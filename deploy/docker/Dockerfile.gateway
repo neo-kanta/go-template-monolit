@@ -1,0 +1,32 @@
+# ───── Stage 1: Build ─────
+FROM golang:1.25-alpine AS builder
+
+RUN apk add --no-cache gcc musl-dev
+
+WORKDIR /src
+
+# Cache dependencies first
+COPY go.mod go.sum ./
+RUN go mod download
+
+# Copy entire source tree
+COPY . .
+
+# Install swag and generate Swagger docs INSIDE the build
+# This ensures Docker build works even if docs/ is not committed.
+RUN go install github.com/swaggo/swag/cmd/swag@latest \
+    && swag init -g ./api-gateway/cmd/gateway/main.go -o ./api-gateway/docs
+
+# Build the gateway binary
+RUN CGO_ENABLED=0 GOOS=linux go build -o /bin/gateway ./api-gateway/cmd/gateway
+
+# ───── Stage 2: Run ─────
+FROM alpine:3.21
+
+RUN apk add --no-cache ca-certificates tzdata
+
+COPY --from=builder /bin/gateway /usr/local/bin/gateway
+
+EXPOSE 8080
+
+ENTRYPOINT ["gateway"]

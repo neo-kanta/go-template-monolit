@@ -1,0 +1,44 @@
+# ──────────────────────────────────────────────
+# Go Transfer Agent Platform — .gitignore
+# ──────────────────────────────────────────────
+
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test output
+*.test
+*.out
+coverage.html
+
+# Go workspace
+go.work
+go.work.sum
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Environment files (may contain secrets)
+.env
+.env.local
+.env.*.local
+
+# Build output
+/bin/
+/dist/
+/tmp/
+
+# Swagger docs are auto-generated (optional: uncomment to ignore)
+# api-gateway/docs/
