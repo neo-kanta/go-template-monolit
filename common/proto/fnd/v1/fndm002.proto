@@ -1,0 +1,160 @@
+syntax = "proto3";
+
+package fnd.v1;
+option go_package = "go-transfer-agent/common/gen/fnd/v1;fndv1";
+
+import "google/api/annotations.proto";
+
+// ═══════════════════════════════════════════════════════════════════
+// FNDM002 Service
+// ═══════════════════════════════════════════════════════════════════
+service FNDM002Service {
+  rpc TAFNDFundFee(TAFNDFundFeeRequest) returns (TAFNDFundFeeResponse) {
+    option (google.api.http) = { get: "/TAapi/Fund/TAFNDFundFee" };
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// FNDM002 Messages
+// ═══════════════════════════════════════════════════════════════════
+
+message TAFNDFundFeeRequest {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string prt_fund_code = 2 [json_name="PrtFundCode"];
+  repeated FundFeeSubListReqDTO fund_fee_sub_list = 3 [json_name="FundFeeSubList"];
+  repeated FundFeeSubDtlListReqDTO fund_fee_sub_dtl_list = 4 [json_name="FundFeeSubDtlList"];
+  repeated FundFeeCDSCListReqDTO fund_fee_cdsc_list = 5 [json_name="FundFeeCDSCList"];
+  repeated FundFeeCDSCDtlListReqDTO fund_fee_cdsc_dtl_list = 6 [json_name="FundFeeCDSCDtlList"];
+  repeated FundFeeBackListReqDTO fund_fee_back_list = 7 [json_name="FundFeeBackList"];
+  repeated FundFeeBackDtlListReqDTO fund_fee_back_dtl_list = 8 [json_name="FundFeeBackDtlList"];
+}
+
+message TAFNDFundFeeResponse {
+  repeated FundFeeMasterDTO result_list = 1 [json_name="ResultList"];
+  repeated FundFeeSubListResDTO fund_fee_sub_list = 2 [json_name="FundFeeSubList"];
+  repeated FundFeeCDSCListResDTO fund_fee_cdsc_list = 3 [json_name="FundFeeCDSCList"];
+  repeated FundFeeBackListResDTO fund_fee_back_list = 4 [json_name="FundFeeBackList"];
+}
+
+// -------------------------------------------------------------------
+// Master DTOs
+// -------------------------------------------------------------------
+
+message FundFeeMasterDTO {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string sys_co_id_nm = 2 [json_name="SysCoIDNm"];
+  string prt_fund_code = 3 [json_name="PrtFundCode"];
+  string prt_fund_code_nm = 4 [json_name="PrtFundCodeNm"];
+}
+
+// -------------------------------------------------------------------
+// Request DTOs (Flat Lists)
+// -------------------------------------------------------------------
+
+message FundFeeSubListReqDTO {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string prt_fund_code = 2 [json_name="PrtFundCode"];
+  string fund_code = 3 [json_name="FundCode"];
+  string cry_id = 4 [json_name="CryID"];
+}
+
+message FundFeeSubDtlListReqDTO {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string prt_fund_code = 2 [json_name="PrtFundCode"];
+  string fund_code = 3 [json_name="FundCode"];
+  string cry_id = 4 [json_name="CryID"];
+  double range_amt_above = 5 [json_name="RangeAmtAbove"];
+  double subs_fee_rate = 6 [json_name="SubsFeeRate"];
+}
+
+message FundFeeCDSCListReqDTO {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string prt_fund_code = 2 [json_name="PrtFundCode"];
+  string fund_code = 3 [json_name="FundCode"];
+  string mature_year = 4 [json_name="MatureYear"];
+  string subs_calc_id = 5 [json_name="SubsCalcID"];
+}
+
+message FundFeeCDSCDtlListReqDTO {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string prt_fund_code = 2 [json_name="PrtFundCode"];
+  string fund_code = 3 [json_name="FundCode"];
+  string mature_year = 4 [json_name="MatureYear"];
+  int32 hold_beg_day = 5 [json_name="HoldBegDay"];
+  double cdsc_fee_rate = 6 [json_name="CDSCFeeRate"];
+}
+
+message FundFeeBackListReqDTO {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string prt_fund_code = 2 [json_name="PrtFundCode"];
+  string fund_code = 3 [json_name="FundCode"];
+  string hold_period_year = 4 [json_name="HoldPeriodYear"];
+  string subs_calc_id = 5 [json_name="SubsCalcID"];
+}
+
+message FundFeeBackDtlListReqDTO {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string prt_fund_code = 2 [json_name="PrtFundCode"];
+  string fund_code = 3 [json_name="FundCode"];
+  string hold_period_year = 4 [json_name="HoldPeriodYear"];
+  int32 hold_beg_day = 5 [json_name="HoldBegDay"];
+  double back_fee_rate = 6 [json_name="BackFeeRate"];
+}
+
+// -------------------------------------------------------------------
+// Response DTOs (Nested Lists per Spec section 2)
+// -------------------------------------------------------------------
+
+message FundFeeSubListResDTO {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string prt_fund_code = 2 [json_name="PrtFundCode"];
+  string fund_code = 3 [json_name="FundCode"];
+  string cry_id = 4 [json_name="CryID"];
+  string cry_id_nm = 5 [json_name="CryIDNm"];
+  repeated FundFeeSubDtlListResDTO fund_fee_sub_dtl_list = 6 [json_name="FundFeeSubDtlList"];
+}
+
+message FundFeeSubDtlListResDTO {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string prt_fund_code = 2 [json_name="PrtFundCode"];
+  string fund_code = 3 [json_name="FundCode"];
+  string cry_id = 4 [json_name="CryID"];
+  double range_amt_above = 5 [json_name="RangeAmtAbove"];
+  double subs_fee_rate = 6 [json_name="SubsFeeRate"];
+}
+
+message FundFeeCDSCListResDTO {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string prt_fund_code = 2 [json_name="PrtFundCode"];
+  string fund_code = 3 [json_name="FundCode"];
+  string mature_year = 4 [json_name="MatureYear"];
+  string subs_calc_id = 5 [json_name="SubsCalcID"];
+  repeated FundFeeCDSCDtlListResDTO fund_fee_cdsc_dtl_list = 6 [json_name="FundFeeCDSCDtlList"];
+}
+
+message FundFeeCDSCDtlListResDTO {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string prt_fund_code = 2 [json_name="PrtFundCode"];
+  string fund_code = 3 [json_name="FundCode"];
+  string mature_year = 4 [json_name="MatureYear"];
+  int32 hold_beg_day = 5 [json_name="HoldBegDay"];
+  double cdsc_fee_rate = 6 [json_name="CDSCFeeRate"];
+}
+
+message FundFeeBackListResDTO {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string prt_fund_code = 2 [json_name="PrtFundCode"];
+  string fund_code = 3 [json_name="FundCode"];
+  string hold_period_year = 4 [json_name="HoldPeriodYear"];
+  string subs_calc_id = 5 [json_name="SubsCalcID"];
+  repeated FundFeeBackDtlListResDTO fund_fee_back_dtl_list = 6 [json_name="FundFeeBackDtlList"];
+}
+
+message FundFeeBackDtlListResDTO {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string prt_fund_code = 2 [json_name="PrtFundCode"];
+  string fund_code = 3 [json_name="FundCode"];
+  string hold_period_year = 4 [json_name="HoldPeriodYear"];
+  int32 hold_beg_day = 5 [json_name="HoldBegDay"];
+  double back_fee_rate = 6 [json_name="BackFeeRate"];
+}

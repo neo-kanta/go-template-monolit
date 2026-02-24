@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package fnd.v1;
+option go_package = "go-transfer-agent/common/gen/fnd/v1;fndv1";
+
+import "google/api/annotations.proto";
+
+// ═══════════════════════════════════════════════════════════════════
+// FNDM012 Service
+// ═══════════════════════════════════════════════════════════════════
+service FNDM012Service {
+  rpc TAFNDPGFundFeeRdm(TAFNDPGFundFeeRdmRequest) returns (TAFNDPGFundFeeRdmResponse) {
+    option (google.api.http) = { get: "/TAapi/Fund/TAFNDPGFundFeeRdm" };
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// FNDM012 Messages
+// ═══════════════════════════════════════════════════════════════════
+
+message TAFNDPGFundFeeRdmRequest {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string prt_fund_code = 2 [json_name="PrtFundCode"];
+  string rdm_calc_beg_date = 3 [json_name="RdmCalcBegDate"];
+  double fee_rate = 4 [json_name="FeeRate"];
+}
+
+message TAFNDPGFundFeeRdmResponse {
+  repeated PGFundFeeRdmMasterDTO result_list = 1 [json_name="ResultList"];
+}
+
+message PGFundFeeRdmMasterDTO {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string sys_co_id_nm = 2 [json_name="SysCoIDNm"];
+  string prt_fund_code = 3 [json_name="PrtFundCode"];
+  string prt_fund_code_nm = 4 [json_name="PrtFundCodeNm"];
+  string rdm_calc_beg_date = 5 [json_name="RdmCalcBegDate"];
+  double fee_rate = 6 [json_name="FeeRate"];
+}

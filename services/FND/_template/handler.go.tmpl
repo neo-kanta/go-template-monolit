@@ -1,0 +1,46 @@
+// Package TEMPLATE — gRPC handler for APIFNDMXXX (TemplateService).
+//
+// This file bridges proto ↔ service. Follow this pattern for every module:
+//
+//	handler.go  →  Implements the generated gRPC server interface
+//	             →  Delegates business logic to Service
+//	             →  Exports NewHandler(log) for server.go to call
+package TEMPLATE
+
+import (
+	"log/slog"
+)
+
+// Handler implements the TEMPLATE gRPC handler methods.
+type Handler struct {
+	log *slog.Logger
+	svc *Service
+}
+
+// NewHandler creates a new TEMPLATE gRPC handler.
+func NewHandler(log *slog.Logger) *Handler {
+	return &Handler{
+		log: log.With(slog.String("module", "TEMPLATE")),
+		svc: NewService(),
+	}
+}
+
+// Service exposes the underlying business service (for cross-module queries).
+func (h *Handler) Service() *Service { return h.svc }
+
+// ─── API Methods ───
+
+// TODO: Add your handler methods here, for example:
+//
+// func (h *Handler) QueryExample(ctx context.Context, req *fndv1.QueryExampleRequest) (*fndv1.QueryExampleResponse, error) {
+//     h.log.Info("QueryExample", slog.String("sys_co_id", req.GetSysCoId()))
+//     return h.svc.QueryExample(req.GetSysCoId()), nil
+// }
+
+// ─── KFNDM: Check Functions ───
+
+// TODO: Add check handler methods
+
+// ─── GFNDM: Get/Search Functions ───
+
+// TODO: Add get/search handler methods

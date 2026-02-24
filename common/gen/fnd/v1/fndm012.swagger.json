@@ -1,0 +1,135 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "fnd/v1/fndm012.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "FNDM012Service"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/TAapi/Fund/TAFNDPGFundFeeRdm": {
+      "get": {
+        "operationId": "FNDM012Service_TAFNDPGFundFeeRdm",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDPGFundFeeRdmResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "SysCoID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "PrtFundCode",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "RdmCalcBegDate",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "FeeRate",
+            "in": "query",
+            "required": false,
+            "type": "number",
+            "format": "double"
+          }
+        ],
+        "tags": [
+          "FNDM012Service"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "v1PGFundFeeRdmMasterDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "SysCoIDNm": {
+          "type": "string"
+        },
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "PrtFundCodeNm": {
+          "type": "string"
+        },
+        "RdmCalcBegDate": {
+          "type": "string"
+        },
+        "FeeRate": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "v1TAFNDPGFundFeeRdmResponse": {
+      "type": "object",
+      "properties": {
+        "ResultList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1PGFundFeeRdmMasterDTO"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,111 @@
+User Interface Specification
+目錄
+應用程式介面說明 2
+壹、功能說明 2
+貳、變更說明 2
+叁、傳入傳出參數(Utility) 2
+一、UTY2007001：TACKACQRcvClosed 2
+二、UTY2007002：TACKTRDRcvClosed 5
+應用程式介面說明
+壹、功能說明
+檢核是否已關帳API
+貳、變更說明
+[TABLE]
+變更日期	變更人員	變更說明
+2022/02/10	Esther Lin	1．Build
+2024/05/09	Meg Pan	Modify\n1．原UTY2007002 廢除，移至 UTY2010009\n2．UTY2007002：ADD
+2024/07/03	Dechang Chen	Modify，配合多公司別調整\n1．UTY2007002：新增傳入參數「公司代碼」
+2024/11/08	Joyce Lin	Modify，配合【交易中心截止委託收單控制檔(TA_TXN_CtlRcvCls)】架構調整\n1．UTY2007001\n2．UTY2007002
+2025/01/23	Joyce Lin	Modify\n1．UTY2007002：傳入參數「交易類別」選項代碼原「S」調整為「Subs」、原「R」調整為「Rdm」
+2025/12/26	Meg Pan	Modify，配合前端組件，選項String『Y、N』變更為Bool『True、False』\n1．「截止收單否」
+
+叁、傳入傳出參數(Utility)
+一、UTY2007001：TACKACQRcvClosed
+判斷收單中心是否可收當日件 Url：{root}/TAapi/Utility/Biz/ClosingCK/TACKACQRcvClosed
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+基準日\nBasicDate	Datetime	V	1．日期時間，包含時分
+交易類別\nTxType	String	V	1．選項(OPT：TA-000143)
+使用者代號\nUserID	String	V
+基金類型\nFundType	String	O	1．選項(TCCode：001)
+申購繳款方式\nSubsPayment	String	O	1．選項(OPT：TA-000140)\n2．「交易類別」為『Subs.申購』時必須傳入
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+訊息清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+訊息代碼\nMsgCode	String
+
+邏輯說明
+資料來源檔案
+TA每日收單截止時間設定檔(DTA_TXN_TxnEndTime)
+TA收單中心使用者關帳控制檔(DTA_ACQ_UserCtlCls)
+交易中心截止委託收單控制檔(TA_TXN_CtlRcvCls)
+每日收單截止時間設定檔(TA_TXN_TxnEndTime)
+收單中心關帳狀態檔(TA_TXN_CheckoutStatus)
+交易中心控制檔(TA_TXN_Control)
+資料處理說明：
+若《基金類型》為空值時
+至【收單中心關帳狀態檔(TA_TXN_CheckoutStatus)】檢核使用者是否已自主關帳
+「收件日」＝《基準日》
+「使用者代號」＝《使用者代號》
+若《交易類別》為『Subs.申購』，則「申購關帳」＝『True』
+若《交易類別》為『Rdm.買回』，則「買回關帳」＝『True』
+若已關帳，則回傳結果代碼{TXN0026}
+若未關帳，則回傳空白
+若《基金類型》非空值時
+至【每日收單截止時間設定檔(TA_TXN_TxnEndTime)】檢核是否已過收單截止時間
+「交易類別」＝《交易類別》
+「基金類型」＝《基金類型》
+「申購繳款方式」＝《申購繳款方式》
+若已過收件截止時間，則回傳結果代碼{TXN0027}
+若未過收件截止時間，則接續【4.2.2.2.】
+至【交易中心截止委託收單控制檔(TA_TXN_CtlRcvCls)】檢核交易中心是否已停止收單
+「收件日期」＝《基準日》
+若《交易類別》為『Subs.申購』且《申購繳款方式》為『T.匯款』，則判斷「收單交易類別」為『ST.申購匯款』且「收單截止否」＝『True』
+若《交易類別》為『Subs.申購』且《申購繳款方式》為『W.扣款』，則判斷「收單交易類別」為『SW.申購扣款』且「收單截止否」『True』
+若《交易類別》為『Rdm.買回』，則判斷「收單交易類別」為『Rdm.買回』且「收單截止否」＝『True』
+若上述任一符合時，則回傳結果代碼{TXN0028}
+若未停止收單，則接續【4.2.2.3.】
+至【收單中心關帳狀態檔(TA_TXN_CheckoutStatus)】檢核使用者是否已自主關帳
+「收件日期」＝《基準日》
+若《交易類別》為『Subs.申購』，則「申購關帳」＝『True』
+若《交易類別》為『Rdm.買回』，則「買回關帳」＝『True』
+「使用者代號」＝《使用者代號》
+若已關帳，則回傳結果代碼{TXN0029}
+若未關帳，則回傳空白
+二、UTY2007002：TACKTRDRcvClosed
+檢核交易中心是否已截止收單 Url：{root}/TAapi/Utility/Biz/ClosingCK/TACKTRDRcvClosed
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+收件日期\nRcvDate	Datetime	V
+基金代碼\nFundCode	String	V
+交易類別\nTxType	String	V	1．選項\nSubs：申購、Rdm：買回
+申購繳款方式\nSubsPmtWay	String	O	1．選項(OPT：TA-000163)\n2．預設為『T.匯款』
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+訊息清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+截止收單否\nIsRcvCls	Bool
+
+邏輯說明
+資料來源檔案
+交易中心截止收單控制檔(TA_TXN_CtlRcvCls)
+資料處理說明
+若以《公司代碼》、《收件日期》及《基金代碼》至【交易中心截止收單控制檔(TA_TXN_CtlRcvCls)】取得收單截止否(@IsRcvDeadline)
+《交易類別》為『Subs.申購』時，判斷《申購繳款方式》
+有傳入值且為『W.扣款』時，取得資料「收單交易類別」為『SW.扣款』的「收單截止否」
+有傳入值且為『T.匯款』時，取得資料「收單交易類別」為『ST.匯款』的「收單截止否」
+取得資料「收單交易類別」為『Rdm.買回』的「收單截止否」

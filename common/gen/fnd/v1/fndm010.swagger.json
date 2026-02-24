@@ -1,0 +1,141 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "fnd/v1/fndm010.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "FNDM010Service"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/TAapi/Fund/TAFNDIShareFundFee": {
+      "get": {
+        "operationId": "FNDM010Service_TAFNDIShareFundFee",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDIShareFundFeeResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "SysCoID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "FundCode",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "FNDM010Service"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "v1IShareFundFeeListDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "FundCode": {
+          "type": "string"
+        },
+        "RangeAmtAbove": {
+          "type": "number",
+          "format": "double"
+        },
+        "SubsFeeRate": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "v1IShareFundFeeMasterDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "SysCoIDNm": {
+          "type": "string"
+        },
+        "FundCode": {
+          "type": "string"
+        },
+        "FundCodeNm": {
+          "type": "string"
+        }
+      }
+    },
+    "v1TAFNDIShareFundFeeResponse": {
+      "type": "object",
+      "properties": {
+        "ResultList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1IShareFundFeeMasterDTO"
+          }
+        },
+        "IShareFundFeeList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1IShareFundFeeListDTO"
+          }
+        }
+      }
+    }
+  }
+}

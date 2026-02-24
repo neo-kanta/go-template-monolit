@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package fnd.v1;
+option go_package = "go-transfer-agent/common/gen/fnd/v1;fndv1";
+
+import "google/api/annotations.proto";
+
+// ═══════════════════════════════════════════════════════════════════
+// FNDM008 Service
+// ═══════════════════════════════════════════════════════════════════
+service FNDM008Service {
+  rpc TAFNDPauseTxn(TAFNDPauseTxnRequest) returns (TAFNDPauseTxnResponse) {
+    option (google.api.http) = { get: "/TAapi/Fund/TAFNDPauseTxn" };
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// FNDM008 Messages
+// ═══════════════════════════════════════════════════════════════════
+
+message TAFNDPauseTxnRequest {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string prt_fund_code = 2 [json_name="PrtFundCode"];
+  string p_txn_beg_date = 3 [json_name="PTxnBegDate"];
+  string p_txn_end_date = 4 [json_name="PTxnEndDate"];
+  string remark = 5 [json_name="Remark"];
+  repeated PauseTxnCryListDTO pause_txn_cry_list = 6 [json_name="PauseTxnCryList"];
+  repeated PauseTxnTypeListDTO pause_txn_type_list = 7 [json_name="PauseTxnTypeList"];
+}
+
+message TAFNDPauseTxnResponse {
+  repeated PauseTxnMasterDTO result_list = 1 [json_name="ResultList"];
+  repeated PauseTxnCryListDTO pause_txn_cry_list = 2 [json_name="PauseTxnCryList"];
+  repeated PauseTxnTypeListDTO pause_txn_type_list = 3 [json_name="PauseTxnTypeList"];
+}
+
+message PauseTxnMasterDTO {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string sys_co_id_nm = 2 [json_name="SysCoIDNm"];
+  string prt_fund_code = 3 [json_name="PrtFundCode"];
+  string prt_fund_code_nm = 4 [json_name="PrtFundCodeNm"];
+  string p_txn_beg_date = 5 [json_name="PTxnBegDate"];
+  string p_txn_end_date = 6 [json_name="PTxnEndDate"];
+  string remark = 7 [json_name="Remark"];
+}
+
+message PauseTxnCryListDTO {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string prt_fund_code = 2 [json_name="PrtFundCode"];
+  string p_txn_beg_date = 3 [json_name="PTxnBegDate"];
+  string cry_id = 4 [json_name="CryID"];
+  string cry_id_nm = 5 [json_name="CryIDNm"];
+}
+
+message PauseTxnTypeListDTO {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string prt_fund_code = 2 [json_name="PrtFundCode"];
+  string p_txn_beg_date = 3 [json_name="PTxnBegDate"];
+  string pause_txn_type = 4 [json_name="PauseTxnType"];
+}

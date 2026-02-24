@@ -1,0 +1,48 @@
+tring	V	1． 選項(OPT：TA-000135)
+母基金代碼\nPrtFundCode	String	V
+基金代碼\nFundCode	String	V
+計價幣別\nFundCurrency	String	V
+收付幣別\nTxCurrency	String	V
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+適用優惠清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+適用優惠代碼\nSpecialOffer	String
+適用優惠名稱\nSpecialOfferNM	String
+適用優惠來源\nSource	String
+
+邏輯說明
+資料來源檔案
+受益人基本資料檔(TA_BF_BFInfo)
+銷售身分代檔(TA_CMM_StatusCode)
+行銷身分名單檔(TA_CMM_StatusList)
+促銷活動主檔(TA_TXN_Cmpn)
+促銷活動身分別明細檔(TA_TXN_CmpnStatus)
+促銷活動適用交易基金明細檔(TA_TXN_CmpnFund)
+資料處理說明
+「適用優惠代碼」取得符合下述規則資料
+取得優惠身分別
+優惠身分別(@DiscStatusCode)：依《身分證字號》至【受益人基本資料檔(TA_BF_BFInfo)】取得「優惠身分別」
+優惠身分名稱(@DiscStatusDescrp)：至【銷售身分代檔(TA_CMM_StatusCode)】取得「身分代碼」為『優惠身分別(@DiscStatusCode)』的「身分名稱」
+適用優惠來源(@Source)：『Disc.優惠身分別』
+取得促銷活動
+促銷活動代碼(@CmpnCode)：至【促銷活動主檔(TA_TXN_Cmpn)】取得《基準日》介於「促銷活動時間起」和「促銷活動時間迄」之間且（若《促銷範圍》為『W.書面』，則「促銷活動範圍書面否」為『Y.是』；若《促銷範圍》為『EC.EC』，則「促銷活動範圍EC否」為『Y.是』）且「促銷活動項目RSP申購否」為『Y.是』的「促銷活動代碼」
+促銷活動名稱(@CmpnName)：至【促銷活動主檔(TA_TXN_Cmpn)】取得《基準日》介於「促銷活動時間起」和「促銷活動時間迄」之間且（若《促銷範圍》為『W.書面』，則「促銷活動範圍書面否」為『Y.是』；若《促銷範圍》為『EC.EC』，則「促銷活動範圍EC否」為『Y.是』）且「促銷活動項目RSP申購否」為『Y.是』的「促銷活動名稱」
+促銷對象(@CmpnObject)：至【促銷活動主檔(TA_TXN_Cmpn)】取得《基準日》介於「促銷活動時間起」和「促銷活動時間迄」之間且（若《促銷範圍》為『W.書面』，則「促銷活動範圍書面否」為『Y.是』；若《促銷範圍》為『EC.EC』，則「促銷活動範圍EC否」為『Y.是』）且「促銷活動項目RSP申購否」為『Y.是』的「促銷對象」
+若促銷對象(@CmpnObject)為『S.身分別』，則依促銷活動代碼(@CmpnCode)至【促銷活動身分別明細檔(TA_TXN_CmpnStatus)】取得「身份代碼」，再依「身份代碼」及《身分證字號》至【行銷身分名單檔(TA_CMM_StatusList)】檢核《身分證字號》是否在該行銷身分名單中，取得適用的「促銷活動代碼」
+依促銷活動代碼(@CmpnCode)、《母基金代碼》、《基金代碼》、《計價幣別》及《收付幣別》至【促銷活動適用交易基金明細檔(TA_TXN_CmpnFund)】取得適用的「促銷活動代碼」
+取得促銷活動代碼(@CmpnCode)排除（不符合【4.2.1.2.4.】的「促銷活動代碼」或不符合【4.2.1.2.5.】的「促銷活動代碼」）
+適用優惠來源(@Source)：『Cmpn.促銷活動』
+取得忠實戶，《忠實戶否》為『Y.是』才進行以下處理
+「適用優惠代碼」：『LOY』
+「適用優惠名稱」：『忠實戶』
+「適用優惠來源」：『Oth.其他』
+固定選項
+「適用優惠代碼」：『99』
+「適用優惠名稱」：『主管特簽』
+「適用優惠來源」：『Oth.其他』

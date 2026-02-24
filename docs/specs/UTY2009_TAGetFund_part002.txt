@@ -1,0 +1,383 @@
+排序
+再依基金代碼排序
+For 開發人員，以下範例皆不開放基金不同幣別互轉
+基礎相關資料設定如下
+轉申購基金相關設定
+[TABLE]
+轉入基金	開放轉入	轉入基金手續費類型	轉出基金
+N01基金	不開放	前收	ALL FUNDS
+N02基金	不開放	不收	ALL FUNDS
+A01基金	開放	前收	ALL FUNDS
+A02基金	開放	不收	A02基金、A03基金
+A03基金	開放	不收	ALL FUNDS
+C01基金	開放	遞延型	ALL FUNDS
+C02基金	開放	遞延型	C02基金、C88基金
+C03基金	開放	遞延型	ALL FUNDS
+C04基金	開放	遞延型	ALL FUNDS
+C88基金	不開放	遞延型	ALL FUNDS
+C99基金	開放	遞延型	ALL FUNDS
+
+遞延型相關設定
+[TABLE]
+基金代碼	到期年限	計算規則	起算日/年(含)	手續費率(%)
+C01基金	2	Y.年計算	0	2
+C01基金	2	Y.年計算	1	1
+C01基金	2	Y.年計算	2	0
+C02基金	3	Y.年計算	0	3
+C02基金	3	Y.年計算	1	2
+C02基金	3	Y.年計算	2	1
+C02基金	3	Y.年計算	3	0
+C03基金	2	Y.年計算	0	2
+C03基金	2	Y.年計算	1	1.5
+C03基金	2	Y.年計算	2	0
+C04基金	2	Y.年計算	0	2
+C04基金	2	Y.年計算	1	1
+C04基金	2	Y.年計算	2	0
+C88基金	3	Y.年計算	0	3
+C88基金	3	Y.年計算	1	2
+C88基金	3	Y.年計算	2	1
+C88基金	3	Y.年計算	3	0
+C99基金	3	Y.年計算	0	3
+C99基金	3	Y.年計算	1	2
+C99基金	3	Y.年計算	2	1
+C99基金	3	Y.年計算	3	0
+
+若《買回基金代碼》：N02，其餘無傳入值，符合轉入基金代碼{『A01』、『A03』、『C01』、『C04』、『C03』、『C99』}
+若《買回基金代碼》：A03，其餘無傳入值，符合轉入基金代碼{『A01』、『A02』、『A03』、『C01』、『C03』、『C04』、『C99』}
+若《買回基金代碼》：C01，其餘無傳入值，符合條件結果如下{『C01』、『C04』}
+若《買回基金代碼》：C02，其餘無傳入值，符合條件結果如下{『C02』、『C99』}
+若《買回基金代碼》：C99，其餘無傳入值，符合條件結果如下{『C99』}
+四、UTY2009004：TAGetDPrtFundInfo
+取得境內母基金資料(Searcher For 基金設定) Url：{root}/TAapi/BaseUtility/TAFund/TAGetDPrtFundInfo
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+含ETF基金\nIsInclETF	Bool	O	1．預設為False
+母基金代碼\nPrtFundCode	String	O
+基金狀態\nFundStatus	String	O	1．選項\n0：有效基金；1：無效基金；8：清算準備中基金；9：合併準備中基金
+排除不收型基金\nIsFundNFee	Bool	O	1．預設為False
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+母基金清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+母基金代碼\nPrtFundCode	String
+母基金簡稱\nPrtFundCodeNM	String
+發行基準貨幣代碼\nIssueBaseCry	String
+首次募集日期\nFundIPODate	Datetime
+募集型態\nOfferType	String	1．選項(OPT：TA-000006)
+基金營業日定義\nBIZDayDef	String	1．選項(OPT：TA-000043)
+成立日期\nFundSetupDate	Datetime
+開放買回日期\nBegRdmDate	Datetime
+保管銀行代碼\nCustBankHeadID	String
+基金專戶主要名稱\nFundAccMName	String
+基金專戶次要名稱\nFundAccSName	String
+基金狀態\nFundStatus	String	1．選項(OPT：TA-000007)
+手續費前收否\nIsFundBFee	Bool
+手續費遞延否\nIsFundCFee	Bool
+手續費後收否\nIsFundPFee	Bool
+基金種類\nFundKind	String	1．選項\nTA：TA基金；ETF：ETF基金；DIM：全委基金
+
+邏輯說明
+資料來源檔案
+取得境內母基金查詢資料(SysUtility.GetDPrtFund)
+取得境內基金基礎類查詢資料(SysUtility.GetDFund)
+資料處理說明
+若《排除不收型基金》為『True』時，以《公司代碼》及《母基金代碼》至【取得境內基金基礎類查詢資料(SysUtility.GetDFund)】取得所屬子基金，所屬子基金資料皆為『N.不收』時，排除該檔母基金。
+傳出欄位說明
+以《公司代碼》及《母基金代碼》至【取得境內基金基礎類查詢資料(SysUtility.GetDFund)】取得所屬子基金的「手續費收取方式」，再依下述規則回傳資料
+「手續費前收否」：任一子基金為『B.前收』時，為『True』，反之為『False』
+「手續費遞延否」：任一子基金為『C.遞延』時，為『True』，反之為『False』
+「手續費後收否」：任一子基金為『P.後收』時，為『True』，反之為『False』
+五、UTY2009005：TAGetTxDFundSubs
+取得境內基金代碼(Searcher For 申購類交易) Url：{root}/TAapi/Utility/TAFund/TAGetTxDFundSubs
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+基金代碼\nFundCode	String	O
+基金狀態\nFundStatus	String	O	1．選項\n0：有效基金；1：無效基金；8：清算準備中基金；9：合併準備中基金
+可做RSP扣款基金\nIsRSP	String	O	1．選項\nY：是、N：否
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+基金清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+基金代碼\nFundCode	String
+基金簡稱\nFundCodeNM	String
+計價幣別\nFundCry	String
+計價幣別名稱\nFundCryNM	String	1．幣別查詢.幣別名稱(SysUtility.GetCry.CryIDNM)
+母基金代碼\nPrtFundCode	String
+基金風險屬性\nFundRiskLevel	String	1．選項(OPT：TA-000003)
+最後申購日期\nLastSubsDate	Datetime
+國內貨幣基金\nIsMMF	Bool
+非投資等級基金否\nIsHighRisk	Bool
+保本型基金否\nIsPGF	Bool
+保本型停止申購日\nPGFStopSubsDate	Datetime
+到期型基金否\nIsTMF	Bool
+到期型停止申購日\nTMFStopSubsDate	Datetime
+申購NAV基準日\nSubsNavDay	Int
+募集型態\nOfferType	String	1．選項(OPT：TA-000006)
+首次募集日期\nFundIPODate	Datetime
+公司基金級別\nFHFundShare	String	1．選項(TCCode：031)
+級別首次銷售日期\nShareFirSaleDate	Datetime
+法人級別否\nIsIShare	Bool
+限制專業投資人交易否IsPITrd	Bool
+計息種類\nDivCalcType	String	1．選項(OPT：TA-000024)
+手續費收取方式\nSubsFeeType	String	1．選項(OPT：TA-000025)
+單筆最低申購金額\nSubsMinAmt	Decimal
+單筆申購累進金額\nSubsAmtApc	Decimal
+最低轉申購金額\nSwMinAmt	Decimal
+
+邏輯說明
+資料來源檔案
+取得境內基金申購交易類查詢資料(TASysUtility.GetDFundSubs)
+六、UTY2009006：TAGetTxDFundRdm
+取得境內基金代碼(Searcher For 買回類交易) Url：{root}/TAapi/Utility/TAFund/TAGetTxDFundRdm
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+基金代碼\nFundCode	String	O
+基金狀態\nFundStatus	String	O	1．選項\n0：有效基金；1：無效基金；8：清算準備中基金；9：合併準備中基金
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+基金清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+基金代碼\nFundCode	String
+基金簡稱\nFundCodeNM	String
+計價幣別\nFundCry	String
+計價幣別名稱\nFundCryNM	String	1．幣別查詢.幣別名稱(SysUtility.GetCry.CryIDNM)
+母基金代碼\nPrtFundCode	String
+基金買回方式\nFundRdmWay	String
+短線交易費收取否\nIsShortFee	String
+開放買回日期\nBegRdmDate	Datetime
+最後買回日期\nLastRdmDate	Datetime
+買回NAV基準日\nRdmNavDay	Int
+保本型基金否\nIsPGF	String
+到期型基金否\nIsTMF	String
+公司基金級別\nFHFundShare	String	1．選項(TCCode：031)
+手續費收取方式\nSubsFeeType	String	1．選項(OPT：TA-000025)
+最低剩餘單位數\nRdmMinUnitSur	Decimal
+最低買回單位數\nRdmMinUnit	Decimal
+最低買回金額\nRdmMinAmt	Decimal
+單位數小數\nUnitLen	Int
+淨值小數\nNavLen	Int
+金額小數\nDecLen	Int
+
+邏輯說明
+資料來源檔案
+取得境內基金買回交易類查詢資料(TASysUtility.GetDFundRdm)
+七、UTY2009007：TAGetOperatingFund
+取得指定日期有營業的境內基金 Url：{root}/TAapi/Utility/TAFund/TAGetOperatingFund
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+交易類別\nTxType	String	V	1．選項\nSubs：申購；Rdm：買回
+交易日期\nTxDate	Datetime	V
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+基金清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+母基金代碼\nPrtFundCode	String
+基金代碼\nFundCode	String
+
+邏輯說明
+資料來源檔案
+取得指定日期有營業的境內基金(TABizUtility.GetOperatingFund)
+八、UTY2009008：TAGetPrtFundForCust
+取得保銀所屬的境內母基金代碼 Url：{root}/TAapi/BaseUtility/TAFund/TAGetPrtFundForCust
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+保管銀行\nCustBankHeadID	String	V
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+母基金清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+母基金代碼\nPrtFundCode	String
+母基金簡稱\nPrtFundCodeNM	String
+
+邏輯說明
+資料來源檔案
+取得境內母基金查詢資料(SysUtility.GetDPrtFund)
+傳入參數
+「含ETF基金」：為『True』
+九、UTY2009009：TAGetSelectionDFund
+取得指定挑選條件的境內基金代碼(基金明細 For一般作業、查詢/報表條件) Url：{root}/TAapi/Utility/TAFund/TAGetSelectionDFund
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+挑選方式\nChoiceType	String	V	1．選項(OPT：TA-900044)
+選擇代碼\nChoiceCode	String	V	1．當「挑選方式」為『FD.指定基金』時，有ALL選項
+指定幣別\nAssignCry	String	V	1．有ALL選項
+基金狀態\nFundStatus	String	O	1．選項\n0：有效基金；1：無效基金；8：清算準備中基金；9：合併準備中基金
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+基金清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+母基金代碼\nPrtFundCode	String
+基金代碼\nFundCode	String
+基金簡稱\nFundCodeNM	String
+計價幣別\nFundCry	String
+計價幣別名稱\nFundCryNM	String
+
+邏輯說明
+資料來源檔案
+取得指定挑選條件的境內基金(TABizUtility.GetSelectionFund)
+十、UTY2009010：TAGetBFRDFund
+取得境內基金代碼(Searcher For 受益權類交易) Url：{root}/TAapi/Utility/TAFund/TAGetBFRDFund
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+基金代碼\nFundCode	String	O
+戶號\nBFNo	Int	V
+庫存種類\nBalKind	String	O	1．選項\nNP：僅取有無實體庫存；CERT：僅取有憑證庫存\n2．預設為NP
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+基金清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+基金代碼\nFundCode	String
+基金簡稱\nFundCodeNM	String
+手續費收取方式\nSubsFeeType	String	1．選項(OPT：TA-000025)
+單位數小數\nUnitLen	Int
+淨值小數\nNavLen	Int
+
+邏輯說明
+資料來源檔案
+取得境內基金受益權交易類查詢資料(TASysUtility.GetDFundBFR)
+十一、UTY2009011：TAGetTxDFundRsp
+取得境內基金代碼(Searcher For 定額類交易) Url：{root}/TAapi/Utility/TAFund/TAGetTxDFundRsp
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+基金代碼\nFundCode	String	V
+幣別代碼集合\nFundCrySet	String	O	1．資料用『，』串接
+基金狀態\nFundStatus	String	O	1．選項\n0：有效基金；1：無效基金；8：清算準備中基金；9：合併準備中基金
+成立基金\nIsFundSetup	Bool	O
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+基金清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+基金代碼\nFundCode	String
+基金簡稱\nFundCodeNM	String
+計價幣別\nFundCry	String
+計價幣別名稱\nFundCryNM	String	1．幣別查詢.幣別名稱(SysUtility.GetCry.CryIDNM)
+基金狀態\nFundStatus	String	1．選項(OPT：TA-000007)
+基金風險屬性\nFundRiskLevel	String	1．選項(OPT：TA-000003)
+非投資等級基金否\nIsHighRisk	Bool
+計息種類\nDivCalcType	String	1．選項(OPT：TA-000024)
+RSP最低扣款金額\nRSPMinAmt	Decimal
+RSP扣款累進金額\nRSPAmtApc	Decimal
+RSP最高扣款金額\nRSPMaxAmt	Decimal
+
+邏輯說明
+資料來源檔案
+取得境內基金申購交易類查詢資料(TASysUtility.GetDFundSubs)
+傳入參數
+「可做RSP扣款基金」：為『True』
+四十一、UTY2009301：TAGetFundHouse
+取得境外基金公司代碼(For Searcher) Url：{root}/TAapi/BaseUtility/TAFund/TAGetFundHouse
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+基金公司代碼\nOFDFHCode	String	O
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+基金公司清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+基金公司代碼\nOFDFHCode	String
+基金公司簡稱\nOFDFHCodeNM	String
+
+邏輯說明
+資料來源檔案
+取得境外基金公司查詢資料(SysUtility.GetFundHouse)
+四十二、UTY2009302：TAGetOFund
+取得境外基金代碼(For Searcher) Url：{root}/TAapi/BaseUtility/TAFund/TAGetOFund
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+基金公司代碼\nOFDFHCode	String	V
+含全部基金選項\nIsALL	Bool	O	1．預設為False
+基金代碼\nFundCode	String	O
+基金狀態\nFundStatus	String	O	1．選項\n0：有效基金；1：無效基金；8：清算準備中基金；9：合併準備中基金
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+基金清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+基金代碼\nFundCode	String
+基金簡稱\nFundCodeNM	String
+計價幣別\nFundCry	String
+計價幣別名稱\nFundCryNM	String	1．幣別查詢.幣別名稱(SysUtility.GetCry.CryIDNM)
+
+邏輯說明
+資料來源檔案
+取得境外基金基礎類查詢資料(SysUtility.GetOFund)
+取得All選項查詢資料(SysUtility.GetSysAll)
+資料處理說明
+全部基金(@AllList)：若《含全部基金選項》為『True』時，至【取得All選項查詢資料(SysUtility.GetSysAll)】取得「All選項Key」為『Fund』的資料
+基金清單(@FundList)：依下述處理後再回傳結果
+若《含全部基金選項》為『True』時，依據全部基金(@AllList)內容新增一筆資料，資料內容如下
+「基金代碼」：為全部基金(@AllList)的『All選項代碼(AllValue)』
+「基金簡稱」：為全部基金(@AllList)的『All選項名稱(AllName)』
+資料排序說明
+基金清單(@FundList)依下列順序排序
+先依「基金狀態」的『0.正常』、『9.合併準備中』、『8.清算準備中』、『1.終止』、『3.合併』、『2.清算』排序
+再依基金代碼排序
+若《含全部基金選項》為『True』時，全部基金(@AllList)固定為第一筆

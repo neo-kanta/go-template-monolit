@@ -1,0 +1,424 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "fnd/v1/fndm002.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "FNDM002Service"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/TAapi/Fund/TAFNDFundFee": {
+      "get": {
+        "operationId": "FNDM002Service_TAFNDFundFee",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDFundFeeResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "SysCoID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "PrtFundCode",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "FNDM002Service"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "v1FundFeeBackDtlListReqDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "FundCode": {
+          "type": "string"
+        },
+        "HoldPeriodYear": {
+          "type": "string"
+        },
+        "HoldBegDay": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "BackFeeRate": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "v1FundFeeBackDtlListResDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "FundCode": {
+          "type": "string"
+        },
+        "HoldPeriodYear": {
+          "type": "string"
+        },
+        "HoldBegDay": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "BackFeeRate": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "v1FundFeeBackListReqDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "FundCode": {
+          "type": "string"
+        },
+        "HoldPeriodYear": {
+          "type": "string"
+        },
+        "SubsCalcID": {
+          "type": "string"
+        }
+      }
+    },
+    "v1FundFeeBackListResDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "FundCode": {
+          "type": "string"
+        },
+        "HoldPeriodYear": {
+          "type": "string"
+        },
+        "SubsCalcID": {
+          "type": "string"
+        },
+        "FundFeeBackDtlList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1FundFeeBackDtlListResDTO"
+          }
+        }
+      }
+    },
+    "v1FundFeeCDSCDtlListReqDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "FundCode": {
+          "type": "string"
+        },
+        "MatureYear": {
+          "type": "string"
+        },
+        "HoldBegDay": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "CDSCFeeRate": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "v1FundFeeCDSCDtlListResDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "FundCode": {
+          "type": "string"
+        },
+        "MatureYear": {
+          "type": "string"
+        },
+        "HoldBegDay": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "CDSCFeeRate": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "v1FundFeeCDSCListReqDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "FundCode": {
+          "type": "string"
+        },
+        "MatureYear": {
+          "type": "string"
+        },
+        "SubsCalcID": {
+          "type": "string"
+        }
+      }
+    },
+    "v1FundFeeCDSCListResDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "FundCode": {
+          "type": "string"
+        },
+        "MatureYear": {
+          "type": "string"
+        },
+        "SubsCalcID": {
+          "type": "string"
+        },
+        "FundFeeCDSCDtlList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1FundFeeCDSCDtlListResDTO"
+          }
+        }
+      }
+    },
+    "v1FundFeeMasterDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "SysCoIDNm": {
+          "type": "string"
+        },
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "PrtFundCodeNm": {
+          "type": "string"
+        }
+      }
+    },
+    "v1FundFeeSubDtlListReqDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "FundCode": {
+          "type": "string"
+        },
+        "CryID": {
+          "type": "string"
+        },
+        "RangeAmtAbove": {
+          "type": "number",
+          "format": "double"
+        },
+        "SubsFeeRate": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "v1FundFeeSubDtlListResDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "FundCode": {
+          "type": "string"
+        },
+        "CryID": {
+          "type": "string"
+        },
+        "RangeAmtAbove": {
+          "type": "number",
+          "format": "double"
+        },
+        "SubsFeeRate": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "v1FundFeeSubListReqDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "FundCode": {
+          "type": "string"
+        },
+        "CryID": {
+          "type": "string"
+        }
+      }
+    },
+    "v1FundFeeSubListResDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "FundCode": {
+          "type": "string"
+        },
+        "CryID": {
+          "type": "string"
+        },
+        "CryIDNm": {
+          "type": "string"
+        },
+        "FundFeeSubDtlList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1FundFeeSubDtlListResDTO"
+          }
+        }
+      }
+    },
+    "v1TAFNDFundFeeResponse": {
+      "type": "object",
+      "properties": {
+        "ResultList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1FundFeeMasterDTO"
+          }
+        },
+        "FundFeeSubList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1FundFeeSubListResDTO"
+          }
+        },
+        "FundFeeCDSCList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1FundFeeCDSCListResDTO"
+          }
+        },
+        "FundFeeBackList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1FundFeeBackListResDTO"
+          }
+        }
+      }
+    }
+  }
+}

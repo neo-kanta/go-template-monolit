@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package fnd.v1;
+option go_package = "go-transfer-agent/common/gen/fnd/v1;fndv1";
+
+import "google/api/annotations.proto";
+
+// ═══════════════════════════════════════════════════════════════════
+// FNDM010 Service
+// ═══════════════════════════════════════════════════════════════════
+service FNDM010Service {
+  rpc TAFNDIShareFundFee(TAFNDIShareFundFeeRequest) returns (TAFNDIShareFundFeeResponse) {
+    option (google.api.http) = { get: "/TAapi/Fund/TAFNDIShareFundFee" };
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// FNDM010 Messages
+// ═══════════════════════════════════════════════════════════════════
+
+message TAFNDIShareFundFeeRequest {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string fund_code = 2 [json_name="FundCode"];
+  repeated IShareFundFeeListDTO i_share_fund_fee_list = 3 [json_name="IShareFundFeeList"];
+}
+
+message TAFNDIShareFundFeeResponse {
+  repeated IShareFundFeeMasterDTO result_list = 1 [json_name="ResultList"];
+  repeated IShareFundFeeListDTO i_share_fund_fee_list = 2 [json_name="IShareFundFeeList"];
+}
+
+message IShareFundFeeMasterDTO {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string sys_co_id_nm = 2 [json_name="SysCoIDNm"];
+  string fund_code = 3 [json_name="FundCode"];
+  string fund_code_nm = 4 [json_name="FundCodeNm"];
+}
+
+message IShareFundFeeListDTO {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string fund_code = 2 [json_name="FundCode"];
+  double range_amt_above = 3 [json_name="RangeAmtAbove"];
+  double subs_fee_rate = 4 [json_name="SubsFeeRate"];
+}

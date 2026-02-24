@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package fnd.v1;
+option go_package = "go-transfer-agent/common/gen/fnd/v1;fndv1";
+
+import "google/api/annotations.proto";
+
+// ═══════════════════════════════════════════════════════════════════
+// FNDM013 Service
+// ═══════════════════════════════════════════════════════════════════
+service FNDM013Service {
+  rpc TAFNDTMFundFeeRdm(TAFNDTMFundFeeRdmRequest) returns (TAFNDTMFundFeeRdmResponse) {
+    option (google.api.http) = { get: "/TAapi/Fund/TAFNDTMFundFeeRdm" };
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// FNDM013 Messages
+// ═══════════════════════════════════════════════════════════════════
+
+message TAFNDTMFundFeeRdmRequest {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string prt_fund_code = 2 [json_name="PrtFundCode"];
+  string rdm_calc_beg_date = 3 [json_name="RdmCalcBegDate"];
+  repeated TMFundFeeRdmDtlListDTO fund_fee_dtl_list = 4 [json_name="FundFeeDtlList"];
+}
+
+message TAFNDTMFundFeeRdmResponse {
+  repeated TMFundFeeRdmMasterDTO result_list = 1 [json_name="ResultList"];
+  repeated TMFundFeeRdmDtlListDTO fund_fee_dtl_list = 2 [json_name="FundFeeDtlList"];
+}
+
+message TMFundFeeRdmMasterDTO {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string sys_co_id_nm = 2 [json_name="SysCoIDNm"];
+  string prt_fund_code = 3 [json_name="PrtFundCode"];
+  string prt_fund_code_nm = 4 [json_name="PrtFundCodeNm"];
+  string rdm_calc_beg_date = 5 [json_name="RdmCalcBegDate"];
+}
+
+message TMFundFeeRdmDtlListDTO {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string prt_fund_code = 2 [json_name="PrtFundCode"];
+  string rdm_calc_beg_date = 3 [json_name="RdmCalcBegDate"];
+  string rdm_calc_end_date = 4 [json_name="RdmCalcEndDate"];
+  double fee_rate = 5 [json_name="FeeRate"];
+}

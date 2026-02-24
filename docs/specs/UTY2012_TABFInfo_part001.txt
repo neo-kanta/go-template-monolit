@@ -1,0 +1,369 @@
+User Interface Specification
+目錄
+應用程式介面說明 2
+壹、功能說明 2
+貳、變更說明 2
+叁、傳入傳出參數(Utility) 3
+一、UTY2012001：TAGetBFNo 4
+二、UTY2012002：TAGetRejBFNo 5
+三、UTY2012003：TAGetTATxBFNo 7
+四、UTY2012004：TAGetTATxDebitAcct 10
+五、UTY2012005：TAGetTATxPayAcct 11
+六、UTY2012006：TAGetTxSalesBFNo 14
+七、UTY2012007：TAGetTABFAdjFISAcct 16
+八、UTY2012008：TAGetTATxRspAcct 17
+應用程式介面說明
+壹、功能說明
+受益人基本資料相關API
+貳、變更說明
+[TABLE]
+變更日期	變更人員	變更說明
+2024/03/27	Meg Pan	1．Build
+2024/04/23	Meg Pan	Modify\n1．新增UTY2012004、UTY2012005
+2024/05/03	Meg Pan	Modify\n1．UTY2012003：配合TXNM021調整
+2024/06/05	Meg Pan	Modify\n1．UTY2012003：原「特金/財管專戶」更名為「特金/財管/受託專戶」
+2024/06/13~06/18	Meg Pan	Modify，配合TXNM031調整\n1．UTY2012003：增加傳出參數「通訊郵遞區號」、「通訊地址」、「戶籍郵遞區號」、「戶籍地址」\n2．UTY2012005：增加傳出參數「中間行資料清單」
+2024/06/20	Joyce Lin	Modify，調整傳入參數「受益人姓名」長度為500\n1．UTY2012001、UTY2012002
+2024/06/26~07/05	Meg Pan	Modify\n1．UTY2012003：原「特金/財管/受託專戶」更名為「信託專戶」\n2．UTY2012004：調整傳入參數「查詢類別」，刪除選項『3.投信扣款+集保扣款』\n3．UTY2012005\n3.1．調整傳入參數「查詢類別」，刪除選項『21：投信付款-買回+集保付款、22：投信付款-配息+集保付款、23：投信付款+集保付款』\n3.2．配合TXNM031調整，增加傳出參數「帳號帳戶名稱」、「帳號類別」
+2024/07/08	Dechang Chen	Modify，配合多公司別調整\n1．UTY2012001、UTY2012002、UTY2012003、UTY2012004、UTY2012005：新增傳入參數「公司代碼」，調整邏輯
+2024/07/22	Joyce Lin	Modify\n1．UTY2012004、UTY2012005：新增傳入參數「銀行代碼」、「銀行帳號」
+2024/08/06	Meg Pan	Modify\n1．UTY2012003：信託專戶的銷售機構改以受益人基本資料登載的資料為准，增加傳出參數「CDSC資料提供方式」
+2024/08/22	Meg Pan	Modify\n1．UTY2001005：配合【取得系統參數查詢資料(SysUtility.GetSystem)】的調整，修改取得「中心幣別」的寫法
+2024/08/28	Joyce Lin	Modify\n1．UTY2012003：銷售機構簡稱增加取得說明
+2025/02/19	Ann Wu	Modify\n1．調整幣別欄位長度為6
+2025/02/21	Joyce Lin	Modify\n1．UTY2012004：傳出參數增加「總行代碼」、「銀行總行簡稱」
+2025/04/21	Dechang Chen	Modify\n1．UTY2012001、UTY2012002、UTY2012003：\n1.1．調整傳入參數「戶號」、「身分證字號」、「受益人姓名」欄位說明，取消必須擇一輸入\n1.2．增加傳出說明，傳出時不限制回傳筆數
+2025/04/22	Dechang Chen	Modify，配合【受益人資料退郵處理作業(BFB002)】欄位異動\n1．UTY2012002：\n1.1．刪除傳出參數「公司電話」、「住家電話」、「行動電話」\n1.2．新增傳出參數「聯絡方式」、「電話號碼」\n2．UTY2012003：調整傳出參數「私募基金應募人身分別」選項代碼
+2025/06/26	Joyce Lin	Modify，配合【受益人交易預設業務人員修改作業(BFM032)】\n1．UTY2012006：新增API
+2025/12/04	Meg Pan	Modify，配合【受益人FIS扣款帳號額度調升作業(BFM005)】\n1．UTY2012007：新增API
+2025/12/12~2025/12/23	Meg Pan	Modify，配合【定額契約作業(RSPM001)】\n1．UTY2012003：新增傳出參數「未成年否」、「法代身分證字號」、「法代姓名」、「法代2身分證字號」、「法代2姓名」\n2．UTY2012008：新增API
+2025/12/26	Meg Pan	Modify，配合前端組件，選項String『Y、N』變更為Bool『True、False』\n1．UTY2012003：「專業投資人否」、「信託專戶否」、「有傳真交易權限否」、「外國人否」、「高齡投資人否」、「有留存次要姓名」、「未成年否」
+2025/12/30	Meg Pan	Modify\n1．UTY2012007：重新調整「選項(OPT：TA-000096)」的代碼及使用方式
+
+叁、傳入傳出參數(Utility)
+一、UTY2012001：TAGetBFNo
+取得受益人戶號或ID(Searcher For一般作業、查詢/報表條件) Url：{root}/TAapi/BaseUtility/BFInfo/TAGetBFNo
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+戶號\nBFNo	Int	O
+身分證字號\nIDNo	String	O
+受益人姓名\nBFNoNM	String	O
+境內TA開戶否\nIsTAOpen	Bool	O	1．預設為True
+境外SA開戶否\nIsSAOpen	Bool	O	1．預設為False
+境外MA開戶否\nIsMAOpen	Bool	O	1．預設為False
+帳戶狀態\nAcctStatus	String	O	1．選項(OPT：TA-000061)
+查詢類型\nQueryType	String	O	1．選項\nSMP：簡易資料、ALL：詳細資料\n2．預設為SMP
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+受益人清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+戶號\nBFNo	Int
+身分證字號\nIDNo	String
+受益人姓名\nBFNoNM	String
+出生日期\nBirthday	Datetime	1．《查詢類型》為『ALL.詳細資料』時，才有傳出值
+
+邏輯說明
+資料來源檔案
+取得受益人戶號或ID查詢資料(SysUtility.GetBFNo)
+資料處理說明：此API傳出時，不限制回傳筆數
+二、UTY2012002：TAGetRejBFNo
+取得受益人戶號或ID查詢資料(Searcher For 退件、退郵作業) Url：{root}/TAapi/BaseUtility/BFInfo/TAGetRejBFNo
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+戶號\nBFNo	Int	O
+身分證字號\nIDNo	String	O
+受益人姓名\nBFNoNM	String	O
+查詢類型\nQueryType	String	O	1．選項\nSMP：簡易資料、ALL：詳細資料\n2．預設為SMP
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+受益人清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+戶號\nBFNo	Int
+身分證字號\nIDNo	String
+受益人姓名\nBFNoNM	String
+通訊地址\nMailAddr	String
+通訊郵遞區號\nMailZip	String
+聯絡方式\nContactInfo	String	1．《查詢類型》為『ALL.詳細資料』時，才有傳出值
+電話號碼\nContactTel	String	1．《查詢類型》為『ALL.詳細資料』時，才有傳出值
+業務人員\nSalesCode	String	1．《查詢類型》為『ALL.詳細資料』時，才有傳出值
+業務人員姓名\nSalesCodeNM	String	1．員工姓名查詢.員工姓名(SysUtility.GetEmpNM.EmpCodeNM)\n1．《查詢類型》為『ALL.詳細資料』時，才有傳出值
+退郵註記\nRejPostMark	String	1．選項(OPT：TA-000081)\n2．《查詢類型》為『ALL.詳細資料』時，才有傳出值
+
+邏輯說明
+資料來源檔案
+取得受益人戶號或ID查詢資料(SysUtility.GetRejBFNo)
+資料處理說明：此API傳出時，不限制回傳筆數
+三、UTY2012003：TAGetTATxBFNo
+取得TA受益人戶號或ID查詢資料(Searcher For 境內TA交易) Url：{root}/TAapi/Utility/BFInfo/TAGetTATxBFNo
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	20	V
+戶號\nBFNo	Int		O
+身分證字號\nIDNo	String	30	O
+查詢日期\nQueryDate	Datetime		V
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+受益人清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+戶號\nBFNo	Int
+身分證字號\nIDNo	String
+受益人姓名\nBFNoNM	String
+銷售機構類別\nAgentType	String	1．選項(OPT：TA-000053)
+銷售機構代碼\nAgentCode	String
+銷售機構簡稱\nAgentCodeNM	String	1．機構簡稱查詢.機構簡稱(SysUtility.GetOrgVNM.OrgFullCodeNM)
+員工代碼\nEmpCode	String
+員工姓名\nEmpCodeNM	String	1．員工姓名查詢.員工姓名(SysUtility.GetEmpNM.EmpCodeNM)
+部門代碼\nDeptCode	String	1．員工姓名查詢.部門代碼(SysUtility.GetEmpNM.DeptCode)
+部門簡稱\nDeptCodeNM	String	1．部門簡稱查詢.部門簡稱(SysUtility.GetDept.DeptCodeNM)
+通路類別\nChannelType	String	1．選項(OPT：TA-000053)
+通路代碼\nChannelCode	String
+通路簡稱\nChannelCodeNM	String	1．機構簡稱查詢.機構簡稱(SysUtility.GetOrgVNM.OrgFullCodeNM)
+推薦人代碼\nSponsorCode	String
+推薦人姓名\nSponsorCodeNM	String	1．推薦人姓名查詢.推薦人姓名(SysUtility.GetSponsorNM.SponsorCodeNM)
+專業投資人否\nIsPIValid	Bool
+最新KYC投資風險屬性\nLatestKYCRisk	String	1．選項(OPT：TA-000073)
+KYC狀態\nKYCStatus	String	1．選項\n01：有效、02：已過期、03：未留存
+私募基金應募人身分別\nPvtIDType	String	1．選項(OPT：TA-000265)
+信託專戶否\nIsTrustAcct	Bool
+優惠身分代碼\nCusIDCode	String
+優惠身分名稱\nCusIDCodeNM	String	1．銷售身分查詢.身分名稱(SysUtility.GetCustIDCode.CusIDCodeNM)
+集保帳號\nCSDBFNo	String
+有傳真交易權限否\nIsTranFax	Bool
+受益人分類\nBFIDType	String	1．選項(OPT：TA-000048)
+外國人否\nIsForeigner	Bool
+高齡投資人否\nIsElderlyCust	Bool
+有留存次要姓名\nIsRetainedSNM	Bool
+帳戶狀態\nAcctStatus	String	1．選項(OPT：TA-000061)
+通訊地址\nMailAddr	String
+通訊郵遞區號\nMailZip	String
+戶籍地址\nHRegAddr	String
+戶籍郵遞區號\nHRegZip	String
+CDSC資料提供方式\nCDSCDataType	String	1．選項(OPT：TA-000051)
+未成年否\nIsUnderage	Bool
+法代身分證字號\nLGMID	String
+法代姓名\nLGMName	String
+法代2身分證字號\nLGSID	String
+法代2姓名\nLGSName	String
+
+邏輯說明
+資料來源檔案
+取得TA受益人戶號或ID查詢資料(TASysUtility.GetTATxBFNo)
+資料處理說明：此API傳出時，不限制回傳筆數
+四、UTY2012004：TAGetTATxDebitAcct
+取得TA交易受益人約定扣款帳號(Searcher For 境內TA交易) Url：{root}/TAapi/Utility/BFInfo/TAGetTATxDebitAcct
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+戶號\nBFNo	Int	V
+查詢日期\nQueryDate	Datetime	V
+查詢類別\nQueryType	String	V	1．選項\n1：投信扣款、2：集保扣款
+交易幣別\nTxCry	String	V
+銀行代碼\nBankID	String	O
+銀行帳號\nBankAcctNo	String	O
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+帳號清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+銀行代碼\nBankID	String
+銀行簡稱\nBankIDNM	String	1．銀行查詢.銀行簡稱(SysUtility.GetBankV.BankIDNM)
+銀行總行代碼\nBankHeadID	String	1．銀行查詢.銀行總行代碼(SysUtility.GetBankV.BankHeadID)
+銀行總行簡稱\nBankHeadIDNM	String	1．銀行查詢.銀行總行簡稱(SysUtility.GetBankV.BankHeadIDNM)
+銀行帳號\nBankAcctNo	String
+扣款平台類別\nDebitPlatType	String	1．選項(OPT：TA-000167)
+代理扣款機構\nAgentDebitBank	String
+
+邏輯說明
+資料來源檔案
+取得TA受益人約定扣款帳號查詢資料(TASysUtility.GetTABFAgreeDebitAcct)
+五、UTY2012005：TAGetTATxPayAcct
+取得TA交易受益人約定付款帳號(Searcher For 境內TA交易) Url：{root}/TAapi/Utility/BFInfo/TAGetTATxPayAcct
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+戶號\nBFNo	Int	V
+查詢日期\nQueryDate	Datetime	V
+查詢類別\nQueryType	String	V	1．選項\n01：投信付款-買回、02：投信付款-配息、03：投信付款、\n11：集保付款、\n21：投信付款-買回+集保付款、22：投信付款-配息+集保付款、23：投信付款+集保付款
+付款幣別\nPayCry	String	V
+基金代碼\nFundCode	String	V
+銀行代碼\nBankID	String	O
+銀行帳號\nBankAcctNo	String	O
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+帳號清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+銀行代碼\nBankID	String
+銀行簡稱\nBankIDNM	String	1．銀行查詢.銀行簡稱(SysUtility.GetBankV.BankIDNM)
+銀行帳號\nBankAcctNo	String
+帳號帳戶名稱\nBankAcctName	String
+帳號類別\nAcctType	String	1．選項(OPT：TA-000066)
+帳號國別類型\nAcctCtyType	String	1．選項\nD：國內、F：國外
+中間行資料清單\nCentBankList	String
+
+CentBankList
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+匯費類型\nRemitChargeCD	String	1．選項(OPT：TA-000023)
+中間行名稱\nCentBankNM	String
+中間行帳號\nCentBankAcct	String
+SWIFT代碼\nSWIFTCode	String
+國際匯款識別代碼\nIntlRemitIDCode	String	1．選項(OPT：TA-000100)
+國際匯款代碼\nIntlRemitCode	String
+備註\nRemark	String
+
+邏輯說明
+資料來源檔案
+取得TA受益人約定付款帳號查詢資料(TASysUtility.GetTABFAgreePayAcct)
+取得系統功能參數查詢資料(SysUtility.GetSystem)
+取得自訂系統參數值(SysUtility.GetSysDefValue)
+資料處理說明
+中心幣別(@CCY)：至【取得系統功能參數查詢資料(SysUtility.GetSystem)】取得「系統代碼」為『000022』的資料
+外幣結算幣別(@MCY)：至【取得自訂系統參數值(SysUtility.GetSysDefValue)】取得「系統代碼」為『000019』的資料
+雜幣否(@IsMCY)：若符合以下任一條件，為『N』，反之為『Y』
+《付款幣別》存在於外幣結算幣別(@MCY)中 或
+《付款幣別》與中心幣別(@CCY)相同
+「中間行清單」：若雜幣否(@IsMCY)為『Y』時，回傳「幣別代碼」為《付款幣別》的資料
+六、UTY2012006：TAGetTxSalesBFNo
+取得受益人戶號或ID查詢資料(Searcher For 交易預設業人員修改作業) Url：{root}/TAapi/Utility/BFInfo/TAGetTxSalesBFNo
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+戶號\nBFNo	Int	O
+身分證字號\nIDNo	String	O
+受益人姓名\nBFNoNM	String	O
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+受益人清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+戶號\nBFNo	Int	1．取得受益人戶號或ID查詢資料.戶號
+身分證字號\nIDNo	String	1．取得受益人戶號或ID查詢資料.身分證字號
+受益人姓名\nBFNoNM	String	1．取得受益人戶號或ID查詢資料.受益人姓名
+銷售機構類別\nAgentType	String	1．選項(OPT：TA-000053)\n2．交易預設業務人員檔(TA_BF_TxSales).銷售機構類別(AgentType)
+銷售機構代碼\nAgentCode	String	1．交易預設業務人員檔(TA_BF_TxSales).銷售機構代碼(AgentCode)
+銷售機構簡稱\nAgentCodeNM	String	1．機構簡稱查詢.機構簡稱(SysUtility.GetOrgVNM.OrgFullCodeNM)
+業務人員\nSalesCode	String	1．交易預設業務人員檔(TA_BF_TxSales).業務人員(SalesCode)
+業務人員姓名\nSalesCodeNM	String	1．員工姓名查詢.員工姓名(SysUtility.GetEmpNM.EmpCodeNM)
+通路類別\nChannelType	String	1．選項(OPT：TA-000053)\n2．交易預設業務人員檔(TA_BF_TxSales).通路類別(ChannelType)
+通路代碼\nChannelCode	String	1．交易預設業務人員檔(TA_BF_TxSales).通路代碼(ChannelCode)
+通路簡稱\nChannelCodeNM	String	1．機構簡稱查詢.機構簡稱(SysUtility.GetOrgVNM.OrgFullCodeNM)
+推薦人代碼\nSponsorCode	String	1．交易預設業務人員檔(TA_BF_TxSales).推薦人代碼(SponsorCode)
+推薦人姓名\nSponsorCodeNM	String	1．推薦人姓名查詢.推薦人姓名(SysUtility.GetSponsorNM.SponsorCodeNM)
+
+邏輯說明
+資料來源檔案
+取得受益人戶號或ID查詢資料(SysUtility.GetBFNo)
+交易預設業務人員檔(TA_BF_TxSales)：取得「交易業務員變更單號」最新的資料
+資料處理說明：此API傳出時，不限制回傳筆數
+七、UTY2012007：TAGetTABFAdjFISAcct
+取得受益人可調升額度的FIS扣款帳號(Searcher For FIS額度調升作業) Url：{root}/TAapi/Utility/BFInfo/TAGetTABFAdjFISAcct
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+戶號\nBFNo	Int	V
+查詢日期\nQueryDate	Datetime	V
+查詢類別\nQueryType	String	O	1．預設為『1.投信扣款』
+銀行代碼\nBankID	String	O
+銀行帳號\nBankAcctNo	String	O
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+約定帳號清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+資料序號\nDataSeq	Int
+銀行代碼\nBankID	String
+銀行簡稱\nBankIDNM	String	1．銀行查詢.銀行簡稱(SysUtility.GetBankV.BankIDNM)
+銀行帳號\nBankAcctNo	String
+財金每日扣款限額類別\nFISDailyLimitType	String	1．選項(OPT：TA-000096)
+
+邏輯說明
+資料來源檔案
+取得TA受益人約定扣款帳號查詢資料(TASysUtility.GetTABFAgreeDebitAcct)
+取得下拉選項查詢資料(SysUtility.GetOption)
+資料處理說明
+最新財金扣款限額類別(@LastFISDailyLimitType)：至【取得下拉選項查詢資料(SysUtility.GetOption)】抓取「選項類別」為『000096』且「自訂用途」為『New』的「選項代碼」
+最新財金每日扣款限額(@LastFISDailyLimit)：至【取得自訂系統參數值(SysUtility.GetSysDefValue)】取得「系統代碼」為『000022』的資料
+至【取得TA受益人約定扣款帳號查詢資料(TASysUtility.GetTABFAgreeDebitAcct)】取得資料
+傳出條件
+「扣款平台類別」＝『FIS』
+「財金每日扣款限額類別」＜＞最新財金每日扣款限額(@LastFISDailyLimit)最新財金扣款限額類別(@LastFISDailyLimitType)
+八、UTY2012008：TAGetTATxRspAcct
+取得TA交易受益人RSP可約定帳號(Searcher For 境內TA交易) Url：{root}/TAapi/Utility/BFInfo/TAGetTATxRspAcct
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+扣款人身分別\nPayerType	String	O	1．選項(OPT：TA-000164)\n2．預設為『0.本人』
+戶號\nBFNo	Int	V
+扣款人統編\nPayerIDNo	String	V
+查詢日期\nQueryDate	Datetime	V
+交易幣別\nTxCry	String	V
+扣款行代碼\nDebitBankID	String	O
+扣款帳號\nDebitAcctNo	String	O
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+帳號清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+銀行代碼\nBankID	String
+銀行簡稱\nBankIDNM	String	1．銀行查詢.銀行總行簡稱(SysUtility.GetBankV.BankHeadIDNM)
+銀行帳號\nBankAcctNo	String
+帳號來源\nAcctSrc	String	1．選項(OPT：TA-900068)
+帳號類別\nAcctType	String	1．選項(OPT：TA-000066)
+帳號幣別\nAcctCry	String
+扣款平台類別\nDebitPlatType	String	1．選項(OPT：TA-000167)
+代理扣款機構\nAgentDebitBank	String
+核印進度\nSealSched	String	1．選項(OPT：TA-000171)
+送核印日期\nSealDate	String
+核印回覆日期\nSealRtnDate	String
+核印失敗原因(公司)\nSealFailedRsnCo	String	1．選項(TCCode：028)
+核印用戶號碼\nSealBFNo	String
+
+邏輯說明
+資料來源檔案
+取得TA受益人RSP可約定帳號查詢資料(TASysUtility.GetTABFCanRspAcct)

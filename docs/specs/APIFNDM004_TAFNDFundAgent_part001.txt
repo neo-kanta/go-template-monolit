@@ -1,0 +1,167 @@
+User Interface Specification
+目錄
+應用程式介面說明 2
+APIFNDM004：TAFNDFundAgent 2
+壹、功能說明 2
+貳、變更說明 2
+叁、傳入傳出參數(Function) 3
+一、傳入參數 3
+二、傳出參數 4
+三、邏輯說明 6
+肆、傳入傳出參數(檢核) 7
+一、KFNDM00401：TACKAgentFund(XX) 7
+二、KFNDM00402：TACKFundAgentEdit 8
+伍、傳入傳出參數(Get) 9
+應用程式介面說明
+APIFNDM004：TAFNDFundAgent
+壹、功能說明
+建立各基金的承銷機構資料。
+Url：{root}/TAapi/BaseFund/TAFNDFundAgent
+貳、變更說明
+[TABLE]
+變更日期	變更人員	變更說明
+2023/07/19	Meg Pan	1．ReBuild
+2024/02/19	Joyce Lin	Modify\n1．配合增加GetAgent Utility調整
+2024/05/06	Meg Pan	Modify\n1．刪除KFNDM00401，移至UTY2010010
+2024/06/20	Dechang Chen	Modify\n1．KFNDM00402：新增規格，由原【KCMMM02301】搬移過來
+2024/07/01	Dechang Chen	Modify，配合多公司別調整\n1．APIFNDM004：新增欄位「公司代碼」\n2．KFNDM00402：新增傳入參數「公司代碼」
+2024/11/05	Joyce Lin	Modify\n1．KFNDM00402：調整URL位置
+2024/11/27	Dechang Chen	Modify\n1．APIFNDM004：傳入參數「公司代碼」調整為必填
+2025/01/09	Meg Pan	Modify\n1．KFNDM00402：傳出參數「檢核時間點」為必填欄位
+2025/02/19	Ann Wu	Modify\n1．調整幣別欄位長度為6\n2．配合前端頁籤呈現增加公司代碼回傳資訊
+2025/03/11	Joyce Lin	Modify\n1．API傳入邏輯移至UI規格書
+2025/07/03	Dechang Chen	Modify\n1．APIFNDM004：配合【取得可被設定承銷基金的銷售機構查詢資料(SysUtility.GetCMMAgent)】異動，改為傳入「銷售機構清單」
+
+叁、傳入傳出參數(Function)
+一、傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+母基金代碼\nPrtFundCode	String	O
+承銷機構明細清單\nFundAgentDtlList	List
+
+承銷機構明細清單FundAgentDtlList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String
+母基金代碼\nPrtFundCode	String
+銷售機構類別\nAgentType	String		1．選項(OPT：TA-000053)
+銷售機構代碼\nAgentCode	String
+銷售作業方式修改否\nIsMAgentOPType	Bool
+銷售作業方式\nAgentOPType	String		1．選項(OPT：TA-000187)
+代銷收單交易別修改否\nIsMRcvTxnType	Bool
+代銷收單交易別\nRcvTxnType	String		1．選項(OPT：TA-000143)
+手續費占比修改否\nIsMSubsFeePct	Bool
+手續費占比-銷售機構\nSubsFeePctAG	Decimal
+手續費占比-投信\nSubsFeePctFH	Decimal
+手續費拆帳基礎修改否\nIsMSubsFeePctType	Bool
+手續費拆帳基礎\nSubsFeePctType	String		1．選項(OPT：TA-000052)
+計價幣別集合修改否\nIsMFundCrySet	Bool
+計價幣別集合\nFundCrySet	String		1．資料用『，』串接
+未銷售的基金級別集合\nNoSaleShareSet	String		1．選項(TCCode：031)\n2．資料用『，』串接
+終止銷售修改否\nIsMEndOfSale	Bool
+終止日期\nTermDate	Datetime
+
+二、傳出參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+基金資訊清單\nResultList \ Master	List	V	V
+承銷機構明細清單\nFundAgentDtlList	List		V
+
+ResultList \ Master
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+公司代碼\nSysCoID	String	V	V
+公司名稱\nSysCoIDNM	String		V	1．公司代碼名稱查詢.公司名稱(SysUtility.GetSysCoNM.SysCoIDNM)
+母基金代碼\nPrtFundCode	String	V	V
+母基金簡稱\nPrtFundCodeNM	String	V	V	1．境內母基金查詢.母基金簡稱(SysUtility.GetDPrtFund.PrtFundCodeNM)
+首次募集日期\nFundIPODate	String		V	1．境內母基金查詢.首次募集日期(SysUtility.GetDPrtFund.FundIPODate)
+
+承銷機構明細清單FundAgentDtlList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+公司代碼\nSysCoID	String		V
+母基金代碼\nPrtFundCode	String		V
+銷售機構類別\nAgentType	String		V	1．選項(OPT：TA-000053)
+銷售機構代碼\nAgentCode	String		V
+銷售機構簡稱\nAgentCodeNM	String		V	1．機構簡稱查詢.機構簡稱(SysUtility.GetOrgVNM.OrgFullCodeNM)
+銷售作業方式修改否\nIsMAgentOPType	Bool		V
+銷售作業方式\nAgentOPType	String		V	1．選項(OPT：TA-000187)
+代銷收單交易別修改否\nIsMRcvTxnType	Bool		V
+代銷收單交易別\nRcvTxnType	String		V	1．選項(OPT：TA-000143)
+手續費占比修改否\nIsMSubsFeePct	Bool		V
+手續費占比-銷售機構\nSubsFeePctAG	Decimal		V
+手續費占比-投信\nSubsFeePctFH	Decimal		V
+手續費拆帳基礎修改否\nIsMSubsFeePctType	Bool		V
+手續費拆帳基礎\nSubsFeePctType	String		V	1．選項(OPT：TA-000052)
+計價幣別集合修改否\nIsMFundCrySet	Bool		V
+計價幣別集合\nFundCrySet	String[]		V
+計價幣別名稱集合\nFundCrySetNM	String[]		V	1．幣別查詢.幣別名稱(SysUtility.GetCry.CryIDNM)
+未銷售的基金級別集合\nNoSaleShareSet	String[]		V	1．代碼選項查詢.代碼說明(SysUtility.GetCode.CodeNM{TCCode：031})
+未銷售的基金級別說明集合\nNoSaleShareSetNM	String[]		V	1．選項(TCCode：031)
+終止銷售修改否\nIsMEndOfSale	Bool		V
+終止日期\nTermDate	Datetime		V
+
+三、邏輯說明
+資料來源檔案
+更新檔案
+基金承銷機構Edit檔(DTA_FND_FundAgent_Edit)
+基金承銷機構Edit明細檔(DTA_FND_FundAgentDtl_Edit)
+主要關連檔案
+取得可被設定承銷基金的銷售機構查詢資料(SysUtility.GetCMMAgent)
+資料處理說明
+銷售機構清單(@AgnetList)：至【基金承銷機構明細檔(DTA_FND_FundAgentDtl)】取得資料
+銷售機構類別(@AgentType)：「銷售機構類別」
+銷售機構代碼(@AgentCode)：「銷售機構代碼」
+以《公司代碼》及銷售機構清單(@AgnetList)至【取得可被設定承銷基金的銷售機構查詢資料(SysUtility.GetCMMAgent)】取得以下欄位
+銷售作業方式(＠CMM_AgentOPType)
+代銷收單交易別(＠CMM_RcvTxnType)
+銷售機構手續費占比(＠CMM_SubsFeePctAG)
+投信手續費占比(＠CMM_SubsFeePctFH)
+手續費拆帳基礎(＠CMM_SubsFeePctType)
+傳出欄位說明
+「銷售作業方式」：若「銷售作業方式修改否」為『False』時，為銷售作業方式(＠CMM_AgentOPType)，反之為原資料
+「代銷收單交易別」：若「代銷收單交易別修改否」為『False』時，為代銷收單交易別(＠CMM_RcvTxnType)，反之為原資料
+「銷售機構手續費占比」：若「手續費修改否」為『False』時，為銷售機構手續費占比(＠CMM_SubsFeePctAG)，反之為原資料
+「投信手續費占比」：若「手續費修改否」為『False』時，為投信手續費占比(＠CMM_SubsFeePctFH)，反之為原資料
+「手續費拆帳基礎」：若「手續費拆帳基礎修改否」為『False』時，為手續費拆帳基礎(＠CMM_SubsFeePctType)，反之為原資料
+肆、傳入傳出參數(檢核)
+一、KFNDM00401：TACKAgentFund(XX)
+檢核銷售機構是否有承銷該基金 Url：{root}/TAapi/BaseFund/TAFNDFundAgent/ChkData/TACKAgentFund
+傳入參數
+[TABLE]
+欄位名稱	資料型態	長度	Method\nQ	欄位說明	備註
+基金代碼\nFundCode	String	10	V
+銷售機構類別\nAgentType	String	6	V	1．選項(OPT：TA-000053)
+銷售機構代碼\nAgentCode	String	20	V
+收件日期\nRcvDate	Datetime		V
+交易類別\nTxType	String	1	V	1．選項\nS：申購、R：買回
+交易幣別\nTxCry	String	3	O	1．「交易類別」為『申購』時，才有傳入值
+公司基金級別\nFHFundShare	String	5	O	1．「交易類別」為『申購』時，才有傳入值
+
+邏輯說明
+資料來源檔案
+取得境內基金基礎類查詢資料(SysUtility.GetDFund)
+取得境內基金承銷機構查詢資料(SysUtility.GetDFundAgent)
+以《基金代碼》至【取得境內基金基礎類查詢資料(SysUtility.GetDFund)】取得「母基金代碼(@PrtFundCode)」、「公司基金級別(@FHFundShare)」
+以3.2所取得的變數及傳入參數至【取得境內基金承銷機構查詢資料(SysUtility.GetDFundAgent)】取得資料，若無資料，則回傳結果代碼{FNDM004002}
+二、KFNDM00402：TACKFundAgentEdit
+檢核基金承銷機構是否仍有未放行的資料 Url：{root}/TAapi/BaseFund/TAFNDFundAgent/ChkData/TACKFundAgentEdit
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+檢核時間點\nCheckTimePoint	String	V	1．選項\n1．S：儲存送核、A：放行
+
+邏輯說明
+資料來源檔案
+基金承銷機構Edit檔(DTA_FND_FundAgent_Edit)
+基金資訊(共用)檔(TA_FND_FundInfo)
+以《公司代碼》至【基金承銷機構Edit檔(DTA_FND_FundAgent_Edit)】、【基金資訊(共用)檔(TA_FND_FundInfo)】取得「基金狀態」為『0.正常』的資料。若有資料，則判斷《檢核時間點》
+為『S.儲存送核』，回傳結果代碼{TA00042}
+為『A.放行』，回傳結果代碼{TA00043}
+伍、傳入傳出參數(Get)
+無。

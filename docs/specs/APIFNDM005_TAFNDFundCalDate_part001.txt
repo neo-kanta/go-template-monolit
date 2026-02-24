@@ -1,0 +1,164 @@
+User Interface Specification
+目錄
+應用程式介面說明 2
+APIFNDM005：TAFNDFundCalDate 2
+壹、功能說明 2
+貳、變更說明 2
+叁、傳入傳出參數(Function) 3
+一、傳入參數 3
+二、傳出參數 4
+參、邏輯說明 6
+肆、傳入傳出參數(檢核) 6
+一、KFNDM00501：TACKFNDCalDate(XX) 6
+二、KFNDM00502：TACKFNDCalEdit 7
+伍、傳入傳出參數(Get) 8
+一、GFNDM00501：TAGetFNDAnnualCalendar(XX) 8
+應用程式介面說明
+APIFNDM005：TAFNDFundCalDate
+壹、功能說明
+建立基金交易時使用的各式行事曆。
+Url：{root}/TAapi/BaseFund/TAFNDFundCalDate
+貳、變更說明
+[TABLE]
+變更日期	變更人員	變更說明
+2023/07/14	Joyce Lin	1．ReBuild
+2024/06/20	Dechang Chen	Modify\n1．KFNDM00502：新增規格，由原【KFNDM00102】搬移過來
+2024/07/01	Dechang Chen	Modify，配合多公司別調整\n1．APIFNDM005：新增欄位「公司代碼」\n2．KFNDM00501：新增傳入參數「公司代碼」\n3．KFNDM00502：新增傳入參數「公司代碼」
+2024/09/09	Joyce Lin	Modify\n1．KFNDM00502：調整API Url
+2024/11/27	Dechang Chen	Modify\n1．APIFNDM005：傳入參數「公司代碼」調整為必填
+2024/12/19	Joyce Lin	Modify\n1．刪除KFNDM00501
+2025/01/09	Meg Pan	Modify\n1．KFNDM00502：傳出參數「檢核時間點」為必填欄位
+2025/02/17	Ann Wu	Modify\n1．APIFNDM005：更正：誤植之(TA_FND_FundCalDate_Edit)為(TA_FND_FundCal_Edit)
+2025/02/19	Ann Wu	Modify\n1．調整幣別欄位長度為6\n2．配合前端頁籤呈現增加公司代碼回傳資訊
+2025/02/25	Ann Wu	Modify\n1．傳出資料顯示規則調整至UI文件說明
+
+叁、傳入傳出參數(Function)
+一、傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+行事曆年度\nCalYear	String	O	1．格式：YYYY
+基金行事曆類別\nFNDCalType	String	O	1．選項(OPT：TA-000044)
+計價幣別\nFundCry	String	O
+行事曆休市說明清單\nFundClosedMemoList	List		1．僅傳入非營業日的資料
+行事曆休市基金清單\nFundClosedDateFundList	List		1．僅傳入非營業日的資料
+
+行事曆休市清單FundClosedDateMemoList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String
+行事曆年度\nCalYear	String		1．格式：YYYY
+基金行事曆類別\nFNDCalType	String		1．選項(OPT：TA-000044)
+計價幣別\nFundCry	String
+營業日期\nCalDate	Datetime
+備註\nRemark	String
+
+行事曆休市基金清單FundClosedDateFundList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String
+行事曆年度\nCalYear	String		1．格式：YYYY
+基金行事曆類別\nFNDCalType	String		1．選項(OPT：TA-000044)
+計價幣別\nFundCry	String
+母基金代碼\nPrtFundCode	String
+營業日期\nCalDate	Datetime
+
+二、傳出參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+基金行事曆清單\nResultList \ Master	List	V	V
+行事曆休市說明清單\nFundClosedMemoList	List		V
+行事曆休市基金清單\nFundClosedDateFundList	List		V
+
+ResultList \ Master
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+公司代碼\nSysCoID	String	V	V
+公司名稱\nSysCoIDNM	String		V	1．公司代碼名稱查詢.公司名稱(SysUtility.GetSysCoNM.SysCoIDNM)
+行事曆年度\nCalYear	String	V	V	1．格式：YYYY
+基金行事曆類別\nFNDCalType	String	V	V
+計價幣別\nFundCry	String	V	V
+計價幣別名稱\nFundCryNM	String	V	V	1．幣別查詢.幣別名稱(SysUtility.GetCry.CryIDNM)
+
+基金行事曆休市說明清單FundClosedDateMemoList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+公司代碼\nSysCoID	String		V
+行事曆年度\nCalYear	String		V	1．格式：YYYY
+基金行事曆類別\nFNDCalType	String		V	1．選項(OPT：TA-000044)
+計價幣別\nFundCry	String		V
+營業日期\nCalDate	Datetime		V
+備註\nRemark	String		V
+
+基金行事曆休市基金清單FundClosedDateFundList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+公司代碼\nSysCoID	String		V
+行事曆年度\nCalYear	String		V	1．格式：YYYY
+基金行事曆類別\nFNDCalType	String		V	1．選項(OPT：TA-000044)
+計價幣別\nFundCry	String		V
+母基金代碼\nPrtFundCode	String		V
+母基金簡稱\nPrtFundCodeNM	String		V	1．境內母基金簡稱查詢.母基金簡稱(SysUtility.GetDPrtFundNM.PrtFundCodeNM)
+營業日期\nCalDate	Datetime		V
+
+參、邏輯說明
+資料來源檔案
+更新檔案
+基金行事曆Edit檔(TA_FND_FundCal_Edit)
+基金行事曆休市說明Edit檔(TA_FND_FundCalMemo_Edit)
+基金行事曆休市Edit明細檔(TA_FND_FundCalDtl_Edit)
+肆、傳入傳出參數(檢核)
+一、KFNDM00501：TACKFNDCalDate(XX)
+檢核母基金的行事曆類別是否已設定過行事曆 Url：{root}/TAapi/BaseFund/TAFNDFundCalDate/ChkData/TACKFNDCalDate
+傳入參數
+[TABLE]
+欄位名稱	資料型態	長度	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	20	V
+行事曆年度\nCalYear	String	4	V	1．格式：YYYY
+基金行事曆類別\nFNDCalType	String	6	V	1．選項(OPT：TA-000044)
+母基金代碼\nPrtFundCode	String	10	V
+計價幣別\nFundCry	String	3	O
+
+邏輯說明
+至【基金行事曆休市明細檔(TA_FND_FundCalDtl)】取得資料。若有資料，則回傳結果代碼{TA00030}
+二、KFNDM00502：TACKFNDCalEdit
+檢核基金淨值行事曆是否有未放行的資料 Url：{root}/TAapi/BaseFund/TAFNDFundCalDate/ChkData/TACKFNDCalEdit
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+檢核時間點\nCheckTimePoint	String	V	1．選項\n1．S：儲存送核、A：放行
+
+邏輯說明
+資料來源檔案
+基金行事曆Edit檔(TA_FND_FundCal_Edit)
+資料處理說明
+至【基金行事曆Edit檔(TA_FND_FundCal_Edit)】取得「行事曆年度」為「系統年度」及「行事曆類別」為『FB.基金淨值行事曆』的資料。若有資料，則判斷《檢核時間點》
+為『S.儲存送核』，回傳結果代碼{FNDM005002}
+為『A.放行』，回傳結果代碼{FNDM005003}
+伍、傳入傳出參數(Get)
+一、GFNDM00501：TAGetFNDAnnualCalendar(XX)
+240326 Pan：FNDM005 更改設計，此支作廢
+取得基金相關行事曆年度資料 Url：{root}/TAapi/BaseFund/TAFNDFundCalDate/GetInfo/TAGetFNDAnnualCalendar
+傳入參數
+[TABLE]
+欄位名稱	資料型態	長度	Method\nQ	欄位說明	備註
+行事曆年度\nCalYear	String	4	V	1．格式：YYYY
+基金行事曆類別\nFNDCalType	String	6	V	1．選項(OPT：TA-000044)
+母基金代碼\nPrtFundCode	String	1000	O	1．資料用『，』串接
+計價幣別\nFundCry	String	3	O	1．《基金行事曆類別》為『SRB.自訂買回行事曆』時，此參數才有作用
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+年度行事曆清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+休市母基金代碼\nPrtFundCode	String
+休市日期\nCalDate	Datetime
+
+邏輯說明
+資料來源檔案
+基金行事曆休市明細檔(TA_FND_FundCalDtl)

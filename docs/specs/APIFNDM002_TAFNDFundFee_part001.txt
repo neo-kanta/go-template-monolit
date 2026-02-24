@@ -1,0 +1,187 @@
+User Interface Specification
+目錄
+應用程式介面說明 2
+APIFNDM002：TAFNDFundFee 2
+壹、功能說明 2
+貳、變更說明 2
+叁、傳入傳出參數(Function) 2
+一、傳入參數 2
+二、傳出參數 7
+三、邏輯說明 11
+肆、傳入傳出參數(檢核) 11
+伍、傳入傳出參數(Get) 12
+應用程式介面說明
+APIFNDM002：TAFNDFundFee
+壹、功能說明
+建立基金牌告手續費率的收取方式及收取標準。
+Url：{root}/TAapi/Fund/TAFNDFundFee
+ModelName：TACMMCtyRequest,Systemweb.ACETA.API.Model.Fund
+貳、變更說明
+[TABLE]
+變更日期	變更人員	變更說明
+2024/03/14	Meg Pan	1．ReBuild
+2024/04/25	Meg Pan	Modify，配合UI調整\n1．移除《轉申購手續費率設定》區塊至FNDM003中\n2．《前收型手續費率明細》取消「定期定額申購手續費率(%)」欄位
+2024/07/01	Dechang Chen	Modify，配合多公司別調整\n1．APIFNDM002：新增欄位「公司代碼」
+2024/11/27	Dechang Chen	Modify\n1．APIFNDM002：傳入參數「公司代碼」調整為必填
+2025/02/20	Ann Wu	Modify\n1．調整幣別欄位長度為6\n2．新增時固定值移至UI 規格書說明\n3．配合前端頁籤呈現增加公司代碼回傳資訊
+2025/06/13	Dechang Chen	Modify\n1．APIFNDM002：配合前端資料格式，調整傳出資料結構\n1.1．【前收型手續費率明細清單】移至【前收型手續費率清單】裡\n1.2．【遞延型手續費率明細清單】移至【遞延型手續費率清單】裡\n1.3．【後收型手續費率明細清單】移至【後收型手續費率清單】裡
+
+叁、傳入傳出參數(Function)
+一、傳入參數
+[TABLE]
+欄位名稱	資料型態	長度	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	20	V
+母基金代碼\nPrtFundCode	String	10	O
+前收型手續費率清單\nFundFeeSubList	List
+前收型手續費率明細清單\nFundFeeSubDtlList	List
+遞延型手續費率清單\nFundFeeCDSCList	List
+遞延型手續費率明細清單\nFundFeeCDSCDtlList	List
+後收型手續費率清單\nFundFeeBackList	List
+後收型手續費率明細清單\nFundFeeBackDtlList	List
+
+前收型手續費率清單FundFeeSubList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String
+母基金代碼\nPrtFundCode	String
+基金代碼\nFundCode	String
+幣別代碼\nCryID	String
+
+前收型手續費率明細清單FundFeeSubDtlList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String
+母基金代碼\nPrtFundCode	String
+基金代碼\nFundCode	String
+幣別代碼\nCryID	String
+級距金額(含)以上\nRangeAmtAbove	Decimal
+申購手續費率(%)\nSubsFeeRate	Decimal
+
+遞延型手續費率清單FundFeeCDSCList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String
+母基金代碼\nPrtFundCode	String
+基金代碼\nFundCode	String
+到期年限\nMatureYear	String		1．選項(OPT：TA-000050)
+手續費計算規則\nSubsCalcID	String		1．選項(OPT：TA-000042)
+
+遞延型手續費率明細清單FundFeeCDSCDtlList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String
+母基金代碼\nPrtFundCode	String
+基金代碼\nFundCode	String
+到期年限\nMatureYear	String		1．選項(OPT：TA-000050)
+起算日/年(含)\nHoldBegDay	Smallint
+遞延手續費率(%)\nCDSCFeeRate	Decimal
+
+後收型手續費率清單FundFeeBackList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String
+母基金代碼\nPrtFundCode	String
+基金代碼\nFundCode	String
+持有年限\nHoldPeriodYear	String		1．選項(OPT：TA-000050)
+手續費計算規則\nSubsCalcID	String		1．選項(OPT：TA-000042)
+
+後收型手續費率明細清單FundFeeBackDtlList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String
+母基金代碼\nPrtFundCode	String
+基金代碼\nFundCode	String
+持有年限\nHoldPeriodYear	String		1．選項(OPT：TA-000050)
+起算日/年(含)\nHoldBegDay	Smallint
+後收手續費率(%)\nBackFeeRate	Decimal
+
+二、傳出參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+母基金手續費率清單\nResultList \ Master	List	V	V
+前收型手續費率清單\nFundFeeSubList	List		V
+遞延型手續費率清單\nFundFeeCDSCList	List		V
+後收型手續費率清單\nFundFeeBackList	List		V
+
+ResultList \ Master
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+公司代碼\nSysCoID	String	V	V
+公司名稱\nSysCoIDNM	String		V	1．公司代碼名稱查詢.公司名稱(SysUtility.GetSysCoNM.SysCoIDNM)
+母基金代碼\nPrtFundCode	String	V	V
+母基金簡稱\nPrtFundCodeNM	String	V	V	1．境內母基金簡稱查詢.母基金簡稱(SysUtility.GetDPrtFundNM.PrtFundCodeNM)
+
+前收型手續費率清單FundFeeSubList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+公司代碼\nSysCoID	String		V
+母基金代碼\nPrtFundCode	String		V
+基金代碼\nFundCode	String		V
+幣別代碼\nCryID	String		V
+幣別名稱\nCryIDNM	String		V	1．幣別查詢.幣別名稱(SysUtility.GetCry.CryIDNM)
+前收型手續費率明細清單\nFundFeeSubDtlList	List		V
+
+前收型手續費率明細清單FundFeeSubDtlList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+公司代碼\nSysCoID	String		V
+母基金代碼\nPrtFundCode	String		V
+基金代碼\nFundCode	String		V
+幣別代碼\nCryID	String		V
+級距金額(含)以上\nRangeAmtAbove	Decimal		V
+申購手續費率(%)\nSubsFeeRate	Decimal		V
+
+遞延型手續費率清單FundFeeCDSCList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+公司代碼\nSysCoID	String		V
+母基金代碼\nPrtFundCode	String		V
+基金代碼\nFundCode	String		V
+到期年限\nMatureYear	String		V	1．選項(OPT：TA-000050)
+手續費計算規則\nSubsCalcID	String		V	1．選項(OPT：TA-000042)
+遞延型手續費率明細清單\nFundFeeCDSCDtlList	List		V
+
+遞延型手續費率明細清單FundFeeCDSCDtlList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+公司代碼\nSysCoID	String		V
+母基金代碼\nPrtFundCode	String		V
+基金代碼\nFundCode	String		V
+到期年限\nMatureYear	String		V	1．選項(OPT：TA-000050)
+起算日/年(含)\nHoldBegDay	Smallint		V
+遞延手續費率(%)\nCDSCFeeRate	Decimal		V
+
+後收型手續費率清單FundFeeBackList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+公司代碼\nSysCoID	String		V
+母基金代碼\nPrtFundCode	String		V
+基金代碼\nFundCode	String		V
+持有年限\nHoldPeriodYear	String		V	1．選項(OPT：TA-000050)
+手續費計算規則\nSubsCalcID	String		V	1．選項(OPT：TA-000042)
+後收型手續費率明細清單\nFundFeeBackDtlList	List		V
+
+後收型手續費率明細清單FundFeeBackDtlList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+公司代碼\nSysCoID	String		V
+母基金代碼\nPrtFundCode	String		V
+基金代碼\nFundCode	String		V
+持有年限\nHoldPeriodYear	String		V	1．選項(OPT：TA-000050)
+起算日/年(含)\nHoldBegDay	Smallint		V
+後收手續費率(%)\nBackFeeRate	Decimal		V
+
+三、邏輯說明
+資料來源檔案
+更新檔案
+基金手續費率設定Edit檔(DTA_FND_FundFee_Edit)
+基金手續費率前收型設定Edit檔(DTA_FND_FundFeeSub_Edit)
+基金手續費率前收型設定Edit明細檔(DTA_FND_FundFeeSubDtl_Edit)
+基金手續費率遞延型設定Edit檔(DTA_FND_FundFeeCDSC_Edit)
+基金手續費率遞延型設定Edit明細檔(DTA_FND_FundFeeCDSCDtl_Edit)
+基金手續費率後收型設定Edit檔(DTA_FND_FundFeeBack_Edit)
+基金手續費率後收型設定Edit明細檔(DTA_FND_FundFeeBackDtl_Edit)
+肆、傳入傳出參數(檢核)
+無。
+伍、傳入傳出參數(Get)
+無。

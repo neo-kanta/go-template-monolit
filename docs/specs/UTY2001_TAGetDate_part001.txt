@@ -1,0 +1,148 @@
+User Interface Specification
+目錄
+應用程式介面說明 2
+壹、功能說明 2
+貳、變更說明 2
+叁、傳入傳出參數(Utility) 3
+一、UTY2001001：TAGetBasicBusinessDate 3
+二、UTY2001002：TAGetFundTxDate 4
+三、UTY2001003：TAGetFundNAVDate 5
+四、UTY2001004：TAGetPHDate 6
+五、UTY2001005：TAGetFundRdmPayDate 7
+應用程式介面說明
+壹、功能說明
+取得系統使用相關日期
+貳、變更說明
+[TABLE]
+變更日期	變更人員	變更說明
+2023/07/26	Joyce Lin	1．ReBuild
+2024/03/26	Meg Pan	Modify\n1．UTY2001004：配合FNDM005 調整，修改邏輯說明
+2024/05/07	Joyce Lin	Modify\n1．UTY2001004：配合年度行事曆日期檔(TA_CTL_AnnualDate) 調整為系統出廠預設提供，調整邏輯說明
+2024/06/06	Meg Pan	Modify\n1．UTY2001005：配合【買回交易維護作業(TXNM031)】調整，Add
+2024/07/03	Dechang Chen	Modify，配合多公司別調整\n1．UTY2001001、UTY2001002、UTY2001003、UTY2001005：新增傳入參數「公司代碼」\n2．UTY2001004：調整取得「中心國別」寫法
+2024/08/07	Joyce Lin	Modify\n1．UTY2001001、UTY2001002：檢核基準日邏輯改為API處理
+2024/08/22	Meg Pan	Modify\n1．UTY2001004：配合【取得系統參數查詢資料(SysUtility.GetSystem)】的調整，修改取得「中心國別」的寫法
+2024/09/09	Joyce Lin	Modify\n1．UTY2001002：配合【最近基金營業日期(BizUtility.GetFundBusinessDate)】位置調整\n2．UTY2001003：增加檢核基準日邏輯處理
+2024/12/10	Dechang Chen	Modify\n1．UTY2001001：配合【取得最近基礎營業日期(BizUtility.GetBasicBusinessDate)】調整\n1.1．修改檢核基準日邏輯說明\n1.2．傳出欄位改為單一日期欄位「最近營業日」\n2．UTY2001002、UTY2001003：配合【最近基金營業日期(BizUtility.GetFundBusinessDate)】調整\n1.1．修改檢核基準日邏輯說明\n1.2．傳出欄位改為單一日期欄位「最近營業日」\n3．UTY2001005：傳出欄位改為單一日期欄位「最近營業日」
+2024/12/24	Meg Pan	Modify\n1．UTY2001004：增加農曆除夕處理說明
+2025/01/23	Joyce Lin	Modify\n1．UTY2001002、UTY2001003：傳入參數「交易類別」選項代碼原「P」調整為「Subs」、原「R」調整為「Rdm」
+2025/08/01	Joyce Lin	Modify\n1．UTY2001004：改為呼叫【取得國家年度放假日期(SysUtility.GetPHDate)】
+2025/12/23	Joyce Lin	Modify\n1．UTY2001001、UTY2001002、UTY2001003：調整「檢核基準日」檢核規則
+
+叁、傳入傳出參數(Utility)
+一、UTY2001001：TAGetBasicBusinessDate
+取得公司、股市、銀行等基礎營業日期 Url：{root}/TAapi/BaseUtility/BizDate/TAGetBasicBusinessDate
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+基礎行事曆類別\nCalType	Stinrg	V	1．選項(OPT：TA-000043)
+基準日\nBasicDate	Datetime	V
+推算天數\nCalDays	Int	O	1．預設為0
+檢核基準日\nIsThatDay	Bool	O	1．《推算天數》為『0』時，此參數才有作用\n2．此參數若為『True』，表示檢查《基準日》是否為營業日\n3．預設為False
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+最近營業日\nCalDate	Datetime
+
+邏輯說明
+資料來源檔案
+取得最近基礎營業日期(BizUtility.GetBasicBusinessDate)
+資料處理說明
+若「最近營業日」為空值時，進行以下判斷
+若《檢核基準日》為『True』且《推算天數》＝0，則回傳訊息{TA00012}
+若《檢核基準日》為『False』時，則回傳訊息{TA00016}
+若「最近營業日」非空值且《檢核基準日》為『True』且《推算天數》＝0時，若《基準日》＜＞「最近營業日」，則回傳訊息{TA00012}
+二、UTY2001002：TAGetFundTxDate
+取得基金交易日期 Url：{root}/TAapi/BaseUtility/BizDate/TAGetFundTxDate
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+基金代碼\nFundCode	String	V
+交易類別\nTxType	Stinrg	V	1．選項\nSubs：申購、Rdm：買回
+基準日\nBasicDate	Datetime	V
+推算天數\nCalDays	Int	O	1．預設為0
+檢核基準日\nIsThatDay	Bool	O	1．《推算天數》為『0』時，此參數才有作用\n2．此參數若為『True』，表示檢查《基準日》是否為營業日\n3．預設為False
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+最近營業日\nCalDate	Datetime
+
+邏輯說明
+資料來源檔案
+取得最近基金營業日期(BizUtility.GetFundBusinessDate)：取得「日期類別」為『T.交易日』的資料
+資料處理說明
+若「最近營業日」為空值時，進行以下判斷
+若《檢核基準日》為『True』且《推算天數》＝0，則回傳訊息{TA00031}
+若《檢核基準日》為『False』時，則回傳訊息{TA00016}
+若「最近營業日」非空值且《檢核基準日》為『True』且《推算天數》＝0時，若《基準日》＜＞「最近營業日」，則回傳訊息{TA00031}
+三、UTY2001003：TAGetFundNAVDate
+取得基金淨值日期 Url：{root}/TAapi/BaseUtility/BizDate/TAGetFundNAVDate
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+基金代碼\nFundCode	String	V
+交易類別\nTxType	Stinrg	V	1．選項\nSubs：申購、Rdm：買回
+基準日\nBasicDate	Datetime	V
+推算天數\nCalDays	Int	O	1．預設為0
+檢核基準日\nIsThatDay	Bool	O	1．《推算天數》為『0』時，此參數才有作用\n2．此參數若為『True』，表示檢查《基準日》是否為營業日\n3．預設為False
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+最近營業日\nCalDate	Datetime
+
+邏輯說明
+資料來源檔案
+取得最近基金營業日期(BizUtility.GetFundBusinessDate)：取得「日期類別」為『N.淨值日』的資料
+資料處理說明
+若「最近營業日」為空值時，進行以下判斷
+若《檢核基準日》為『True』且《推算天數》＝0，則回傳訊息{TA00031}
+若《檢核基準日》為『False』時，則回傳訊息{TA00016}
+若「最近營業日」非空值且《檢核基準日》為『True』且《推算天數》＝0時，若《基準日》＜＞「最近營業日」，則回傳訊息{TA00031}
+四、UTY2001004：TAGetPHDate
+取得國家該年度放假日期 Url：{root}/TAapi/BaseUtility/BizDate/TAGetPHDate
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+國別代碼\nCtyID	Stinrg	O
+行事曆年度\nCalYear	Stinrg	V	1．格式：YYYY
+基礎行事曆類別\nBasicCalType	String	V	1．選項(OPT：TA-000043)\n2．資料用『，』串接
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+休假日清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+國別代碼\nCtyID	Stinrg
+行事曆類別\nCalType	String	1．選項(OPT：TA-000043)
+休假日期\nPHDate	Datetime
+備註\nRemark	String
+
+邏輯說明
+資料來源檔案
+取得國家年度放假日期(SysUtility.GetPHDate)
+五、UTY2001005：TAGetFundRdmPayDate
+取得基金買回付款日期 Url：{root}/TAapi/BaseUtility/BizDate/TAGetFundRdmPayDate
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+基金代碼\nFundCode	String	V
+基準日\nBasicDate	Datetime	V
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+最近營業日\nCalDate	Datetime
+
+邏輯說明
+資料來源檔案
+取得基金買回付款日期(TABizUtility.GetFundRdmPayDate)

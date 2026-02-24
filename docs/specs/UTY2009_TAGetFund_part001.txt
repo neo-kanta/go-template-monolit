@@ -1,0 +1,281 @@
+User Interface Specification
+目錄
+應用程式介面說明 2
+壹、功能說明 2
+貳、變更說明 2
+叁、傳入傳出參數(Utility) 5
+一、UTY2009001：TAGetDPrtFund 5
+二、UTY2009002：TAGetDFund 7
+三、UTY2009003：TAGetDSwFund 10
+四、UTY2009004：TAGetDPrtFundInfo 16
+五、UTY2009005：TAGetTxDFundSubs 18
+六、UTY2009006：TAGetTxDFundRdm 20
+七、UTY2009007：TAGetOperatingFund 22
+八、UTY2009008：TAGetPrtFundForCust 23
+九、UTY2009009：TAGetSelectionDFund 24
+十、UTY2009010：TAGetBFRDFund 26
+十一、UTY2009011：TAGetTxDFundRsp 27
+四十一、UTY2009301：TAGetFundHouse 28
+四十二、UTY2009302：TAGetOFund 29
+應用程式介面說明
+壹、功能說明
+取得境內基金相關API
+文中所稱“前收類基金”：包含「前收」及「不收」二種類型的基金
+叁、傳入傳出參數(Utility)
+貳、變更說明
+[TABLE]
+變更日期	變更人員	變更說明
+2022/03/18	Joyce Lin	1．Build
+2024/03/08	Joyce Lin	Modify\n1．配合FundHouse、OFDFundCode，新增 UTY2009301、UTY2009302
+2024/03/13	Meg Pan	Modify\n1．配合多國語系 Searcher、Option 呈現方式調整
+2024/03/18	Meg Pan	Modify，UTY2009001：配合FNDM012、FNDM013\n1．增加傳入參數「只含保本型基金」、「只含到期型基金」\n2．增加傳出參數「到期型到期日期」
+2024/03/19	Meg Pan	Modify\n1．UTY2009003：因遞延型基金到期後的庫存，可轉入前收型基金，重新調整邏輯說明及增加傳入參數
+2024/03/26	Meg Pan	Modify\n1．「基金營業日定義」由UTY2009001移至UTY2009004\n2．UTY2009004：新增傳出參數「募集型態」
+2024/05/03	Meg Pan	Modify\n1．UTY2009005：Add\n2．UTY2009003：配合境內基金檢視檔(DFundV)調整
+2024/06/06	Meg Pan	Modify\n1．UTY2009006：配合TXNM031調整，Add
+2024/06/24	Joyce Lin	Modify\n1．UTY2009002、UTY2009005、UTY2009006、UTY2009302：傳出欄位「計價幣別(FundCryNM)」調整「計價幣別名稱(FundCryNM)」\n2．UTY2009003：新增開發人員說明
+2024/07/03	Dechang Chen	Modify，配合多公司別調整\n1．UTY2009001、UTY2009002、UTY2009003、UTY2009005、UTY2009006、UTY2009301、UTY2009302：新增傳入參數「公司代碼」\n2．UTY2009004：新增傳入/出參數「公司代碼」
+2024/07/11	Meg Pan	Modify\n1．UTY2009003：配合TXNM031調整，新增傳出參數「轉申購日期計算基準日」
+2024/08/22	Meg Pan	Modify\n1．UTY2009302：原「境外基金代碼(OFDFundCode)」變更為「基金代碼(FundCode)」、「境外基金簡稱(OFDFundCodeNM)」變更為「基金簡稱(FundCodeNM)」\n2．UTY2009007：配合TXNM101，Add
+2024/08/23	Meg Pan	Modify\n1．UTY2009004：刪除傳出參數「公司代碼」
+2024/08/30	Joyce Lin	Modify\n1．UTY2009002：新增傳出參數「單位數小數」、「淨值小數」、「小額小數」、傳入參數「查詢類別」新增『NAV.淨值類別』\n2．刪除UTY2009007
+2024/09/02	Meg Pan	Modify\n1．UTY2009002：新增傳出參數「成立日期」
+2024/09/25	Joyce Lin	Modify\n1．UTY2009003：調整遞延型基金取得可轉入基金清單判斷\n2．UTY2009006：新增傳出參數「保本型基金否」、「到期型基金否」
+2024/11/01	Joyce Lin	Modify\n1．UTY2009005：新增傳出參數「國內貨幣基金」
+2024/11/13	Joyce Lin	Modify\n1．UTY2009007：新增API
+2024/12/02	Dechang Chen	Modify\n1．UTY200903：調整「前收類基金」可轉入基金的判斷條件
+2024/12/19	Meg Pan	Modify\n1．UTY2009001、UTY200902、UTY200904：傳出參數「基金種類」增加『DIM.全委基金』選項
+2025/01/08	Meg Pan	Modify\n1．UTY2009002：傳出參數「基金種類」增加《查詢類型》為『NAV.淨值資料』時，也要傳出
+2025/01/20	Jake Cheng	Modify\n1．UTY2009003：命名修正\n2．UTY2009004：命名修正
+2025/01/23	Joyce Lin	Modify\n1．UTY2009007：傳入參數「交易別」調整為『交易類別』，傳入長度調整為4
+2025/02/13	Dechang Chen	Modify\n1．UTY2009005：調整傳出參數「最低申購金額」命名
+2025/02/18	Dechang Chen	Modify\n1．UTY2009003：傳入參數「轉出基金代碼」調整為『買回基金代碼』，新增傳入參數「基金代碼」及相關寫法
+2025/03/28	Dechang Chen	Modify\n1．UTY2009002：調整傳入參數「收取手續費類型」命名，原「FeeChargType」改為「FeeChargeType」
+2025/05/13	Joyce Lin	Modify\n1．UTY2009004：增加傳入參數「排除不收型基金」及相關邏輯處理
+2025/05/26	Joyce Lin	Modify\n1．UTY2009003：增加傳出參數「母基金代碼」
+2025/06/05	Dechang Chen	Modify\n1．UTY2009301：調整資料來源為【取得境外基金公司查詢資料(SysUtility.GetFundHouse)】
+2025/06/17	Dechang Chen	Modify，配合【申購交易單維護作業(TXNM021】異動\n1．UTY2009005：新增傳出參數「限制專業投資人交易」
+2025/06/09	Ann Wu	Modify\n1．UTY2009008：新增API
+2025/06/23	Joyce Lin	Modify\n1．UTY2009008：Review調整名稱、Url、邏輯說明
+2025/06/24	Joyce Lin	Modify\n1．UTY2009005：新增傳出參數「級別首次銷售日期」
+2025/08/15	Joyce Lin	Modify\n1．UTY2009002：新增傳入參數「指定貨幣型基金」相關判斷
+2025/10/13	Joyce Lin	Modify\n1．UTY2009009：配合TXNR101調整，Add
+2025/11/09	Meg Pan	Modify\n1．UTY2009010：配合受益權類交易程式，Add
+2025/11/10	Joyce Lin	Modify\n1．UTY2009002：配合【扣款機構媒體檔案參數設定作業(DEBM003)】，新增傳入參數「幣別代碼集合」
+2025/11/17~2025/11/20	Joyce Lin	Modify\n1．UTY2009011：配合定額調整，Add
+2025/12/11~2005/12/23	Meg Pan	Modify，配合【定額契約作業(RSPM001)】\n1．UTY2009005：刪除傳入參數「可做RSP扣款基金」\n2．UTY2009011：新增傳出參數「基金狀態」、「基金風險屬性」、「非投資等級基金否」、「計息種類」
+2025/12/26	Meg Pan	Modify，配合前端組件，選項String『Y、N』變更為Bool『True、False』\n1．UTY2009002：「可做RSP扣款基金」、「可做收益分配基金」、「指定貨幣型基金」；相關欄位判斷規則\n2．UTY2009003：「開放轉入否」相關欄位判斷規則\n3．UTY2009004：「手續費前收否」、「手續費遞延否」、「手續費後收否」；相關欄位判斷規則\n4．UTY2009005：、「國內貨幣基金」、「非投資等級基金否」、「保本型基金否」、「到期型基金否」、「法人級別否」、「限制專業投資人交易否」\n5．UTY2009011：「成立基金」、「非投資等級基金否」、「可做RSP扣款基金」；相關欄位判斷規則
+2026/02/09	Joyce Lin	Modify\n1．UTY2009010\n1.1傳入參數「基金代碼」改為非必填\n1.2配合憑證換發、掛失增加傳入參數「判斷庫存種類」
+
+一、UTY2009001：TAGetDPrtFund
+取得境內母基金代碼(For Searcher) Url：{root}/TAapi/BaseUtility/TAFund/TAGetDPrtFund
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+含全部基金選項\nIsALL	Bool	O	1．預設為False
+含ETF基金\nIsInclETF	Bool	O	1．預設為False
+母基金代碼\nPrtFundCode	String	O
+基金狀態\nFundStatus	String	O	1．選項\n0：有效基金；1：無效基金；8：清算準備中基金；9：合併準備中基金
+只含保本型基金\nIsInclPGF	Bool	O	1．預設為False
+只含到期型基金\nIsInclTMF	Bool	O	1．預設為False
+查詢類型\nQueryType	String	O	1．選項\nSMP：簡易資料、ALL：詳細資料\n2．預設為SMP
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+母基金清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+母基金代碼\nPrtFundCode	String
+母基金簡稱\nPrtFundCodeNM	String
+首次募集日期\nFundIPODate	Datetime	1．《查詢類型》為『ALL.詳細資料』時，才有傳出值
+募集型態\nOfferType	String	1．選項(OPT：TA-000006)\n2．《查詢類型》為『ALL.詳細資料』時，才有傳出值
+到期型到期日期\nTMFExpiryDate	Datetime	1．《查詢類型》為『ALL.詳細資料』時，才有傳出值
+基金種類\nFundKind	String	1．選項\nTA：TA基金；ETF：ETF基金；DIM：全委基金\n2．《查詢類型》為『ALL.詳細資料』時，才有傳出值
+
+邏輯說明
+資料來源檔案
+取得境內母基金查詢資料(SysUtility.GetDPrtFund)
+取得All選項查詢資料(SysUtility.GetSysAll)
+資料處理說明
+全部基金(@AllList)：若《含全部基金選項》為『True』時，至【取得All選項查詢資料(SysUtility.GetSysAll)】取得「All選項Key」為『Fund』的資料
+母基金清單(@PrtFundList)：依下述處理後再回傳結果
+若《含全部基金選項》為『True』時，依據全部基金(@AllList)內容新增一筆資料，資料內容如下
+「母基金代碼」：為全部基金(@AllList)的『All選項代碼(AllValue)』
+「母基金簡稱」：為全部基金(@AllList)的『All選項名稱(AllName) 』
+其餘欄位為空值
+資料排序說明
+母基金清單(@PrtFundList)依下列順序排序
+先依「基金狀態」的『0.正常』、『9.合併準備中』、『8.清算準備中』、『3.合併』、『2.清算』排序
+再依母基金代碼排序
+若《含全部基金選項》為『True』時，全部基金(@AllList)固定為第一筆
+二、UTY2009002：TAGetDFund
+取得境內基金代碼(Searcher For 一般作業、查詢/報表條件) Url：{root}/TAapi/BaseUtility/TAFund/TAGetDFund
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+含全部基金選項\nIsALL	Bool	O	1．預設為False
+含ETF基金\nIsInclETF	Bool	O	1．預設為False
+母基金代碼\nPrtFundCode	String	O
+基金代碼\nFundCode	String	O
+基金狀態\nFundStatus	String	O	1．選項\n0：有效基金；1：無效基金；8：清算準備中基金；9：合併準備中基金
+收取手續費類型\nFeeChargeType	String	O	1．選項\nB：前收；P：後收；C：遞延；N：不收；BN：前收型(B+N)；PC：後收型(P+C)
+可做RSP扣款基金\nIsRSP	Bool
+可做收益分配基金\nIsDividend	Bool	O
+只含法人級別\nIsInclIShare	Bool	O	1．預設為False
+指定貨幣型基金\nIsSpecMMF	Bool	O
+幣別代碼集合\nFundCrySet	String	O	1．資料用『，』串接
+查詢類型\nQueryType	String	O	1．選項\nSMP：簡易資料；NAV：淨值資料；ALL：詳細資料\n2．預設為SMP
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+子基金清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+基金代碼\nFundCode	String
+基金簡稱\nFundCodeNM	String
+計價幣別\nFundCry	String
+計價幣別名稱\nFundCryNM	String	1．幣別查詢.幣別名稱(SysUtility.GetCry.CryIDNM)
+母基金代碼\nPrtFundCode	String	1．《查詢類型》為『ALL.詳細資料』時，才有傳出值
+基金種類\nFundKind	String	1．選項\nTA：TA基金；ETF：ETF基金；DIM：全委基金\n2．《查詢類型》為『ALL.詳細資料』或『NAV.淨值資料』時，才有傳出值
+成立日期\nFundSetupDate	Datetime	1．《查詢類型》為『NAV.淨值資料』時，才有傳出值
+單位數小數\nUnitLen	Int	1．《查詢類型》為『NAV.淨值資料』時，才有傳出值
+淨值小數\nNavLen	Int	1．《查詢類型》為『NAV.淨值資料』時，才有傳出值
+金額小數\nDecLen	Int	1．《查詢類型》為『NAV.淨值資料』時，才有傳出值
+
+邏輯說明
+資料來源檔案
+取得境內基金基礎類查詢資料(SysUtility.GetDFund)
+取得All選項查詢資料(SysUtility.GetSysAll)
+資料處理說明
+全部基金(@AllList)：若《含全部基金選項》為『True』時，至【取得All選項查詢資料(SysUtility.GetSysAll)】取得「All選項Key」為『Fund』的資料
+子基金清單(@FundList)：依下述處理後再回傳結果
+若《含全部基金選項》為『True』時，依據全部基金(@AllList)內容新增一筆資料後再回傳，資料內容如下
+「基金代碼」：為全部基金(@AllList)的『All選項代碼(AllValue)』
+「基金簡稱」：為全部基金(@AllList)的『All選項名稱(AllName)』
+其餘欄位為空值
+若《指定貨幣型基金》有傳入時，判斷「國內貨幣基金」為《指定貨幣型基金》
+為『Y.貨幣型基金』時，僅取得「國內貨幣基金」為『Y』的資料
+為『N.非貨幣型基金』時，僅取得「國內貨幣基金」為『N』的資料
+資料排序說明
+子基金清單(@FundList)依下列順序排序
+先依「基金狀態」的『0.正常』、『9.合併準備中』、『8.清算準備中』、『3.合併』、『2.清算』排序
+再依基金代碼排序
+若《含全部基金選項》為『True』時，全部基金(@AllList)固定為第一筆
+三、UTY2009003：TAGetDSwFund
+取得境內可轉入基金代碼(Searcher For 交易) Url：{root}/TAapi/Utility/TAFund/TAGetDSwFund
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+買回基金代碼\nRdmFundCode	String	V
+基金代碼\nFundCode	String	O
+基金狀態\nFundStatus	String	O	1．選項\n0：有效基金；1：無效基金；8：清算準備中基金；9：合併準備中基金
+遞延型基金有已到期庫存\nIsInclFrontEndFund	Bool	O	1．預設False
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+轉入基金清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+母基金代碼\nPrtFundCode	String
+基金代碼\nFundCode	String
+基金簡稱\nFundCodeNM	String	1．境內基金簡稱查詢.基金簡稱(SysUtility.GetDFundNM.FundCodeNM)
+轉申購日期計算基準日\nSwDateType	String	1．選項(OPT：TA-000049)
+
+邏輯說明
+資料來源檔案
+取得系統功能參數查詢資料(SysUtility.GetSystem)
+基金轉申購檔(DTA_FND_Switch)
+基金轉申購轉出基金檔(DTA_FND_SwitchFund)
+基金轉申購幣別檔(DTA_FND_SwitchCry)
+境內基金檢視檔(DFundV)
+基金手續費率遞延型設定檔(DTA_FND_FundFeeCDSC)
+基金手續費率遞延型設定明細檔(DTA_FND_FundFeeCDSCDtl)
+基金手續費率後收型設定檔(DTA_FND_FundFeeBack)
+基金手續費率後收型設定明細檔(DTA_FND_FundFeeBackDtl)
+基金相互轉申購的規則說明
+在不開放不同幣別互轉時，子基金互轉時計價幣別須相同。
+買回基金為「前收類基金」時，可轉申購至任何類型的基金。若轉入非「前收類基金」時，持有開始日期以轉入日期重新計算。
+買回基金為「遞延型基金」
+到期前：只可轉入「相同年限」、「相同費率」的遞延型基金，持有開始日期不變。
+到期後：可轉申購至任何類型的基金。若轉入非「前收類基金」時，持有開始日期以轉入日期重新計算。
+買回基金為「後收型基金」，只可轉入後收型基金且持有年限、手續費率需相同，持有開始日期不變。
+資料處理說明
+開放不同幣別互轉否(@IsSwDiffCry)：以《公司代碼》至【取得系統功能參數查詢資料(SysUtility.GetSystem)】取得「系統代碼」為『000012』的資料
+依《公司代碼》及《買回基金代碼》至【境內基金檢視檔(DFundV)】取得以下欄位
+轉出母基金代碼(@SwOPrtFund)：為「母基金代碼」
+轉出計價幣別(@SwOCry)：為「計價幣別」
+轉出基金手續費收取方式(@SwOFeeType)：為「手續費收取方式」
+轉出基金到期年限(@SwOHoldYear)：為「到期年限」
+轉出基金遞延設定清單(@SwOCDSCList)：若轉出基金手續費收取方式(@SwOFeeType)為『C.遞延』時，以《公司代碼》、轉出母基金代碼(@SwOPrtFund)及轉出基金到期年限(@SwOHoldYear)至【基金手續費率遞延型設定檔(DTA_FND_FundFeeCDSC)、基金手續費率遞延型設定明細檔(DTA_FND_FundFeeCDSCDtl)】取得以下欄位
+轉出基金到期年限A(@SwOHoldYearA)：為「基金手續費率遞延型設定檔.到期年限」
+轉出基金計算規則A(@SwOSubsCalcIDA)：為「基金手續費率遞延型設定檔.手續費計算規則」
+轉出基金起算日A(@SwOHoldBegDayA)：為「基金手續費率遞延型設定明細檔.起算日/年(含)」
+轉出基金遞延手續費率A(@SwOCDSCFeeRateA)：為「基金手續費率遞延型設定明細檔.遞延手續費率(%)」
+轉出基金後收設定清單(@SwOBackList)：若轉出基金手續費收取方式(@SwOFeeType)為『P.後收』時，以《公司代碼》及轉出母基金代碼(@SwOPrtFund)至【基金手續費率後收型設定檔(DTA_FND_FundFeeBack)、基金手續費率後收型設定明細檔(DTA_FND_FundFeeBackDtl)】取得以下欄位
+轉出基金持有年限B(@SwOHoldPeriodYearB)：為「基金手續費率後收型設定檔.持有年限」
+轉出基金計算規則B(@SwOSubsCalcIDB)：為「基金手續費率後收型設定檔.手續費計算規則」
+轉出基金起算日B@SwOHoldBegDayB)：為「基金手續費率後收型設定明細檔.起算日/年(含)」
+轉出基金後收手續費率B(@SwOBackFeeRateB)：為「基金手續費率後收型設定明細檔.後收手續費率(%)」
+可轉入母基金清單(@SwInPrtFundList)：至【基金轉申購轉出基金檔(DTA_FND_SwitchFund)】抓取「轉出母基金」為{轉出母基金代碼(@SwOPrtFund)或為『ALL FUNDS』}且該筆資料於【基金轉申購檔(DTA_FND_Switch)】的「開放轉入否」為『True』的資料，取得以下欄位
+轉入母基金代碼A(@SwInPrtFundA)：為「基金轉申購轉出基金檔.母基金代碼」
+轉申購日期計算基準日A(@SwDateTypeA)：為「基金轉申購轉出基金檔.轉申購日期計算基準日」
+可轉入幣別清單(@SwInCryList)：依可轉入母基金清單(@SwInPrtFundList)逐筆，依下述規則產生資料
+寫入一筆轉出基金計價幣別的資料
+轉入母基金代碼B(@SwInPrtFundB)：為轉入母基金代碼A(@SwInPrtFundA)
+轉入計價幣別(@SwIFundCry)：為轉出計價幣別(@SwOCry)
+轉申購日期計算基準日B(@SwDateTypeB)：為轉申購日期計算基準日A(@SwDateTypeA)
+若開放不同幣別互轉否(@IsSwDiffCry)為『Y.開放』時，依《公司代碼》及轉入母基金代碼A(@SwInPrtFundA)至【基金轉申購幣別檔(DTA_FND_SwitchCry)】取得{轉出計價幣別(@SwOCry)存在於「轉出計價幣別集合」或「轉出計價幣別集合」為『ALL』}的資料。若有取得資料時，依下述規則產生資料
+轉入母基金代碼B(@SwInPrtFundB)：為「母基金代碼」
+轉入計價幣別(@SwIFundCry)：為「轉入計價幣別」
+可轉入基金清單(@SwInFundList)：依《基金代碼》、《基金狀態》及可轉入幣別清單(@SwInCryList)至【境內基金檢視檔(DFundV)】抓取「母基金代碼」為轉入母基金代碼B(@SwInPrtFundB)且「計價幣別」為轉入計價幣別(@SwIFundCry)的資料，取得以下欄位
+轉入基金代碼(@SwInFundCode)：為「基金代碼」
+轉入基金手續費收取方式(@SwInFeeType)：為「手續費收取方式」
+轉入基金到期年限(@SwInHoldYear)：為「到期年限」
+基金狀態(@SwInFundStatus)：為「基金狀態」
+轉申購日期計算基準日(@SwDateType)：為轉申購日期計算基準日A(@SwDateTypeB)
+轉入基金遞延設定清單(@SwInCDSCList)：若轉入基金手續費收取方式(@SwInFeeType)為『C.遞延』時，以《公司代碼》、轉入母基金代碼(@SwInPrtFund)及轉入基金到期年限(@SwInHoldYear)至【基金手續費率遞延型設定檔(DTA_FND_FundFeeCDSC)、基金手續費率遞延型設定明細檔(DTA_FND_FundFeeCDSCDtl)】取得以下欄位
+轉入基金到期年限A(@SwInHoldYearA)：為「基金手續費率遞延型設定檔.到期年限」
+轉入基金計算規則A(@SwInSubsCalcIDA)：為「基金手續費率遞延型設定檔.手續費計算規則」
+轉入基金起算日A(@SwInHoldBegDayA)：為「基金手續費率遞延型設定明細檔.起算日/年(含)」
+轉入基金遞延手續費率A(@SwInCDSCFeeRateA)：為「基金手續費率遞延型設定明細檔.遞延手續費率(%)」
+轉入基金後收設定清單(@SwInBackList)：若轉入基金手續費收取方式(@SwInFeeType)為『P.後收』時，以《公司代碼》及轉入母基金代碼(@SwInPrtFund)至【基金手續費率後收型設定檔(DTA_FND_FundFeeBack)、基金手續費率後收型設定明細檔(DTA_FND_FundFeeBackDtl)】取得以下欄位
+轉入基金持有年限B(@SwInHoldPeriodYearB)：為「基金手續費率後收型設定檔.持有年限」
+轉入基金計算規則B(@SwInSubsCalcIDB)：為「基金手續費率後收型設定檔.手續費計算規則」
+轉入基金起算日B@SwInHoldBegDayB)：為「基金手續費率後收型設定明細檔.起算日/年(含)」
+轉入基金後收手續費率B(@SwInBackFeeRateB)：為「基金手續費率後收型設定明細檔.後收手續費率(%)」
+可轉入基金清單(@SwInFundList)，再判斷轉出基金手續費收取方式(@SwOFeeType)依下述規則篩選符合條件的資料
+若為『B.前收』或『N.不收』時，取得可轉入基金清單(@SwInFundList)的資料
+若為『P.後收』取得轉出基金後收設定清單(@SwOBackList)及轉入基金後收設定清單(@SwInBackList)的「持有年限」、「計算規則」、「起算日」及「後收手續費率」皆相同的資料
+若為『C.遞延』時，依《遞延型基金有已到期庫存》情境判斷
+為『False』時，取得轉出基金遞延設定清單(@SwOCDSCList)及轉入基金遞延設定清單(@SwInCDSCList)的「到期年限」、「計算規則」、「起算日」及「遞延手續費率」皆相同的資料
+為『True』時，取得可轉入基金清單(@SwInFundList)的資料
+資料排序說明
+可轉入基金清單(@SwInFundList)依下列順序排序
+先依「基金狀態」的『0.正常』、『9.合併準備中』、『8.清算準備中』、『3.合併』、『2.清算』排序
+再依基金代碼排序
+For 開發人員，以下範例皆不開放基金不同幣別互轉
+基礎相關資料設定如下
+轉申購基金相關設定
+[TABLE]
+轉入基金	開放轉入	轉入基金手續費類型	轉出基金
+N01基金	不開放	前收	ALL FUNDS
+N02基金	不開放	不收	ALL FUNDS
+A01基金	開放	前收	ALL FUNDS
+A02基金	開放	不收	A02基金、A03基金
+A03基金	開放	不收	ALL FUNDS
+C01基金	開放	遞延型	ALL FUNDS
+C02基金	開放	遞延型	C02基金、C88基金
+C03基金	開放	遞延型	ALL FUNDS
+C04基金	開放	遞延型	ALL FUNDS

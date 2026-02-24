@@ -1,0 +1,148 @@
+User Interface Specification
+目錄
+應用程式介面說明 2
+APIFNDM009：TAFNDFavDisc 2
+壹、功能說明 2
+貳、變更說明 2
+叁、傳入傳出參數(Function) 2
+一、傳入參數 3
+二、傳出參數 4
+三、邏輯說明 8
+肆、傳入傳出參數(檢核) 8
+伍、傳入傳出參數(Get) 9
+應用程式介面說明
+APIFNDM009：TAFNDFavDisc
+壹、功能說明
+依各別的優惠身分別建立申購手續費率的優惠方式。
+Url：{root}/TAapi/Fund/TAFNDFavDisc
+貳、變更說明
+[TABLE]
+變更日期	變更人員	變更說明
+2023/06/28	Meg Pan	1．ReBuild
+2024/02/21	Meg Pan	Modify\n1．配合UI改以母基金設定
+2024/07/01	Dechang Chen	Modify，配合多公司別調整\n1．APIFNDM009：新增欄位「公司代碼」
+2024/11/22	Dechang Chen	Modify，配合UI程式撰寫邏輯調整\n1．傳出參數新增「單筆申購優惠方式」、「定期定額優惠方式」、「轉申購優惠方式」、〔單筆申購優惠清單〕、〔定期定額優惠清單〕、〔轉申購優惠清單〕\n2．傳出參數刪除、〔優惠方式清單〕、〔優惠方式明細清單〕
+2024/11/27	Dechang Chen	Modify\n1．APIFNDM009：傳入參數「公司代碼」調整為必填
+2025/02/13	Dechang Chen	Modify\n1．APIFNDM009：調整傳出參數〔轉申購優惠清單〕、「轉申購優惠方式」命名
+2025/02/19	Ann Wu	Modify\n1．調整幣別欄位長度為6\n2．新增時固定值移至UI 規格書說明\n3．配合前端頁籤呈現增加公司代碼回傳資訊
+2025/02/25	Ann Wu	Modify\n1．傳出資料顯示規則調整至UI文件說明
+
+叁、傳入傳出參數(Function)
+一、傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+身分代碼\nCusIDCode	String	O
+優惠項目集合\nDiscItemSet	String		1．選項(OPT：TA-000110)\n2．資料用『，』串接
+優惠基金方式\nDiscFundType	String		1．選項(OPT：TA-000027)
+優惠基金清單\nPrtFundList	List
+優惠方式清單\nDiscTypeList	List
+優惠方式明細清單\nDiscTypeDtlList	List
+
+優惠基金清單PrtFundList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String
+身分代碼\nCusIDCode	String
+母基金代碼\nPrtFundCode	String
+
+優惠方式清單DiscTypeList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String
+身分代碼\nCusIDCode	String
+優惠項目\nDiscItem	String		1．選項(OPT：TA-000110)
+優惠方式\nDiscType	String		1．選項(OPT：TA-000047)
+
+優惠方式明細清單DiscTypeDtlList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String
+身分代碼\nCusIDCode	String
+優惠項目\nDiscItem	String		1．選項(OPT：TA-000110)
+交易幣別\nTxCry	String
+級距金額(含)以上RangeAmtAbove	Decimal
+級距費率(%)\nRangeFeeRate	Decimal
+
+二、傳出參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+優惠身分手續費清單\nResultList \ Master	List	V	V
+優惠基金清單\nPrtFundList	List		V
+單筆申購優惠清單\nAllotDiscTypeDtlList	List		V	1．請參考邏輯說明
+定期定額優惠清單\nRSPDiscTypeDtlList	List		V	1．請參考邏輯說明
+轉申購優惠清單\nSwDiscTypeDtlList	List		V	1．請參考邏輯說明
+
+ResultList \ Master
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+公司代碼\nSysCoID	String	V	V
+公司名稱\nSysCoIDNM	String		V	1．公司代碼名稱查詢.公司名稱(SysUtility.GetSysCoNM.SysCoIDNM)
+身分代碼\nCusIDCode	String	V	V
+身分名稱\nCusIDCodeNM	String	V	V	1．銷售身分查詢.身分名稱(SysUtility.GetCustIDCode.CusIDCodeNM)
+優惠項目集合\nDiscItemSet	String[]	V	V
+優惠基金方式\nDiscFundType	String	V	V
+優惠身分適用交易優惠方式檔(TA_FND_FavDiscType)	優惠身分適用交易優惠方式檔(TA_FND_FavDiscType)	優惠身分適用交易優惠方式檔(TA_FND_FavDiscType)	優惠身分適用交易優惠方式檔(TA_FND_FavDiscType)	優惠身分適用交易優惠方式檔(TA_FND_FavDiscType)	優惠身分適用交易優惠方式檔(TA_FND_FavDiscType)
+單筆申購優惠方式\nAllotDiscType	String		V	1．請參考邏輯說明
+定期定額優惠方式\nRSPDiscType	String		V	1．請參考邏輯說明
+轉申購優惠方式\nSwDiscType	String		V	1．請參考邏輯說明
+
+優惠基金清單PrtFundList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+公司代碼\nSysCoID	String		V
+身分代碼\nCusIDCode	String		V
+母基金代碼\nPrtFundCode	String		V
+母基金簡稱\nPrtFundCodeNM	String		V	1．境內母基金簡稱查詢.母基金簡稱(SysUtility.GetDPrtFundNM.PrtFundCodeNM)
+
+單筆申購優惠清單AllotDiscTypeDtlList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+公司代碼\nSysCoID	String		V
+身分代碼\nCusIDCode	String		V
+優惠項目\nDiscItem	String		V	1．選項(OPT：TA-000110)
+交易幣別\nTxCry	String		V
+交易幣別名稱\nTxCryNM	String		V	1．幣別查詢.幣別名稱(SysUtility.GetCry.CryIDNM)
+級距金額(含)以上\nRangeAmtAbove	Decimal		V
+級距費率(%)\nRangeFeeRate	Decimal		V
+
+定期定額優惠清單RSPDiscTypeDtlList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+公司代碼\nSysCoID	String		V
+身分代碼\nCusIDCode	String		V
+優惠項目\nDiscItem	String		V	1．選項(OPT：TA-000110)
+交易幣別\nTxCry	String		V
+交易幣別名稱\nTxCryNM	String		V	1．幣別查詢.幣別名稱(SysUtility.GetCry.CryIDNM)
+級距金額(含)以上\nRangeAmtAbove	Decimal		V
+級距費率(%)\nRangeFeeRate	Decimal		V
+
+轉申購優惠清單SwDiscTypeDtlList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+公司代碼\nSysCoID	String		V
+身分代碼\nCusIDCode	String		V
+優惠項目\nDiscItem	String		V	1．選項(OPT：TA-000110)
+交易幣別\nTxCry	String		V
+交易幣別名稱\nTxCryNM	String		V	1．幣別查詢.幣別名稱(SysUtility.GetCry.CryIDNM)
+級距金額(含)以上\nRangeAmtAbove	Decimal		V
+級距費率(%)\nRangeFeeRate	Decimal		V
+
+三、邏輯說明
+資料來源檔案
+更新檔案
+優惠身分適用交易Edit檔(TA_FND_FavDisc_Edit)
+優惠身分適用交易基金Edit明細檔(TA_FND_FavDiscFund_Edit)
+優惠身分適用交易優惠方式Edit檔(TA_FND_FavDiscType_Edit)
+優惠身分適用交易優惠方式Edit明細檔(TA_FND_FavDiscTypeDtl_Edit)
+傳出欄位說明
+「單筆申購優惠方式」：至【優惠身分適用交易優惠方式檔(TA_FND_FavDiscType)】取得「優惠項目」為『A.單筆申購』的資料
+「定期定額優惠方式」：至【優惠身分適用交易優惠方式檔(TA_FND_FavDiscType)】取得「優惠項目」為『R.定期定額』的資料
+「轉申購優惠方式」：至【優惠身分適用交易優惠方式檔(TA_FND_FavDiscType)】取得「優惠項目」為『S.轉申購』的資料
+〔單筆申購優惠清單(AllotDiscTypeDtlList)〕：至【優惠身分適用交易優惠方式明細檔(TA_FND_FavDiscTypeDtl)】取得「優惠項目」為『A.單筆申購』的資料
+〔定期定額優惠清單(RSPDiscTypeDtlList)〕：至【優惠身分適用交易優惠方式明細檔(TA_FND_FavDiscTypeDtl)】取得「優惠項目」為『R.定期定額』的資料
+〔轉申購優惠清單(SwDiscTypeDtlList)〕：至【優惠身分適用交易優惠方式明細檔(TA_FND_FavDiscTypeDtl)】取得「優惠項目」為『S.轉申購』的資料
+肆、傳入傳出參數(檢核)
+無。
+伍、傳入傳出參數(Get)
+無。

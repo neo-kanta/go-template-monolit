@@ -1,0 +1,291 @@
+User Interface Specification
+目錄
+應用程式介面說明 2
+壹、功能說明 2
+貳、變更說明 2
+叁、傳入傳出參數(Utility) 3
+一、UTY2011001：TAGetTAAnnFeeRate 3
+二、UTY2011002：TAGetTASubsFeeRate 4
+三、UTY2011003：TAGetTASwFeeRate 9
+四、UTY2011004：TAGetTARspFeeRate 11
+應用程式介面說明
+壹、功能說明
+取得境內交易手續費率相關(書面交易)
+貳、變更說明
+[TABLE]
+變更日期	變更人員	變更說明
+2024/04/26	Meg Pan	Modify\n1．UTY2011001：Add\n2．UTY2011002：Rebuild
+2024/06/03	Meg Pan	Modify\n1．UTY2011002：配合TXNM010調整取得手續費率的規則
+2024/07/03	Dechang Chen	Modify，配合多公司別調整\n1．UTY2011001、UTY2011002、UTY2011011：新增傳入參數「公司代碼」
+2024/07/09	Meg Pan	Modify\n1．UTY2011003：Rebuild
+2024/07/22~2024/07/23	Joyce Lin	Modify\n1．UTY2011002：調整關於牌告手續費率寫法、增加法人級別判斷
+2024/07/26~8/1	Meg Pan	Modify\n1．UTY2011002：以Joyce調整的架構為主，再次調整細部加構；改以Function取得牌告手續費率\n2．UTY2011003：依UTY2011002調整的方式，調整架構；改以Function取得牌告手續費率
+2024/08/09	Joyce Lin	Modify\n1．UTY2011003：改以Function取得轉申購手續費率
+2024/08/27	Meg Pan	Modify\n1．UTY2011002：調整「優惠身分代碼」的檔案來源
+2025/02/19	Ann Wu	Modify\n1．調整幣別欄位長度為6
+2025/03/18	Meg Pan	Modify\n1．UTY2011001：程式主體移至CoreUtility\n2．UTY2011002：配合 UTY2011001 調整，改以CoreUtility取得牌告手續費率
+2025/04/22	Johnson	Modify\n1．UTY2011003：程式主體移至CoreUtility
+2025/06/19	Meg Pan	Modify\n1．UTY2011011：配合 UTY2006033 的新增，廢除本支作業
+2025/12/19~2025/12/22	Meg Pan	Modify，配合【定額契約作業(RSPM001)】\n1．UTY2011004：Add\n2．UTY2011002：Rebulid，做擇優處理
+2025/12/26	Meg Pan	Modify，配合前端組件，選項String『Y、N』變更為Bool『True、False』\n1．UTY2011002、UTY2011004：「信託專戶否(@IsTrustAcct)」、「法人級別基金否(@IsIShare)」；相關欄位判斷規則
+
+叁、傳入傳出參數(Utility)
+一、UTY2011001：TAGetTAAnnFeeRate
+取得TA基金的牌告手續費率 Url：{root}/TAapi/Utility/Biz/GetFeeRate/TAGetTAAnnFeeRate
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+母基金代碼\nPrtFundCode	String	V
+基金代碼\nFundCode	String	V
+交易幣別\nTxCry	String	V
+申購金額\nSubsAmt	Decimal	V
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+手續費率清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+母基金代碼\nPrtFundCode	String
+基金代碼\nFundCode	String
+申購手續費率\nSubsFeeRate	decimail
+定期定額手續費率\nRSPFeeRate	decimail
+
+邏輯說明
+資料來源檔案
+取得TA基金的牌告手續率(TABizUtility.GetTAAnnFeeRate)
+資料處理說明
+依傳入參數至【取得TA基金的牌告手續率(TABizUtility.GetTAAnnFeeRate)】取得資料
+若無資料，則回傳結果代碼{TA00038}
+二、UTY2011002：TAGetTASubsFeeRate
+取得TA交易單筆申購手續費率(書面) Url：{root}/TAapi/Utility/Biz/GetFeeRate/TAGetTASubsFeeRate
+僅提供前收型基金使用
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	欄位說明	備註
+公司代碼\nSysCoID	String	V
+戶號\nBFNo	Int	V
+母基金代碼\nPrtFundCode	String	V
+基金代碼\nFundCode	String	V
+交易幣別\nTxCry	String	V
+交易日期\nTxDate	DateTime	V
+申購金額\nSubsAmt	Decimal	V
+促銷活動代碼\nCpgnCode	String	O
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+手續費率清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+手續費率\nFeeRate	Decimal
+手續費率來源\nFeeRateSrc	String	1．選項(OPT：TA-000170)
+
+邏輯說明
+資料來源檔案
+受益人基本資料檔(TA_BF_BFInfo)
+受益人銷售行銷相關資料(TA_BF_BFSaleInfo)
+取得境內基金基礎類查詢資料(SysUtility.GetDFund)
+境內基金發行幣別設定檔(DTA_FND_FundCryGroup)
+促銷活動優惠方式檔(TA_TXN_CpgnDiscType)
+優惠身分適用交易檔(TA_FND_FavDisc)
+優惠身分適用交易基金明細檔(TA_FND_FavDiscFund)
+優惠身分適用交易優惠方式明細檔(TA_FND_FavDiscTypeDtl)
+法人級別基金手續費率設定明細檔(DTA_FND_IShareFundFeeSub)
+取得TA基金的牌告手續率(TABizUtility.GetTAAnnFeeRate)
+「申購費率」取得規則
+受益人為「信託專戶」時，費率固定為『0』
+受益人非「信託專戶」時
+適用費率類別如下
+促銷活動費率：以【促銷活動設定作業(TXNM010)】設定的費率帶入
+IPO優惠費率：IPO期間，以【基金基本資料維護作業(FNDM001)】設定的IPO優惠費率帶入
+優惠身分費率：以【優惠身分手續費率設定作業(FNDM009)】設定的優惠身分費率帶入
+法人級別費率：以【法人級別基金手續費率設定作業(FNDM010)】設定的費率帶入
+牌告費率：以【基金牌告手續費率設定作業(FNDM002)】設定的牌告費率帶入
+取得上述最優費率帶入：若費率相同時，以下述順序取得
+促銷活動費率IPO優惠費率優惠身分費率法人級別費率牌告費率
+資料處理說明
+以下列順序，取得第一個符合條件的申購費率，無擇優的處理
+受益人為「信託專戶」時，申購費率固定為『0』
+IPO期間，以【基金基本資料維護作業(FNDM001)】設定的IPO優惠費率帶入
+非IPO期間，以【優惠身分手續費率設定作業(FNDM009)】設定的優惠身分費率帶入
+每個受益人皆會設定「優惠身分代碼」，故無促銷活動時，以「優惠身分代碼」的費率帶入
+若無「優惠身分代碼」的費率時
+若申購基金為「法人級別」基金時，以【法人級別基金手續費率設定作業(FNDM010)】設定的費率帶入
+若無「法人級別基金」的費率或申購基金非「法人級別」基金時，以【基金牌告手續費率設定作業(FNDM002)】設定的牌告費率帶入
+信託專戶否(@IsTrustAcct)：以《公司代碼》及《戶號》至【受益人基本資料檔(TA_BF_BFInfo)】取得「信託專戶否」
+若信託專戶否(@IsTrustAcct)為『True』時，直接結束作業並回傳
+手續費率(@FeeRate)：為『0』
+手續費率來源(@FeeRateSrc)：為『1.信託戶』
+優惠身分代碼(@CusIDCode)：以《公司代碼》及《戶號》至【受益人銷售行銷相關資料(TA_BF_BFSaleInfo)】取得「身分代碼」
+成立日期(@FundSetupDate)、法人級別基金否(@IsIShare)：以《公司代碼》及《基金代碼》至【取得境內基金基礎類查詢資料(SysUtility.GetDFund)】取得「成立日期」、「法人級別」
+牌告手續費率(@AnnFeeRate)：依傳入參數至【取得TA基金的牌告手續率(TABizUtility.GetTAAnnFeeRate)】取得「申購手續費率」
+若無資料，則回傳結果代碼{TA00038}
+若《促銷活動代碼》非空值時
+以《公司代碼》及《促銷活動代碼》至【促銷活動優惠方式檔(TA_TXN_CpgnDiscType)】抓取「促銷活動項目」為『A.單筆申購』的資料，取得優惠方式(@DiscType)、優惠費率(@DiscFixRate)、費率折數(@DiscRateOff)
+若無資料，則跳至【取得IPO優惠費率】促銷活動費率(@CpgnFeeRate)為『100』
+促銷活動費率(@CpgnFeeRate)手續費率(@FeeRate)：判斷優惠方式(@DiscType)
+為『F.固定費率(%)』時，為優惠費率(@DiscFixRate)
+為『D.牌告費率折數(%)』時，則以牌告手續費率(@AnnFeeRate)＊費率折數(@DiscRateOff)，無條件捨去至小數點後第二位
+手續費率來源(@FeeRateSrc)：為『2.促銷活動』
+取得IPO優惠費率：判斷是否採用首次募集優惠費率
+若《交易日期》＞＝成立日期(@FundSetupDate)，表示基金已成立，則跳至【取得優惠身分代碼的手續費率】IPO優惠費率(@IPOFeeRate)為『100』
+若{《交易日期》＜＝成立日期(@FundSetupDate)}或{成立日期(@FundSetupDate)＝空值}，表示基金仍在募集期
+以《公司代碼》及《母基金代碼》至【境內基金發行幣別設定檔(DTA_FND_FundCryGroup)】抓取「發行幣別代碼」為《交易幣別》的資料，取得募集手續費優惠方式(@IPOSubsFeeDisType)、募集固定費率(@IPOFixRate)、募集牌告折數(@IPODiscRateOff)
+IPO優惠費率(@IPOFeeRate)手續費率(@FeeRate)：判斷募集手續費優惠方式(@IPOSubsFeeDisType)
+為『F.固定費率(%)』時，為募集固定費率(@IPOFixRate)
+為『D.牌告費率折數(%)』時，則以牌告手續費率(@AnnFeeRate)＊募集牌告折數(@IPODiscRateOff)，無條件捨去至小數點後第二位
+手續費率來源(@FeeRateSrc)：為『3.IPO優惠』
+取得優惠身分代碼的手續費率
+優惠基金方式(@DiscFundType)：以《公司代碼》及優惠身分代碼(@CusIDCode)至【優惠身分適用交易檔(TA_FND_FavDisc)】取得「優惠項目集合」含有『A.單筆申購』的資料
+若無資料，則優惠身分費率(@CusFeeRate)為『100』
+若無資料，判斷法人級別基金否(＠IsIShare)
+為『Y』時，則跳至【取得法人級別手續費率】
+為『N』時，則跳至【取得牌告手續費率】
+若優惠基金方式(@DiscFundType)為『1.指定基金』時，須再以《公司代碼》及《母基金代碼》至【優惠身分適用交易基金明細檔(TA_FND_FavDiscFund)】取得資料
+若無資料，則優惠身分費率(@CusFeeRate)為『100』
+若無資料，判斷法人級別基金否(@IsIShare)
+為『Y』時，則跳至【取得法人級別手續費率】
+為『N』時，則跳至【取得牌告手續費率】
+優惠身分費率(@CusFeeRate)手續費率(@FeeRate)：以《公司代碼》、優惠身分代碼(@CusIDCode)及《交易幣別》至【優惠身分適用交易優惠方式明細檔(TA_FND_FavDiscTypeDtl)】抓取「優惠項目」為『A.單筆申購』且「級距金額(含)以上」為『0』的資料，取得「級距費率」
+手續費率來源(@FeeRateSrc)：為『4.優惠身分別』
+取得法人級別手續費率：判斷法人級別基金否(＠IsIShare)
+為『True』時
+法人級別費率(@IShareFeeRate)手續費率(@FeeRate)：以《公司代碼》及《基金代碼》至【法人級別基金手續費率設定明細檔(DTA_FND_IShareFundFeeSub)】抓取「級距金額(含)以上」＜＝《申購金額》的資料，取得「申購手續費率」
+傳出條件
+若有多筆資料時，取得「級距金額(含)以上」最大的一筆資料
+若無資料，則為『100』跳至【取得牌告手續費率】
+為『False』時
+法人級別費率(@IShareFeeRate)：為『100』
+手續費率來源(@FeeRateSrc)：為『6.法人級別費率』
+取得牌告手續費率
+手續費率(@FeeRate)：為牌告手續費率(@AnnFeeRate)
+手續費率來源(@FeeRateSrc)：為『7.牌告費率』
+取得最優費率
+手續費率(@FeeRate)：比較促銷活動費率(@CpgnFeeRate)、IPO優惠費率(@IPOFeeRate)、優惠身分費率(@CusFeeRate)、法人級別費率(@IShareFeeRate)、牌告手續費率(@AnnFeeRate)取得最優費率帶入
+手續費率來源(@FeeRateSrc)：依取得的最優費率種類帶入
+為促銷活動費率(@CpgnFeeRate)時，為『2.促銷活動』
+為IPO優惠費率(@IPOFeeRate)時，為『3.IPO優惠』
+為優惠身分費率(@CusFeeRate)時，為『4.優惠身分別』
+為法人級別費率(@IShareFeeRate)時，為『6.法人級別費率』
+為牌告手續費率(@AnnFeeRate)時，為『7.牌告費率』
+若費率相同時，以下述順序取得
+促銷活動費率IPO優惠費率優惠身分費率法人級別費率牌告費率
+三、UTY2011003：TAGetTASwFeeRate
+取得TA交易轉申購手續費率(書面) Url：{root}/TAapi/Utility/Biz/GetFeeRate/TAGetTASwFeeRate
+僅提供前收型基金使用
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+戶號\nBFNo	Int	V
+母基金代碼\nPrtFundCode	String	V
+基金代碼\nFundCode	String	V
+交易幣別\nTxCry	String	V
+轉出基金代碼\nSwOFundCode	String	V
+交易日期\nTxDate	DateTime	V
+申購金額\nSubsAmt	Decimal	V
+促銷活動代碼\nCpgnCode	String	O
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+手續費率清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+手續費率\nFeeRate	Decimal
+手續費率來源\nFeeRateSrc	String	1．選項(OPT：TA-000170)
+
+邏輯說明
+資料來源檔案
+取得TA基金的前收型基金轉申購手續率(TABizUtility.GetTASwFeeRate)
+資料處理說明
+依傳入參數至【取得TA基金的前收型基金轉申購手續率(TABizUtility.GetTASwFeeRate)】取得資料
+若「手續費率」為『-1』時，則回傳結果代碼{TA00038}
+四、UTY2011004：TAGetTARspFeeRate
+取得TA交易RSP契約費率(書面) Url：{root}/TAapi/Utility/Biz/GetFeeRate/TAGetTARspFeeRate
+僅提供前收型基金使用
+促銷活動：採定額簡易版
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+戶號\nBFNo	Int	V
+母基金代碼\nPrtFundCode	String	V
+基金代碼\nFundCode	String	V
+交易幣別\nTxCry	String	V
+收件日期\nRcvDate	DateTime	V
+扣款金額\nDebitAmt	Decimal	V
+促銷活動代碼\nCpgnCode	String	O
+忠實戶註記\nRSPLoyalMark	Bool	V
+累積成功次數\nTotSuccCnt	Int	V
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+手續費率清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+手續費率\nFeeRate	Decimal
+手續費率來源\nFeeRateSrc	String	1．選項(OPT：TA-000170)
+
+邏輯說明
+資料來源檔案
+受益人銷售行銷相關資料(TA_BF_BFSaleInfo)
+促銷活動優惠方式檔(TA_TXN_CpgnDiscType)
+優惠身分適用交易檔(TA_FND_FavDisc)
+優惠身分適用交易基金明細檔(TA_FND_FavDiscFund)
+優惠身分適用交易優惠方式明細檔(TA_FND_FavDiscTypeDtl)
+RSP忠實戶費率設定檔(TA_CTL_LoyalFee)
+取得TA基金的牌告手續率(TABizUtility.GetTAAnnFeeRate)
+「契約費率」取得規則
+適用費率類別如下
+促銷活動費率：以【促銷活動設定作業(TXNM010)】設定的費率帶入
+優惠身分費率：以【優惠身分手續費率設定作業(FNDM009)】設定的優惠身分費率帶入
+忠實戶費率：以【RSP忠實戶費率設定檔(TA_CTL_LoyalFee)】設定的費率帶入
+牌告費率：以【基金牌告手續費率設定作業(FNDM002)】設定的牌告費率帶入
+取得上述最優費率帶入：若費率相同時，以下述順序取得
+促銷活動費率忠實戶費率優惠身費率牌告費率
+資料處理說明
+優惠身分代碼(@CusIDCode)：以《公司代碼》及《戶號》至【受益人銷售行銷相關資料(TA_BF_BFSaleInfo)】取得「身分代碼」
+牌告手續費率(@AnnFeeRate)：依傳入參數至【取得TA基金的牌告手續率(TABizUtility.GetTAAnnFeeRate)】取得「定期定額手續費率」
+若無資料，則回傳結果代碼{TA00038}
+若《促銷活動代碼》非空值時
+以《公司代碼》及《促銷活動代碼》至【促銷活動優惠方式檔(TA_TXN_CpgnDiscType)】抓取「促銷活動項目」為『R.定期定額』的資料，取得優惠方式(@DiscType)、優惠費率(@DiscFixRate)、費率折數(@DiscRateOff)
+若無資料，則促銷活動費率(@CpgnFeeRate)為『100』
+促銷活動費率(@CpgnFeeRate)：判斷優惠方式(@DiscType)
+為『F.固定費率(%)』時，為優惠費率(@DiscFixRate)
+為『D.牌告費率折數(%)』時，則以牌告手續費率(@AnnFeeRate)＊費率折數(@DiscRateOff)，無條件捨去至小數點後第二位
+取得優惠身分代碼的手續費率
+優惠基金方式(@DiscFundType)：以《公司代碼》及優惠身分代碼(@CusIDCode)至【優惠身分適用交易檔(TA_FND_FavDisc)】取得「優惠項目集合」含有『A.單筆申購』的資料
+若無資料，則優惠身分費率(@CusFeeRate)為『100』
+若優惠基金方式(@DiscFundType)為『1.指定基金』時，須再以《公司代碼》及《母基金代碼》至【優惠身分適用交易基金明細檔(TA_FND_FavDiscFund)】取得資料
+若無資料，則優惠身分費率(@CusFeeRate)為『100』
+優惠身分費率(@CusFeeRate)：以《公司代碼》、優惠身分代碼(@CusIDCode)及《交易幣別》至【優惠身分適用交易優惠方式明細檔(TA_FND_FavDiscTypeDtl)】抓取「優惠項目」為『A.單筆申購』且「級距金額(含)以上」為『0』的資料，取得「級距費率」
+取得忠實戶費率：判斷《忠實戶註記》
+為『True』時
+忠實戶費率(@LoyalFeeRate)：以《公司代碼》至【RSP忠實戶費率設定檔(TA_CTL_LoyalFee)】抓取「級距次數(含)以上」＜＝《累積成功次數》的資料，取得優惠方式(@DiscType)、級距固定費率(@RangeFixRate)、級距折數(@RangeDiscRateOff)
+若無資料，則忠實戶費率(@LoyalFeeRate)為『100』
+促銷活動費率(@CpgnFeeRate)：判斷優惠方式(@DiscType)
+為『F.固定費率(%)』時，為級距固定費率(@RangeFixRate)
+為『D.牌告費率折數(%)』時，則以牌告手續費率(@AnnFeeRate)＊級距折數(@RangeDiscRateOff)，無條件捨去至小數點後第二位
+為『False』時
+忠實戶費率(@LoyalFeeRate)：為『100』
+取得最優費率
+手續費率(@FeeRate)：比較促銷活動費率(@CpgnFeeRate)、忠實戶費率(@LoyalFeeRate)、優惠身分費率(@CusFeeRate)、牌告手續費率(@AnnFeeRate)取得最優費率帶入
+手續費率來源(@FeeRateSrc)：依取得的最優費率種類帶入
+為促銷活動費率(@CpgnFeeRate)時，為『2.促銷活動』
+為優惠身分費率(@CusFeeRate)時，為『4.優惠身分別』
+為忠實戶費率(@LoyalFeeRate)時，為『8.忠實戶』
+為促銷活動費率(@CpgnFeeRate)時，為『7.牌告費率』
+若費率相同時，以下述順序取得
+促銷活動費率忠實戶費率優惠身分費率牌告費率

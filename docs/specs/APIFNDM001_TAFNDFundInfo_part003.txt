@@ -1,0 +1,379 @@
+扣款累進金額－其他交易幣\nRSPAmtApcTxC	Decimal		V
+RSP最高扣款金額－其他交易幣\nRSPMaxAmtTxC	Decimal		V
+加發基金否\nIsAdditional	Bool		V
+舊資料否\nIsOld	Bool		V
+級別說明事項\nShareMemo	String		V
+
+子基金相關帳號清單DTAFundAccountList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+公司代碼\nSysCoID	String		V
+母基金代碼\nPrtFundCode	String		V
+基金代碼\nFundCode	String		V
+資料序號\nDataSeq	Int		V
+基金專戶分行\nCusBankBrh	String		V
+基金專戶分行簡稱\nCusBankBrhNM	String		V	1．銀行簡稱查詢.銀行簡稱(SysUtility.GetBankVNM.BankIDNM)
+基金專戶帳號\nFundAccount	String		V
+匯款虛擬帳號代碼\nSRemitVCode	String		V
+SWIFT代碼\nSWIFTCode	String		V	1．銀行簡稱查詢.SWIFT代碼(SysUtility.GetBankVNM.SWIFTCode)
+帳號用途集合\nAccountUseSet	String[]		V	1．選項(OPT：TA-000028)
+備註\nRemark	String		V
+
+子基金相關群組清單DTAFundRelGroupList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+公司代碼\nSysCoID	String		V
+母基金代碼\nPrtFundCode	String		V
+基金代碼\nFundCode	String		V
+群組分類代碼\nFundGroupNo	String		V	1．選項(OPT：CustomUse=F1)
+群組分類說明\nFundGroupNoNM	String		V	1．代碼種類查詢.代碼種類說明(SysUtility.GetCodeType.CodeTypeNM)
+分類代碼\nGroupTypeNo	String		V	1．當「群組分類代碼」值為『通路服務費』時，選項(TCCode：022)\n2．當「群組分類代碼」值為『基金停利』時，選項(TCCode：033)
+分類說明\nGroupTypeNoNM	String		V	1．代碼選項查詢.代碼說明(SysUtility.GetCode.CodeNM{TCCode：群組分類代碼})
+
+子確認單揭露費用資訊DTAFundDisFeeList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+公司代碼\nSysCoID	String		V
+母基金代碼\nPrtFundCode	String		V
+基金代碼\nFundCode	String		V
+生效日期\nEffDate	Datetime		V
+公告經理費率\nAnnManagerRate	String		V
+公告保管費率\nAnnCustodyRate	String		V
+公告分銷費率\nAnnDistributionRate	String		V
+公告其他費用\nAnnOtherFee	String		V
+
+子基金可交易幣別清單DTAFundTxCryList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+公司代碼\nSysCoID	String		V
+母基金代碼\nPrtFundCode	String		V
+基金代碼\nFundCode	String		V
+幣別代碼\nCryID	String		V
+幣別資料來源\nCryDataSrc	String		V	1．選項\n1：計價幣別、2：其他交易幣別
+
+短線交易費率明細清單DTAFundShortDtlList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+公司代碼\nSysCoID	String		V
+母基金代碼\nPrtFundCode	String		V
+起算日／月(含)\nBeginDay	Int		V
+終止日／月(含)\nEndDay	Int		V
+短線交易費率%\nShortFeeRate	Decimal		V
+判斷上限否\nIsMaxAmt	Bool		V
+上限金額\nMaxAmt	Decimal		V
+判斷下限否\nIsMinAmt	Bool		V
+下限金額\nMinAmt	Decimal		V
+
+反稀釋設定清單DTAFundAntiDilList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+公司代碼\nSysCoID	String		V
+母基金代碼\nPrtFundCode	String		V
+反稀釋設定適用類型AntiDilSetType	String		V	1．選項(OPT：TA-900038)
+生效日期\nEffDate	Datetime		V
+終止日期\nTermDate	Datetime		V
+啟動門檻(AUM%)\nAntiDilTrigger	Decimal		V
+反稀釋費率(%)\nAntiDilFeeRate	Decimal		V
+調整原因\nAdjRsn	String		V	1．選項(OPT：TA-000240)
+備註\nRemark	String		V
+
+反稀釋機制清單DTAFundAntiDilMechList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+公司代碼\nSysCoID	String		V
+母基金代碼\nPrtFundCode	String		V
+生效日期\nEffDate	Datetime		V
+啟動門檻(AUM%)\nAntiDilTrigger	Decimal		V
+反稀釋費率(%)\nAntiDilFeeRate	Decimal		V
+備註\nRemark	String		V
+
+反稀釋調整清單DTAFundAntiDilAdjList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+公司代碼\nSysCoID	String		V
+母基金代碼\nPrtFundCode	String		V
+反稀釋設定適用類型AntiDilSetType	String		V	1．選項(OPT：TA-900038)
+生效日期\nEffDate	Datetime		V
+終止日期\nTermDate	Datetime		V
+啟動門檻(AUM%)\nAntiDilTrigger	Decimal		V
+反稀釋費率(%)\nAntiDilFeeRate	Decimal		V
+調整原因\nAdjRsn	String		V	1．選項(OPT：TA-000240)
+備註\nRemark	String		V
+
+經理費率清單DTAFundMGTFeeList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+公司代碼\nSysCoID	String		V
+母基金代碼\nPrtFundCode	String		V
+公司基金級別代碼\nFHFundShare	String		V	1．選項(TCCode：031)
+公司基金級別說明\nFHFundShareNM	String		V	1．代碼選項查詢.代碼說明(SysUtility.GetCode.CodeNM{TCCode：031})
+生效日期\nEffDate	Datetime		V
+經理費計算規則\nMGTFeeCalcID	String		V	1．選項(OPT：TA-000131)
+
+經理費率明細清單DTAMGTFeeDtlList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+公司代碼\nSysCoID	String		V
+母基金代碼\nPrtFundCode	String		V
+公司基金級別代碼\nFHFundShare	String		V
+生效日期\nEffDate	Datetime		V
+基金規模下限金額\nAUMMinAmt	Decimal		V
+經理費率(%)\nManagerRate	Decimal		V
+
+三、邏輯說明
+資料來源檔案
+更新檔案
+基金資訊(共用)Edit檔(TA_FND_FundInfo_Edit)
+僅取得「境內外基金識別碼」為『DTA.境內基金』且「ETF基金否」為『N』的資料
+境內基金資訊Edit檔(DTA_FND_FundInfo_Edit)
+境內基金保管銀行聯絡人資料Edit檔(DTA_FND_FundCustContact_Edit)
+境內基金特殊型資料Edit檔(DTA_FND_FundSpecial_Edit)
+境內基金發行幣別設定Edit檔(DTA_FND_FundCryGroup_Edit)
+境內子基金Edit明細檔(DTA_FND_FundDetail_Edit)
+境內子基金相關帳號Edit檔(DTA_FND_FundAccount_Edit)
+境內子基金相關群組Edit檔(DTA_FND_FundRelGroup_Edit)
+境內子基金確認單揭露費用Edit檔(DTA_FND_FundDisclosureFee_Edit)
+境內子基金可交易幣別Edit檔(DTA_FND_FundTxCry_Edit)
+境內基金短線交易費率設定Edit檔(DTA_FND_FundShortInf_Edit)
+境內基金短線交易費率設定Edit明細檔(DTA_FND_FundShortDtl_Edit)
+境內基金反稀釋設定Edit檔(DTA_FND_FundAntiDilution)
+境內基金經理費率設定Edit檔(DTA_FND_FundMGTFeeInf_Edit)
+境內基金經理費率設定Edit明細檔(DTA_FND_FundMGTFeeDtl_Edit)
+主要關連檔案
+基金行事曆Edit檔(TA_FND_FundCal_Edit)
+取得系統參數查詢資料(SysUtility.GetSystem)
+檢核基金是否已有交易資料(TABizUtility.ChkFundHasTxData)
+檢核
+新增放行流程完成前
+以《公司代碼》至【基金行事曆Edit檔(TA_FND_FundCal_Edit)】取得「基金行事曆類別」為『FB.基金淨值行事曆』且「行事曆年度」為「系統年度」的資料。若有資料，則回傳結果代碼{FNDM005003}
+資料同步處理說明
+新增放行流程完成時
+以《母基金代碼》及《基金營業日定義》新增基金淨值行事曆休市資料
+以《基金營業日定義》及「系統年度」至【取得基礎行事曆休市日期查詢資料(SysUtility.GetBasicNoWorkDate)】取得資料。若有資料，逐筆寫入以下檔案
+中心國別(@MCtyID)：至【取得系統參數查詢資料(SysUtility.GetSystem)】取得「系統代碼」為『000017』的資料
+【基金行事曆休市說明檔(TA_FND_FundCalMemo)】：若資料不存在時，才新增一筆資料
+[TABLE]
+欄位名稱	預設值	處理說明
+公司代碼		1．「公司代碼」
+行事曆年度		1．「系統年度」
+基金行事曆類別	FB.基金淨值行事曆
+計價幣別	空白
+營業日期		1．「營業日期」
+備註	空白
+
+【基金行事曆休市明細檔(TA_FND_FundCalDtl)】
+[TABLE]
+欄位名稱	預設值	處理說明
+公司代碼		1．「公司代碼」
+行事曆年度		1．「系統年度」
+基金行事曆類別	FB.基金淨值行事曆
+計價幣別	空白
+母基金代碼		1．《母基金代碼》
+營業日期	空白
+
+傳出欄位說明
+〔反稀釋機制清單(DTAFundAntiDilMechList)〕：至【境內基金反稀釋設定檔(DTA_FND_FundAntiDilution)】取得「反稀釋設定適用類型」為『1.公開說明書設定』的資料
+〔反稀釋調整清單(DTAFundAntiDilAdjList)〕：至【境內基金反稀釋設定檔(DTA_FND_FundAntiDilution)】取得「反稀釋設定適用類型」非『1.公開說明書設定』的資料
+「可刪除否」：以《公司代碼》及《母基金代碼》至【檢核基金是否已有交易資料(TABizUtility.ChkFundHasTxData)】取得資料。若「已有交易否」為『True』時，為『False』，反之為「True」
+肆、傳入傳出參數(檢核)
+一、KFNDM00101：TACKCSDPrtFundSetlDate
+檢核集保平台款項生效日期 Url：{root}/TAapi/Fund/TAFNDFundInfo/ChkData/TACKCSDPrtFundSetlDate
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+集保平台款項生效日期\nCSDPrtFundSetlDate	Datetime	V
+基金代碼\nFundCode	String	O
+
+邏輯說明
+資料來源檔案
+取得系統參數查詢資料(SysUtility.GetSystem)
+取得最近基礎營業日(BizUtility.GetBasicBusinessDate)
+資料處理說明
+集保平台款項生效日參數(@SysValue)：以《公司代碼》至【取得系統參數查詢資料(SysUtility.GetSystem)】取得「系統代碼」為『000021』的資料
+可生效日期(@EffDate)：至【取得最近基礎營業日(BizUtility.GetBasicBusinessDate)】取得「行事曆類別」為『CB.公司行事曆』、「基準日」為「系統日期」、「推算天數」為集保平台款項生效日參數(@SysValue)的資料
+若《集保平台款項生效日期》＜可生效日期(@EffDate)時，判斷《基金代碼》無傳入時，則回傳結果代碼{FNDM001009}，反之則回傳結果代碼{FNDM001014}
+二、KFNDM00102：TACKFundCalEdit(XX)
+檢核基金淨值行事曆是否有未放行的資料 Url：{root}/TAapi/Fund/TAFNDFundInfo/ChkData/TACKFundCalEdit
+傳入參數
+[TABLE]
+欄位名稱	資料型態	長度	Method\nQ	欄位說明	備註
+檢核時間點\nCheckTimePoint	String	1		1．選項\n1．S：儲存送核、A：放行
+
+邏輯說明
+資料來源檔案
+基金行事曆Edit檔(TA_FND_FundCal_Edit)
+資料處理說明
+至【基金行事曆Edit檔(TA_FND_FundCal_Edit)】取得「行事曆年度」為「系統年度」及「行事曆類別」為『FB.基金淨值行事曆』的資料，若有資料
+《檢核時間點》為『S.儲存送核』，則回傳結果代碼{FNDM001014}
+《檢核時間點》為『A.放行』，則回傳結果代碼{FNDM001015}
+三、KFNDM00103：TACKFundCodeExist
+檢核基金代碼是否已被設定過 Url：{root}/TAapi/Fund/TAFNDFundInfo/ChkData/TACKFundCodeExist
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	20	V
+基金代碼\nFundCode	String	10	V
+
+邏輯說明
+資料來源檔案
+境內子基金明細檔(DTA_FND_FundDetail)
+境內子基金Edit明細檔(DTA_FND_FundDetail_Edit)
+資料處理說明
+以傳入參數至【境內子基金明細檔(DTA_FND_FundDetail)】及【境內子基金Edit明細檔(DTA_FND_FundDetail_Edit)】取得資料。若任一檔案有資料，則回傳結果代碼{TA00030}
+伍、傳入傳出參數(Get)
+一、GFNDM00101：TAGetDPrtFundIssueCry
+取得境內母基金發行幣別代碼(For Searcher) Url：{root}/TAapi/Fund/TAFNDFundInfo/GetInfo/TAGetDPrtFundIssueCry
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+含全部幣別選項\nIsALL	Bool	O	1．預設為False
+母基金代碼\nPrtFundCode	String	O
+幣別代碼\nCryID	String	O
+收取手續費類型\nFeeChargeType	String	O	1．選項\nB：前收；P：後收；C：遞延；N：不收；BN：前收型(B+N)；PC：後收型(P+C)
+排除幣別代碼\nFilterItem	String	O
+查詢類型\nQueryType	String	O	1．選項\nSMP：簡易資料、ALL：詳細資料\n2．預設為SMP
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+幣別清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+幣別代碼\nCryID	String
+幣別名稱\nCryIDNM	String	1．幣別查詢.幣別名稱(SysUtility.GetCry.CryIDNM)
+基金開放RSP否\nIsRSP	Bool	1．選項(OPT：TA-000040)\n2．《查詢類型》為『ALL.詳細資料』時，才有傳出值
+
+邏輯說明
+資料來源檔案
+境內基金發行幣別設定檔(DTA_FND_FundCryGroup)：取得「發行幣別代碼」不重覆的資料
+境內子基金明細檔(DTA_FND_FundDetail)
+取得All選項查詢資料(SysUtility.GetSysAll)
+資料處理說明
+全部幣別(@AllList)：若《含全部幣別選項》為『True』時，至【取得All選項查詢資料(SysUtility.GetSysAll)】取得「All選項Key」為『Cry』的資料
+若《收取手續費類型》有傳入值時，判斷【境內子基金明細檔(DTA_FND_FundDetail)】的「申購手續費收取方式」，並以下述規則篩選資料
+傳入值為『B或P或C或N』時，「申購手續費收取方式」＝《收取手續費類型》
+傳入值為『BN』時，同時回傳「申購手續費收取方式」＝{『B.前收』及『N.不收』}的資料
+傳入值為『PC』時，同時回傳「申購手續費收取方式」＝{『P.後收』及『C.遞延』}的資料
+幣別清單(@CryList)：依下述處理後再回傳結果
+若《含全部幣別選項》為『True』時，依據全部幣別(@AllList)內容新增一筆資料，資料內容如下
+「幣別代碼」：為全部幣別(@AllList)的「All選項代碼(AllValue)」
+「幣別名稱」：在全部幣別(@AllList)的「All選項名稱(AllName)」
+「基金開放RSP否」：固定為『Y.開放』
+若《排除幣別代碼》有傳入值時，清單內容的選項代碼排除《排除幣別代碼》所設定的資料
+資料排序說明
+若《含全部幣別選項》為『True』時，全部幣別(@AllList)固定為第一筆
+二、GFNDM00102：TAGetDFundCry(XX)
+取得境內基金計價幣別資料 Url：{root}/TAapi/Fund/TAFNDFundInfo/GetInfo/TAGetDFundCry
+傳入參數
+[TABLE]
+欄位名稱	資料型態	長度	Method\nQ	欄位說明	備註
+含全部幣別選項\nIsALL	Bool		O	1．預設為False
+幣別代碼\nCryID	String	3	O
+收取手續費類型\nFeeChargType	String	2	O	1．選項\nB：前收；P：後收；C：遞延；N：不收；BN：前收型(B+N)；PC：後收型(P+C)
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+幣別清單\nMaster	List	V
+
+Master
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+幣別代碼\nCryID	String	V
+幣別名稱\nCryNM	String	V	1．幣別查詢.幣別名稱(SysUtility.GetCry.CryIDNM)
+
+邏輯說明
+資料來源檔案
+境內子基金可交易幣別檔：取得「幣別資料來源」為『1.計價幣別』不重覆的資料
+取得All選項查詢資料(SysUtility.GetSysAll)
+資料處理說明
+語系(@LangCode)：抓取底層基底的「LangID」
+全部幣別(@AllList)：若《含全部幣別選項》為『True』時，至【取得All選項查詢資料(SysUtility.GetSysAll)】依語系(@LangCode)取得「All選項Key(AllKey)」為『Cry』的資料
+幣別清單(@CryList)：依《含全部幣別選項》進行下列處理後再回傳結果
+若《含全部幣別選項》為『True』時，依據全部幣別(@AllList)內容新增一筆資料後再回傳，資料內容如下
+「幣別代碼」：為全部幣別(@AllList)的「All選項代碼(AllValue)」
+「幣別名稱」：為全部幣別(@AllList)的「All選項名稱(AllName)」
+三、GFNDM00103：TAGetDFundMatureYear(XX)
+240313 Pan：FNDM002 更改設計，此支作廢
+取得境內母基金到期年限資料 Url：{root}/TAapi/Fund/TAFNDFundInfo/GetInfo/TAGetDFundMatureYear
+傳入參數
+[TABLE]
+欄位名稱	資料型態	長度	Method\nQ	欄位說明	備註
+母基金代碼\nPrtFundCode	String	10	V
+到期年限\nMatureYear	String	6	O
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+到期年限清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+到期年限\nMatureYear	Int
+到期年限名稱\nMatureYearNM	String	1．請看邏輯說明
+
+邏輯說明
+資料來源檔案
+境內子基金明細檔(DTA_FND_FundDetail)：取得「到期年限」不重覆的資料
+取得系統功能參數查詢資料(SysUtility.GetSystem)
+資料處理說明
+語系(@LangCode)：抓取基底的「LangID」
+主要語系(@MLangCode)：至【取得系統功能參數查詢資料(SysUtility.GetSystem)】取得「系統代碼」為『000043』的資料
+次要語系(@SLangCode)：至【取得系統功能參數查詢資料(SysUtility.GetSystem)】取得「系統代碼」為『000044』的資料
+語系參數(@LangParm)：若語系(@LangCode)與主要語系(@MLangCode)相同時，則為「主要語系(@MLangCode)」 ，反之則為「次要語系(@SLangCode)」
+傳出欄位說明
+「到期年限名稱」：以傳入參數至【取得下拉選項查詢資料(SysUtility.GetOption)】取得「語系」為「語系參數(@LangParm)」的「代碼說明」
+四、GFNDM00104：TAGetDTxCry
+取得境內基金可交易幣別代碼(For Searcher) Url：{root}/TAapi/Fund/TAFNDFundInfo/GetInfo/TAGetDTxCry
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+含全部幣別選項\nIsALL	Bool	O	1．預設為False
+母基金代碼\nPrtFundCode	String	O
+基金代碼\nFundCode	String	O
+幣別代碼\nCryID	String	O	1．資料用『，』串接
+幣別來源\nCryDataSrc	String	O	1．選項\n1：計價幣別；2：其他交易幣別
+排除中心幣別\nIsExcludeCCY	Bool	O	1．預設為False
+查詢類型\nQueryType	String	O	1．選項\nSMP：簡易資料、ALL：詳細資料\n2．預設為SMP
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+幣別清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+幣別代碼\nCryID	String
+幣別名稱\nCryIDNM	String	1．幣別查詢.幣別名稱(SysUtility.GetCry.CryIDNM)
+金額小數\nDecLen	Int	1．幣別查詢.金額小數(SysUtility.GetCry.DecLen)
+雜幣否\nIsMCY	Bool	1．《查詢類型》為『ALL.詳細資料』時，才有傳出值
+
+邏輯說明
+資料來源檔案
+境內子基金可交易幣別檔(DTA_FND_FundTxCry)：取得「幣別代碼」不重覆的資料
+取得All選項查詢資料(SysUtility.GetSysAll)
+取得系統功能參數查詢資料(SysUtility.GetSystem)
+取得自訂系統參數值(SysUtility.GetSysDefValue)
+資料處理說明
+全部幣別(@AllList)：若《含全部幣別選項》為『True』時，至【取得All選項查詢資料(SysUtility.GetSysAll)】取得「All選項Key」為『Cry』的資料
+中心幣別(@CCY)：至【取得系統功能參數查詢資料(SysUtility.GetSystem)】取得「系統代碼」為『000022』的資料
+外幣結算幣別(@MCY)：至【取得自訂系統參數值(SysUtility.GetSysDefValue)】取得「系統代碼」為『000019』的資料
+幣別清單(@CryList)：依下述處理後再回傳結果
+若《含全部幣別選項》為『True』時，依據全部幣別(@AllList)內容新增一筆資料，資料內容如下
+「幣別代碼」：為全部幣別(@AllList)的「All選項代碼(AllValue)」
+「幣別名稱」：為全部幣別(@AllList)的「All選項名稱(AllName)」
+「雜幣否」：固定為『False』
+若《排除中心幣別》為『True』時，則排除中心幣別(@CCY)後回傳
+資料排序說明
+若《含全部幣別選項》為『True』時，全部幣別(@AllList)固定為第一筆
+傳出欄位說明
+「雜幣否」：符合以下任一條件，為『False』，反之為『True』
+「幣別代碼」存在於外幣結算幣別(@MCY)中 或
+「幣別代碼」與中心幣別(@CCY)相同

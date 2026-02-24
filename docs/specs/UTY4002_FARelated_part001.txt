@@ -1,0 +1,484 @@
+User Interface Specification
+目錄
+應用程式介面說明 2
+壹、功能說明 2
+貳、變更說明 2
+叁、傳入傳出參數(Utility) 2
+一、UTY4002001：ImpFANav 2
+二、UTY4002002：ImpFAExRate 7
+三、UTY4002003：ImpFADivData 13
+四、UTY4002004：ImpFAFNDData 16
+五、UTY4002005：ImpFATradeFeeRate 21
+應用程式介面說明
+壹、功能說明
+處理與FA相關的API。
+貳、變更說明
+[TABLE]
+變更日期	變更人員	變更說明
+2024/12/13~19	Meg Pan	1．Build
+2024/12/20	Joyce Lin	Modify\n1．UTY4002001、UTY4002002、UTY4002003、UTY4002004、UTY4002005調整Url\n2．UTY4002001、UTY4002002、UTY4002004、UTY4002005 Review調整
+2025/01/07	Meg Pan	Modify\n1．UTY4002004：取消「執行訊息代碼」『F003』的選項，並調整相關邏輯、原【FANFD申報資料檔(TA_IMP_FAFND)】變更為【基金彙總資料申報資料檔(TA_IMP_FND)】
+2025/01/14	Joyce Lin	Modify\n1．原【基金彙總資料申報資料檔(TA_IMP_FND)】變更為【基金彙總資料申報資料檔(DTA_IMP_FND)】\n2．原【FAETF交易費率浮動檔(TA_IMP_FATxRate)】變更為【FAETF交易費率浮動檔(DTA_IMP_FATxRate)】
+2025/02/07	Joyce Lin	1．UTY4002004：配合Table取消「已申報」欄位調整，調整API描述
+2025/02/19	Ann Wu	Modify\n1．調整幣別欄位長度為6
+2025/06/10	Meg Pan	Modify\n1．UTY4002001、UTY4002005：配合ChkDFundTxnClosed重新調整\n1.1．傳入參數：刪除「基金代碼」、「交易類別」；新增「檢核基金清單」
+2025/12/26	Meg Pan	Modify，配合前端組件，選項String『Y、N』變更為Bool『True、False』\n1．UTY4002001：「ETF基金(@IsETF)」相關欄位判斷規則
+
+叁、傳入傳出參數(Utility)
+一、UTY4002001：ImpFANav
+建立FA提供的基金淨值 Url：{root}/TAapi/External/ExtFAComm/ImpFANav
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公會代碼\nSITCACode	String	O	1．當系統功能有支援【多公司別】時，則為必填欄位\n2．此為投信公司的公會代碼
+基金淨值清單\nNAVList	List	V
+
+基金淨值清單NAVList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+FA基金代碼\nFAFundCode	String	V	1．FA的自訂代碼或公會申報基金代碼
+淨值日期\nNavDate	DateTime	V
+基金淨值\nFormalNav	Decimal	V
+基金資產規模\nFundSize	Decimal	O
+發行在外單位數\nOSUnit	Decimal	O
+異動淨值否\nIsChgNav	Bool	V	1．預設為True
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+處理結果清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+FA基金代碼\nFAFundCode	String
+基金代碼\nFundCode	String
+淨值日期\nNavDate	DateTime
+執行訊息代碼\nExecMsg	String	1．選項\nF001：表成功\nF002：表(FA基金代碼)或(基金統編+級別代碼)與TA系統設定不符\nF003：表淨值有異動但TA尚未回帳\nF004：表本次傳入淨值與TA系統不符\nF005：表本次傳入發行在外單位數與TA系統不符\nF006：表本次傳入基金資產規模與TA系統不符
+
+邏輯說明
+資料來源檔案
+更新檔案
+TA基金淨值檔(DTA_TXN_FundNav)
+主要關連檔案
+s(SysUtility.GetCompany)
+取得境內基金外部機構代碼(SysUtility.GetDFundExtCode)
+檢核TA基金交易是否已結帳(TABizUtility.ChkDFundTxnClosed)
+資料處理說明
+公司代碼(@SysCoID)：至【取得公司查詢資料(SysUtility.GetCompany)】取得資料
+查詢條件
+若《公會代碼》有傳入值時，「公會代碼」＝《公會代碼》
+若有多筆資料時，回傳結果代碼{TA00054}，且跳過以下所有處理
+基金代碼清單(@FundCodeList)：至【取得境內基金外部機構代碼(SysUtility.GetDFundExtCode)】取得資料
+查詢條件
+「公司代碼」＝公司代碼(@SysCoID)
+「查詢類別」＝『INTL.內部代碼』
+「外部代碼類別」＝『FA.FA基金代碼』
+「查詢代碼」＝《基金淨值清單.FA基金代碼》
+「基金狀態」＝『0.有效基金』
+取得欄位
+基金代碼(@FundCode)
+外部代碼(@ExtCode)
+ETF基金(@IsETF)
+處理結果清單(@ProcResultList)：欄位如下
+FA基金代碼(@FAFundCode)
+基金代碼(@FundCode)
+淨值日期(@NavDate)
+執行訊息代碼(@ExecMsg)
+以《基金淨值清單NAVList》為主，合併基金代碼清單(@FundCodeList)，逐筆處理
+寫入一筆資料至處理結果清單(@ProcResultList)
+FA基金代碼(@FAFundCode)：為《基金淨值清單.FA基金代碼》
+基金代碼(@FundCode)：為基金代碼清單.基金代碼(@FundCode)
+淨值日期(@NavDate)：為《基金淨值清單.淨值日期》
+執行訊息代碼(@ExecMsg)：為空白
+若基金代碼清單.基金代碼(@FundCode)為空值時，更新執行訊息代碼(@ExecMsg)為『F002』，且跳過以下所有處理
+至【TA基金淨值檔(DTA_TXN_FundNav)】取得資料
+查詢條件
+「公司代碼」＝公司代碼(@SysCoID)
+「淨值日期」＝《基金淨值清單.淨值日期》
+「基金代碼」＝基金代碼清單.基金代碼(@FundCode)
+取得欄位
+基金淨值(@FormalNav)
+基金資產規模(@FundSize)
+發行在外單位數(@OSUnit)
+若無可更新的資料時，則新增一筆資料至【TA基金淨值檔(DTA_TXN_FundNav)】
+更新執行訊息代碼(@ExecMsg)為『F001』
+[TABLE]
+欄位名稱	預設值	處理說明
+公司代碼		1．公司代碼(@SysCoID)
+淨值日期		1．《基金淨值清單.淨值日期》
+基金代碼		1．基金代碼清單.基金代碼(@FundCode)
+基金淨值		1．《基金淨值清單.基金淨值》
+基金資產規模		1．《基金淨值清單.基金資產規模》
+發行在外單位數		1．《基金淨值清單.發行在外單位數》
+
+若有資料且《基金淨值清單.異動淨值否》為『True』時，以公司代碼(@SysCoID)至【檢核TA基金交易是否已結帳(TABizUtility.ChkDFundTxnClosed)】抓取「淨值日期」為《基金淨值清單.淨值日期》及「檢核基金清單」為{基金代碼清單.基金代碼(@FundCode)、『Subs.申購』；基金代碼清單.基金代碼(@FundCode)、『Rdm.買回』；基金代碼清單.基金代碼(@FundCode)、『Rsp.定期定額』}的資料
+更新執行訊息代碼(@ExecMsg)為『F003』
+更新【TA基金淨值檔(DTA_TXN_FundNav)】
+更新條件
+「公司代碼」＝公司代碼(@SysCoID)
+「淨值日期」＝《基金淨值清單.淨值日期》
+「基金代碼」＝基金代碼清單.基金代碼(@FundCode)
+更新欄位
+「基金淨值」：為《基金淨值清單.基金淨值》
+「基金資產規模」：為《基金淨值清單.基金資產規模》
+「發行在外單位數」：為《基金淨值清單.發行在外單位數》
+更新執行訊息代碼(@ExecMsg)為『F001』
+若有資料且《基金淨值清單.異動淨值否》為『False』時
+檢核：違反下列其中一項檢核，則後面檢核不處理
+若《基金淨值清單.基金淨值》＜＞基金淨值(@FormalNav)時，更新執行訊息代碼(@ExecMsg)為『F004』
+若ETF基金(@IsETF)＝『True』且《基金淨值清單.發行在外單位數》＜＞發行在外單位數(@OSUnit)時，更新執行訊息代碼(@ExecMsg)為『F005』
+若ETF基金(@IsETF)＝『True』且《基金淨值清單.基金資產規模》＜＞基金資產規模(@FundSize)時，更新執行訊息代碼(@ExecMsg)為『F006』
+若通過上述檢核，更新【TA基金淨值檔(DTA_TXN_FundNav)】
+更新條件
+「公司代碼」＝公司代碼(@SysCoID)
+「淨值日期」＝《基金淨值清單.淨值日期》
+「基金代碼」＝基金代碼清單.基金代碼(@FundCode)
+更新欄位
+「基金資產規模」：為《基金淨值清單.基金資產規模》
+「發行在外單位數」：為《基金淨值清單.發行在外單位數》
+更新執行訊息代碼(@ExecMsg)為『F001』
+回傳：將處理結果清單(@ProcResultList)資料回傳
+二、UTY4002002：ImpFAExRate
+建立FA提供的會計匯率 Url：{root}/TAapi/External/ExtFAComm/ImpFAExRate
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公會代碼\nSITCACode	String	O	1．當系統功能有支援【多公司別】時，則為必填欄位\n2．此為投信公司的公會代碼
+基金匯率清單\nExRateList	List	V
+
+匯率清單ExRateList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+FA基金代碼\nFAFundCode	String	V	1．FA的自訂代碼或公會申報基金代碼
+匯率日期\nERDate	DateTime	V
+原始幣別\nOrgCry	String	V
+兌換幣別\nExCry	String	V
+兌換匯率\nExRate	Decimal	V
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+處理結果清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+FA基金代碼\nFAFundCode	String
+基金代碼\nFundCode	String
+匯率日期\nERDate	DateTime
+原始幣別\nOrgCry	String
+兌換幣別\nExCry	String
+執行訊息代碼\nExecMsg	String	1．選項\nF001：表成功\nF002：表(FA基金代碼)或(基金統編+級別代碼)與TA系統設定不符\nF003：表資料已存在
+
+邏輯說明
+資料來源檔案
+更新檔案
+匯率檔(TA_TXN_ExRate)
+主要關連檔案
+取得公司查詢資料(SysUtility.GetCompany)
+取得境內基金外部機構代碼(SysUtility.GetDFundExtCode)
+資料處理說明
+公司代碼(@SysCoID)：至【取得公司查詢資料(SysUtility.GetCompany)】取得資料
+查詢條件
+若《公會代碼》有傳入值時，「公會代碼」＝《公會代碼》
+若有多筆資料時，回傳結果代碼{TA00054}，且跳過以下所有處理
+基金代碼清單(@FundCodeList)：至【取得境內基金外部機構代碼(SysUtility.GetDFundExtCode)】取得資料
+查詢條件
+「公司代碼」＝公司代碼(@SysCoID)
+「查詢類別」＝『INTL.內部代碼』
+「外部代碼類別」＝『FA.FA基金代碼』
+「查詢代碼」＝《基金資料清單.FA基金代碼》
+「基金狀態」＝『0.有效基金』
+取得欄位
+基金代碼(@FundCode)
+外部代碼(@ExtCode)
+處理結果清單(@ProcResultList)：欄位如下
+FA基金代碼(@FAFundCode)
+基金代碼(@FundCode)
+匯率日期(@ERDate)
+原始幣別(@OrgCry)
+兌換幣別(@ExCry)
+執行訊息代碼(@ExecMsg)
+依據《基金匯率清單ExRateList》為主，合併基金代碼清單(@FundCodeList)，逐筆處理
+寫入一筆資料至處理結果清單(@ProcResultList)
+FA基金代碼(@FAFundCode)：為《基金匯率清單.FA基金代碼》
+基金代碼(@FundCode)：為基金代碼清單.基金代碼(@FundCode)
+匯率日期(@ERDate)：為《基金匯率清單.匯率日期》
+原始幣別(@OrgCry)：為《基金匯率清單.原始幣別》
+兌換幣別(@ExCry)：為《基金匯率清單.兌換幣別》
+執行訊息代碼(@ExecMsg)：為空白
+若基金代碼清單.基金代碼(@FundCode)為空值時，更新執行訊息代碼(@ExecMsg)為『F002』，且跳過以下所有處理
+原始幣別(@OrgCry)：若《基金匯率清單.原始幣別》為『CNH』，則為『CNY』，反之則為《基金匯率清單.原始幣別》
+兌換幣別(@ExCry)：若《基金匯率清單.兌換幣別》為『CNH』，則為『CNY』，反之則為《基金匯率清單.兌換幣別》
+兌換匯率(@ExRate)：為《基金匯率清單.兌換匯率》
+若原始幣別(@OrgCry)為『USD』且兌換幣別(@ExCry)為『TWD』時
+原始幣別2(@OrgCry2)：為『TWD』
+兌換幣別2(@ExCry2)：為『USD』
+兌換匯率2(@ExRate2)：為1／《匯率清單.兌換匯率》，四捨五入至小數11位
+情境-ALL FUNDS：至【匯率檔(TA_TXN_ExRate)】取得資料
+查詢條件
+「公司代碼」＝公司代碼(@SysCoID)
+「匯率日期」＝《基金匯率清單.匯率日期》
+「匯率來源」＝『FA.基金會計』
+「原始幣別」＝原始幣別(@OrgCry)
+「兌換幣別」＝兌換幣別(@ExCry)
+「基金代碼」＝『ALL FUNDS』
+原始幣別(@OrgCry)＜＞兌換幣別(@ExCry)
+若無可更新的資料時，則新增一筆資料至【匯率檔(TA_TXN_ExRate)】
+[TABLE]
+欄位名稱	預設值	處理說明
+公司代碼		1．公司代碼(@SysCoID)
+匯率日期		1．《基金匯率清單.淨值日期》
+匯率來源	FA.基金會計
+原始幣別		1．原始幣別(@OrgCry)
+兌換幣別		1．兌換幣別(@ExCry)
+銀行總行代碼	空白
+基金代碼	ALL FUNDS
+買進匯率		1．兌換匯率(@ExRate)
+賣出匯率		1．兌換匯率(@ExRate)
+中價匯率		1．兌換匯率(@ExRate)
+資料來源	C.檔案轉入
+
+情境-台幣對美金匯率-ALL FUNDS：若原始幣別2(@OrgCry2)非空值時，至【匯率檔(TA_TXN_ExRate)】取得資料
+查詢條件
+「公司代碼」＝公司代碼(@SysCoID)
+「匯率日期」＝《基金匯率清單.匯率日期》
+「匯率來源」＝『FA.基金會計』
+「原始幣別」＝原始幣別2(@OrgCry2)
+「兌換幣別」＝兌換幣別2(@ExCry2)
+「基金代碼」＝『ALL FUNDS』
+若無可更新的資料時，則新增一筆資料至【匯率檔(TA_TXN_ExRate)】
+[TABLE]
+欄位名稱	預設值	處理說明
+公司代碼		1．公司代碼(@SysCoID)
+匯率日期		1．《基金匯率清單.淨值日期》
+匯率來源	FA.基金會計
+原始幣別		1．原始幣別2(@OrgCry2)
+兌換幣別		1．兌換幣別2(@ExCry2)
+銀行總行代碼	空白
+基金代碼	ALL FUNDS
+買進匯率		1．兌換匯率2(@ExRate2)
+賣出匯率		1．兌換匯率2(@ExRate2)
+中價匯率		1．兌換匯率2(@ExRate2)
+資料來源	C.檔案轉入
+
+情境-台幣對美金匯率-BY基金：若原始幣別2(@OrgCry2)非空值時，至【匯率檔(TA_TXN_ExRate)】取得資料
+查詢條件
+「公司代碼」＝公司代碼(@SysCoID)
+「匯率日期」＝《基金匯率清單.匯率日期》
+「匯率來源」＝『FA.基金會計』
+「原始幣別」＝原始幣別2(@OrgCry2)
+「兌換幣別」＝兌換幣別2(@ExCry2)
+「基金代碼」＝基金代碼清單.基金代碼(@FundCode)
+若無可更新的資料時，則新增一筆資料至【匯率檔(TA_TXN_ExRate)】
+[TABLE]
+欄位名稱	預設值	處理說明
+公司代碼		1．公司代碼(@SysCoID)
+匯率日期		1．《基金匯率清單.淨值日期》
+匯率來源	FA.基金會計
+原始幣別		1．原始幣別2(@OrgCry2)
+兌換幣別		1．兌換幣別2(@ExCry2)
+銀行總行代碼	空白
+基金代碼		1．基金代碼清單.基金代碼(@FundCode)
+買進匯率		1．兌換匯率2(@ExRate2)
+賣出匯率		1．兌換匯率2(@ExRate2)
+中價匯率		1．兌換匯率2(@ExRate2)
+資料來源	C.檔案轉入
+
+情境-BY基金：至【匯率檔(TA_TXN_ExRate)】取得資料
+查詢條件
+「公司代碼」＝公司代碼(@SysCoID)
+「匯率日期」＝《基金匯率清單.匯率日期》
+「匯率來源」＝『FA.基金會計』
+「原始幣別」＝原始幣別(@OrgCry)
+「兌換幣別」＝兌換幣別(@ExCry)
+「基金代碼」＝基金代碼清單.基金代碼(@FundCode)
+原始幣別(@OrgCry)＜＞兌換幣別(@ExCry)
+若有資料，更新執行訊息代碼(@ExecMsg)為『F003』
+若無資料，新增一筆資料至【匯率檔(TA_TXN_ExRate)】
+更新執行訊息代碼(@ExecMsg)為『F001』
+[TABLE]
+欄位名稱	預設值	處理說明
+公司代碼		1．公司代碼(@SysCoID)
+匯率日期		1．《基金匯率清單.淨值日期》
+匯率來源	FA.基金會計
+原始幣別		1．原始幣別(@OrgCry)
+兌換幣別		1．兌換幣別(@ExCry)
+銀行總行代碼	空白
+基金代碼		1．基金代碼清單.基金代碼(@FundCode)
+買進匯率		1．兌換匯率(@ExRate)
+賣出匯率		1．兌換匯率(@ExRate)
+中價匯率		1．兌換匯率(@ExRate)
+資料來源	C.檔案轉入
+
+回傳：將處理結果清單(@ProcResultList)資料回傳
+三、UTY4002003：ImpFADivData
+建立FA提供的收益分配基本資料 Url：{root}/TAapi/External/ExtFAComm/ImpFADivData
+241217 Pan：只寫了框架，待收益分配模組再補
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公會代碼\nSITCACode	String	O	1．當系統功能有支援【多公司別】時，則為必填欄位\n2．此為投信公司的公會代碼
+基金配息清單\nDivDataList	List	V
+
+基金配息清單DivDataList
+[TABLE]
+欄位名稱	資料型態	長度	Method\nQ	欄位說明	備註
+FA基金代碼\nFAFundCode	String	40	V	1．FA的自訂代碼或公會申報基金代碼
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+處理結果清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+FA基金代碼\nFAFundCode	String
+基金代碼\nFundCode	String
+執行訊息代碼\nExecMsg	String	1．選項\nF001：表成功\nF002：表(FA基金代碼)或(基金統編+級別代碼)與TA系統設定不符
+
+邏輯說明
+資料來源檔案
+更新檔案
+主要關連檔案
+取得公司查詢資料(SysUtility.GetCompany)
+取得境內基金外部機構代碼(SysUtility.GetDFundExtCode)
+資料處理說明
+公司代碼(@SysCoID)：至【取得公司查詢資料(SysUtility.GetCompany)】取得資料
+查詢條件
+若《公會代碼》有傳入值時，「公會代碼」＝《公會代碼》
+若有多筆資料時，回傳結果代碼{TA00054}，且跳過以下所有處理
+基金代碼清單(@FundCodeList)：至【取得境內基金外部機構代碼(SysUtility.GetDFundExtCode)】取得資料
+查詢條件
+「公司代碼」＝公司代碼(@SysCoID)
+「查詢類別」＝『INTL.內部代碼』
+「外部代碼類別」＝『FA.FA基金代碼』
+「查詢代碼」＝《基金資料清單.FA基金代碼》
+「基金狀態」＝『0.有效基金』
+取得欄位
+基金代碼(@FundCode)
+外部代碼(@ExtCode)
+ETF基金(@IsETF)
+處理結果清單(@ProcResultList)：欄位如下
+FA基金代碼(@FAFundCode)
+基金代碼(@FundCode)
+執行訊息代碼(@ExecMsg)
+以《基金配息清單DivDataList》為主，合併基金代碼清單(@FundCodeList)，逐筆處理
+寫入一筆資料至處理結果清單(@ProcResultList)
+FA基金代碼(@FAFundCode)：為《基金淨值清單.FA基金代碼》
+基金代碼(@FundCode)：為基金代碼清單.基金代碼(@FundCode)
+執行訊息代碼(@ExecMsg)：為空白
+若基金代碼清單.基金代碼(@FundCode)為空值時，則執行訊息代碼(@ExecMsg)為『F002』，且跳過以下所有處理
+至【】取得資料
+查詢條件
+「公司代碼」＝公司代碼(@SysCoID)
+「基金代碼」＝基金代碼清單.基金代碼(@FundCode)
+取得欄位
+若無可更新的資料時，則新增一筆資料至【】
+更新執行訊息代碼(@ExecMsg)為『F001』
+[TABLE]
+欄位名稱	預設值	處理說明
+公司代碼		1．公司代碼(@SysCoID)
+基金代碼		1．基金代碼清單.基金代碼(@FundCode)
+
+回傳：將處理結果清單(@ProcResultList)資料回傳
+四、UTY4002004：ImpFAFNDData
+建立FA提供的基金申報相關資料 Url：{root}/TAapi/External/ImpFAFNDData
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公會代碼\nSITCACode	String	O	1．當系統功能有支援【多公司別】時，則為必填欄位\n2．此為投信公司的公會代碼
+申報年月\nDclYM	DateTime	V
+基金資料清單\nFNDDataList	List	V
+
+基金資料清單FNDDataList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+FA基金代碼\nFAFundCode	String	V	1．FA的自訂代碼或公會申報基金代碼
+發行在外單位數\nOSUnit	Decimal	V
+申報幣基金資產規模\nDCYFundSize	Decimal	V
+申報幣基金淨值\nDCYFormalNav	Decimal	V
+申報幣申購總金額\nDCYTotSubsAmt	Decimal	V
+申報幣買回總金額\nDCYTotRdmAmt	Decimal	V
+申報幣月平均金額\nDCYMonAvgAmt	Decimal	V
+原幣基金資產規模\nOCYFundSize	Decimal	V
+原幣基金淨值\nOCYFormalNav	Decimal	V
+原幣申購總金額\nOCYTotSubsAmt	Decimal	V
+原幣買回總金額\nOCYTotRdmAmt	Decimal	V
+原幣月平均金額\nOCYMonAvgAmt	Decimal	V
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+處理結果清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+FA基金代碼\nFAFundCode	String
+基金代碼\nFundCode	String
+申報年月\nDclYM	DateTime
+執行訊息代碼\nExecMsg	String	1．選項\nF001：表成功\nF002：表(FA基金代碼)或(基金統編+級別代碼)與TA系統設定不符
+
+邏輯說明
+資料來源檔案
+更新檔案
+基金彙總資料申報資料檔(DTA_IMP_FND)
+主要關連檔案
+取得公司查詢資料(SysUtility.GetCompany)
+取得境內基金外部機構代碼(SysUtility.GetDFundExtCode)
+取得月底日期(SysUtility.GetEOMonthDate)
+資料處理說明
+公司代碼(@SysCoID)：至【取得公司查詢資料(SysUtility.GetCompany)】取得資料
+查詢條件
+若《公會代碼》有傳入值時，「公會代碼」＝《公會代碼》
+若有多筆資料時，回傳結果代碼{TA00054}，且跳過以下所有處理
+申報日期(@DclDate)：以《申報年月》至【取得月底日期(SysUtility.GetEOMonthDate)】取得資料
+基金代碼清單(@FundCodeList)：至【取得境內基金外部機構代碼(SysUtility.GetDFundExtCode)】取得資料
+查詢條件
+「公司代碼」＝公司代碼(@SysCoID)
+「查詢類別」＝『INTL.內部代碼』
+「外部代碼類別」＝『FA.FA基金代碼』
+「查詢代碼」＝《基金資料清單.FA基金代碼》
+「基金範圍」＝『1.非全委基金(含ETF)』
+取得欄位
+基金代碼(@FundCode)
+外部代碼(@ExtCode)
+處理結果清單(@ProcResultList)
+取得欄位
+FA基金代碼(@FAFundCode)
+基金代碼(@FundCode)
+申報年月(@DclYM)
+執行訊息代碼(@ExecMsg)
+以《基金資料清單FNDDataList》為主，合併基金代碼清單(@FundCodeList)，逐筆處理
+寫入一筆資料至處理結果清單(@ProcResultList)
+FA基金代碼(@FAFundCode)：為《基金資料清單.FA基金代碼》
+基金代碼(@FundCode)：為基金代碼清單.基金代碼(@FundCode)
+申報年月(@DclYM)：為《基金資料清單.申報年月》
+執行訊息代碼(@ExecMsg)：為空白
+若基金代碼清單.基金代碼(@FundCode)為空值時，更新執行訊息代碼(@ExecMsg)為『F002』，且跳過以下所有處理
+至【基金彙總資料申報資料檔(DTA_IMP_FND)】取得資料
+查詢條件
+「公司代碼」＝公司代碼(@SysCoID)
+「申報日期」＝申報日期(@DclDate)
+「基金代碼」＝基金代碼清單.基金代碼(@FundCode)
+若無可更新的資料時，則新增一筆資料至【基金彙總資料申報資料檔(DTA_IMP_FND)】
+更新執行訊息代碼(@ExecMsg)為『F001』
+[TABLE]
+欄位名稱	預設值	處理說明
+公司代碼		1．公司代碼(@SysCoID)
+申報日期		1．《Master.申報年月》
+基金代碼		1．基金代碼清單.基金代碼(@FundCode)
+發行在外單位數		1．《基金資料清單.發行在外單位數》
+申報幣基金資產規模		1．《基金資料清單.申報幣基金資產規模》
+申報幣基金淨值		1．《基金資料清單.申報幣基金淨值》
+申報幣申購總金額		1．《基金資料清單.申報幣申購總金額》
+申報幣買回總金額		1．《基金資料清單.申報幣買回總金額》
+申報幣月平均金額		1．《基金資料清單.申報幣月平均金額》
+原幣基金資產規模		1．《基金資料清單.原幣基金資產規模》
+原幣基金淨值		1．《基金資料清單.原幣基金淨值》
+原幣申購總金額		1．《基金資料清單.原幣申購總金額》
+原幣買回總金額		1．《基金資料清單.原幣買回總金額》
+原幣月平均金額		1．《基金資料清單.原

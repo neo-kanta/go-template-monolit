@@ -1,0 +1,277 @@
+User Interface Specification
+目錄
+應用程式介面說明 3
+壹、功能說明 3
+貳、變更說明 3
+叁、傳入傳出參數(Utility) 5
+一、UTY2010001：TACKFundTxData 5
+二、UTY2010002：TACKFundQuota(XX) 6
+三、UTY2010003：TACKSingleDebitLimit 12
+四、UTY2010004：TACKDailyDebitLimit 12
+五、UTY2010005：TACKFundTxnRisk 13
+六、UTY2010006：TACKAgentTxData 14
+七、UTY2010007：TACKFundAgentTxData 16
+八、UTY2010008：TACKDFundPauseTxn 17
+九、UTY2010009：TACKDFundTxnClosed 18
+十、UTY2010010：TACKAgentDFund 19
+十一、UTY2010011：TACKCpgnTxData 20
+十二、UTY2010012：TACKDFundTxnDataEdit 22
+十三、UTY2010013：TACKDFundTxnRcvDeadline 23
+十四、UTY2010014：TACKDFundTxnConfirmed 24
+十五、UTY2010015：TACKDFundTxnDebitStatus 26
+十六、UTY2010016：TACKDFundTxnB2CStatus 27
+十七、UTY2010017：TACKDFundTxnB2BDeadline 29
+十八、UTY2010018：TACKDFundTxnFHDedCfmed 30
+十九、UTY2010019：TACKDFundTxnXferd 32
+應用程式介面說明
+壹、功能說明
+取得境內基金交易相關API
+貳、變更說明
+[TABLE]
+變更日期	變更人員	變更說明
+2022/04/08	Esther Lin	1．Build
+2024/03/06	Meg Pan	Modify\n1．UTY2010003、UTY2010004：Add
+2024/04/29~2024/05/07	Meg Pan	Modify\n1．UTY2010005：Rebuild\n2．UTY2010008、UTY2010009：Add\n3．UTY2010010：由KFNDM00401 移入\n4．UTY2010003、UTY2010004：檢核主體移至CoreUtility
+2024/06/06	Dechang Chen	Modify\n1．UTY2010011：Add
+2024/06/24	Meg Pan	Modify\n1．UTY2010001、UTY2010006、UTY2010007、UTY2010011：配合人工輸入交易檔更名，原「TA申購交易維護檔(DTA_TXN_SubsTxn)」變更為「TA申購交易人工維護檔(DTA_TXN_SubsTxnMan)」、原「TA買回交易維護檔(DTA_TXN_RdmTxn)」變更為「TA買回交易人工維護檔(DTA_TXN_RdmTxnMan)」、原「TA買回交易維護明細檔(DTA_TXN_RdmTxnDtl)」變更為「TA買回交易明細人工維護檔(DTA_TXN_RdmTxnManDtl)」\n2．UTY2010002：暫不處理
+2024/07/03	Dechang Chen	Modify，配合多公司別調整\n1．UTY2010001、UTY2010003、UTY2010004、UTY2010005、UTY2010006、UTY2010007、UTY2010008、UTY2010009、UTY2010010、UTY2010011：新增傳入參數「公司代碼」
+2024/11/12	Meg Pan	Modify\n1．UTY2010012、UTY2010013、UTY2010014：Add
+2024/11/25	Joyce Lin	Modify\n1．UTY2010012、UTY2010014 配合交易單成交轉入檢核調整
+2024/11/26	Meg Pan	Modify\n1．UTY2010013：納入買回交易的檢核\n2．UTY2010012、UTY2010014：檢核主體移至CoreUtility
+2024/11/28	Meg Pan	Modify\n1．UTY2010012：增加傳入參數「款項處理機構」、「申購繳款方式」
+2024/12/06	Ann Wu	Modify\n1．UTY2010012、UTY2010014：增加傳出參數「交易類別」
+2024/12/17	Joyce Lin	Modify\n1．UTY2010012、UTY2010013、UTY2010014：調整傳入參數「交易類別」長度\n2．UTY2010012、UTY2010014：刪除傳出參數「交易類別」
+2025/01/07	Meg Pan	Modify\n1．UTY2010009：傳入參數「交易類別」增加04、05的選項
+2025/01/13	Joyce Lin	Modify\n1．UTY2010009：檢核失敗錯誤訊息配合傳入參數「交易類別」調整訊息代碼
+2025/01/23	Joyce Lin	Modify\n1．UTY2010008、UTY2010009：傳入參數「交易日期(TxnDate)」名稱調整為「交易日期(TxDate)」\n2．UTY2010010：傳入參數「交易類別」選項代碼原「S」調整為「Subs」、原「R」調整為「Rdm」
+2025/01/23~2025/03/11	Meg Pan	Modify\n1．UTY2010012\n1.1．修改程式代碼、名稱及路徑\n1.2．邏輯說明：調整【資料來源檔案】名稱\n2．UTY2010013\n2.1．修改程式代碼、名稱及路徑\n2.2．傳入參數：「收單截止項目」變更為多組傳入\n2.3．邏輯說明：調整【資料來源檔案】名稱；增加【傳出欄位說明】\n3．UTY2010014\n3.1．修改程式代碼、名稱及路徑\n3.2．傳入參數：「交易類別」增加『Rsp.定額』、『NRsp.排除定額』的選項；移除「款項處理機構」、「申購繳款方式」\n3.3．邏輯說明：調整【資料來源檔案】名稱\n4．扣款幣別的長度由3碼改為6碼：UTY2010003、UTY2010004、UTY2010008、UTY2010010\n5．UTY2010015、UTY2010016、UTY2010017、UTY2010018：Add
+2025/04/21~2025/06/10	Meg Pan	Modify\n1．UTY2010014：配合ChkDFundTxnConfirmed重新調整\n1.1．傳入參數：刪除「交易類別」、「檢核基金集合」；新增「檢核基金清單」\n2．UTY2010019：Add\n3．UTY2010009：配合ChkDFundTxnClosed重新調整\n3.1．傳入參數：刪除「基金代碼」、「交易類別」；新增「檢核基金清單」
+2025/11/28	Joyce Lin	Modify\n1．UTY2010018：配合定額人工扣款回報檢核增加傳入參數「預計扣款日期」\n2．UTY2010015：配合定額扣款行確認檢核增加傳入參數「預計扣款日期」、「申購資料來源」
+2025/12/26	Meg Pan	Modify，配合前端組件，選項String『Y、N』變更為Bool『True、False』\n1．UTY2010001、UTY2010006、UTY2010007、UTY2010011：「已有交易否」相關欄位判斷規則\n2．UTY2010013：「已截止收單否」、「「收單截止否」；相關欄位判斷規則\n3．UTY2010015、UTY2010016：「仍有未回覆資料否」相關欄位判斷規則\n4．UTY2010017：「已截止收單否」相關欄位判斷規則
+2026/01/13	Joyce Lin	Modify\n1．UTY2010013：資料來源來為呼叫【取得TA基金交易或契約資料截止收單資料(GetDFundTxnDeadlineData)】
+2026/01/26	Meg Pan	Modify，配合前端組件，「檢核失敗否」變更為Bool『True、False』\n1．UTY2010003、UTY2010004、UTY2010005、UTY2010008、UTY2010010
+2026/01/26	Meg Pan	Modify，配合前端底層規則\n1．UTY2010001：檢核主體移至CoreUtility
+
+叁、傳入傳出參數(Utility)
+一、UTY2010001：TACKFundTxData
+檢核基金是否已有交易資料 Url：{root}/TAapi/Utility/Biz/TxChkData/TACKFundTxData
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+母基金代碼\nPrtFundCode	String	O	1．必須擇一傳入
+基金代碼\nFundCode	String	O	1．必須擇一傳入
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+交易清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+已有交易否\nIsHaveData	Bool
+
+邏輯說明
+資料來源檔案
+檢核基金是否已有交易資料(TABizUtility.ChkFundHasTxData)
+二、UTY2010002：TACKFundQuota(XX)
+240625 Pan：暫不處理
+檢核申購金額是否超過基金銷售額度 Url：{root}/TAapi/Utility/Biz/TxChkData/TACKFundQuota
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+基金代碼\nFundCode	String	V
+母基金代碼\nPrtFundCode	String	V
+收付幣別\nTxCurrency	String	V
+收件日期\nRcvDate	Datetime	V
+交易單號\nOrderNo	String	V
+交易金額\nTxAmt	Decimal	O	1．「交易金額」、「交易單位數」必須擇一輸入
+交易單位數\nTxUnit	Decimal	O	1．「交易金額」、「交易單位數」必須擇一輸入
+交易種類\nTxType	String	V	1．選項(OPT：TA-000115)
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+基金銷售額度清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+超額否\nExceed	String	1．選項(OPT：TA-000000)
+
+邏輯說明
+資料來源檔案
+基金資訊共用檔(TA_FND_FundInfo)
+境內基金資訊檔(DTA_FND_FundInfo)
+境內基金發行幣別設定檔(DTA_FND_FundCryGroup)
+境內子基金明細檔(DTA_FND_FundDetail)
+TA基金淨值檔(DTA_ACC_FundNav)
+基金過帳控制檔(TA_ACC_FundClosing)
+TA申購下單成交檔(DTA_ACC_SubsOrder)
+TA買回下單成交檔(DTA_ACC_RdmOrder)
+TA申購交易人工維護檔(DTA_TXN_SubsTxnMan)
+TA買回交易人工維護檔(DTA_TXN_RdmTxnMan)
+TA申購交易委託檔(DTA_TXN_RcvSubs)
+TA轉申購交易委託檔(DTA_TXN_RcvSw)
+資料處理說明：
+單位數小數位數(@UnitDotLen)：至【基金資訊共用檔(TA_FND_FundInfo)】取得「母基金代碼」為『《母基金代碼》』之「單位數小數位數」
+額度控管比率(@FundQuoLmtRate)：至【境內基金資訊檔(DTA_FND_FundInfo)】取得「母基金代碼」為『《母基金代碼》』之「額度控管比率」
+外幣發行額度控管方式(@ExchUnitLmt)：至【境內基金資訊檔(DTA_FND_FundInfo)】取得「母基金代碼」為『《母基金代碼》』之「外幣發行額度控管方式」
+淨發行單位數上限(@LmtUnit)：
+若外幣發行額度控管方式(@ExchUnitLmt)為（『0.僅發行新台幣』或『1.單一幣別』），至【境內基金發行幣別設定檔(DTA_FND_FundCryGroup)】取得「母基金代碼」為『《母基金代碼》』且「發行幣別」為『《收付幣別》』之「淨發行單位數上限(額控)」
+若外幣發行額度控管方式(@ExchUnitLmt)為『2.外幣總額』且「《收付幣別》」為『TWD.新台幣』，至【境內基金資訊檔(DTA_FND_FundInfo)】取得「母基金代碼」為『《母基金代碼》』之「台幣總額淨發行單位數上限」
+若外幣發行額度控管方式(@ExchUnitLmt)為『2.外幣總額』且「《收付幣別》」非『TWD.新台幣』，至【境內基金資訊檔(DTA_FND_FundInfo)】取得「母基金代碼」為『《母基金代碼》』之「外幣總額淨發行單位數上限」
+基金代碼清單(@FundCodeList)：
+若外幣發行額度控管方式(@ExchUnitLmt)為（『0.僅發行新台幣』或『1.單一幣別』』或（『2.外幣總額』且「《收付幣別》」為『TWD.新台幣』）），至【境內子基金明細檔(DTA_FND_FundDetail)】取得「母基金代碼」為『《母基金代碼》』且「計價幣別」為『《收付幣別》』之「基金代碼」及「計價幣別」
+若外幣發行額度控管方式(@ExchUnitLmt)為『2.外幣總額』且「《收付幣別》」非『TWD.新台幣』，至【境內子基金明細檔(DTA_FND_FundDetail)】取得「母基金代碼」為『《母基金代碼》』且「計價幣別」非『TWD.新台幣』之「基金代碼」及「計價幣別」
+額度控管的換算比率(@UnitConvRate)：
+若外幣發行額度控管方式(@ExchUnitLmt)為（『0.僅發行新台幣』或『1.單一幣別』』或（『2.外幣總額』且「《收付幣別》」為『TWD.新台幣』）），至【境內基金發行幣別設定檔(DTA_FND_FundCryGroup)】取得「母基金代碼」為『《母基金代碼》』且「發行幣別」為『《收付幣別》』之「額度控管的換算比率」及「發行幣別」
+若外幣發行額度控管方式(@ExchUnitLmt)為『2.外幣總額』且「《收付幣別》」非『TWD.新台幣』，至【境內基金發行幣別設定檔(DTA_FND_FundCryGroup)】取得「母基金代碼」為『《母基金代碼》』且「發行幣別」非『TWD.新台幣』之「額度控管的換算比率」及「發行幣別」
+依【4.2.5.】取得之基金代碼清單(@FundCodeList)，逐筆進行以下處理
+正式淨值(@FormalNav)：至【TA基金淨值檔(DTA_ACC_FundNav)】取得「基金代碼」為『基金代碼 (@CURFundCode)』且「淨值日期」小於等於『《收件日期》』之最新「正式淨值」
+發行在外單位數(@OutStandingUnit)：至【TA基金淨值檔(DTA_ACC_FundNav)】取得「基金代碼」為『基金代碼 (@CURFundCode)』且「淨值日期」為『《收件日期》－2日』之「發行單位數」
+申購單位數(@SubsUnit)：
+至【基金過帳控制檔(TA_ACC_FundClosing)】取得「基金代碼」為『基金代碼(@CURFundCode)』且「結帳日期」為『《收件日期》－1日』之「申購結帳流程狀態」
+若「申購結帳流程狀態」為『5.已結帳』，則至【TA申購下單成交檔(DTA_ACC_SubsOrder)】加總「基金代碼」為基金代碼 (@CURFundCode)且「交易日期」為『《收件日期》－1日』且「申購方式」為（『1.單筆申購』或『2.轉申購』）之「成交單位數」，四捨五入至小數點第單位數小數位數(@UnitDotLen)位
+若「申購結帳流程狀態」非『5.已結帳』，則至【TA申購下單成交檔(DTA_ACC_SubsOrder)】加總「基金代碼」為基金代碼 (@CURFundCode)且「交易日期」為『《收件日期》－1日』且「申購方式」為（『1.單筆申購』或『2.轉申購』）之「成交金額」，再除以正式淨值(@FormalNav)，四捨五入至小數點第單位數小數位數(@UnitDotLen)位
+金額買回單位數(@RdmAmtUnit)：至【TA買回下單成交檔(DTA_ACC_RdmOrder)】加總「基金代碼」為『基金代碼 (@CURFundCode)』且「交易日期」為『《收件日期》－1日』且「買回方式」為『A.買回總金額』之「買回總金額」，再除以「正式淨值(@FormalNav)」，最後四捨五入至小數點第單位數小數位數(@UnitDotLen)位
+單位數買回單位數(@RdmUnit)：至【TA買回下單成交檔(DTA_ACC_RdmOrder)】加總「基金代碼」為『基金代碼 (@CURFundCode)』且「交易日期」為『《收件日期》－1日』且「買回方式」為『U.買回單位數』之「買回總單位數」，最後四捨五入至小數點第單位數小數位數(@UnitDotLen)位
+今日申購單位數(@TSubsUnit) ：
+若《交易種類》為『1.單筆申購』
+至【TA申購交易人工維護檔(DTA_TXN_SubsTxnMan)】加總「基金代碼」為基金代碼(@CURFundCode)且「收件日期」為『《收件日期》』且「申購方式」為『《交易種類》』且「申購下單單號」非『《交易單號》』之「申購金額」，再除以正式淨值(@FormalNav)，最後四捨五入至小數點第單位數小數位數(@UnitDotLen)位
+至【TA申購交易委託檔(DTA_TXN_RcvSubs)】加總「基金代碼」為基金代碼 (@CURFundCode)且「收件日期」為『《收件日期》』且「申購下單單號」（非『《交易單號》』且不存在於【TA申購交易人工維護檔(DTA_TXN_SubsManTxn)】）之「申購金額」，再除以正式淨值(@FormalNav)，最後四捨五入至小數點第單位數小數位數(@UnitDotLen)位
+若《交易種類》為『2.轉申購』
+至【TA申購交易人工維護檔(DTA_TXN_SubsTxnMan)】加總「基金代碼」為基金代碼 (@CURFundCode)且「收件日期」為『《收件日期》』且「申購方式」為『《交易種類》』且「相關下單單號」非『《交易單號》』之「申購金額」，再除以正式淨值(@FormalNav)，最後四捨五入至小數點第單位數小數位數(@UnitDotLen)位
+至【TA轉申購交易委託檔(DTA_TXN_RcvSw)】加總「基金代碼」為『基金代碼 (@CURFundCode)』且「收件日期」為『《收件日期》』且「買回交易單號」（非『《交易單號》』且不存在於【TA買回交易人工維護檔(DTA_TXN_RdmTxnMan)】）且「買回方式」為『A.買回總金額』之「買回總金額」，再除以正式淨值(@FormalNav)，最後四捨五入至小數點第單位數小數位數(@UnitDotLen)位
+至【TA轉申購交易委託檔(DTA_TXN_RcvSw)】加總「基金代碼」為基金代碼 (@CURFundCode)且「收件日期」為『《收件日期》』且「買回交易單號」（非『《交易單號》』且不存在於【TA買回交易人工維護檔(DTA_TXN_RdmTxnMan)】）且「買回方式」為『U.買回單位數』之「買回總單位數」，最後四捨五入至小數點第單位數小數位數(@UnitDotLen)位
+加總【4.2.7.6.1.1.】和【4.2.7.6.1.2.】和【4.2.7.6.2.1.】和【4.2.7.6.2.2.】和【4.2.7.6.2.3.】
+交易單位數(@Unit)：
+若基金代碼 (@CURFundCode)為『《基金代碼》』
+《交易金額》有值時，《交易金額》除以正式淨值(@FormalNav)，最後四捨五入至小數點第單位數小數位數(@UnitDotLen)位
+《交易單位數》有值時，欄位值為『《交易單位數》』
+若基金代碼(@CURFundCode) 非『《基金代碼》』，欄位值為『0』
+預估截至該筆申購之發行在外單位數(@EstUnit)：發行在外單位數(@OutStandingUnit)＋申購單位數(@SubsUnit)－金額買回單位數(@RdmAmtUnit)－單位數買回單位數(@RdmUnit)＋今日申購單位數(@TSubsUnit)＋交易單位數(@Unit)
+發行幣在外單位數(@TotEstUnit)：
+若外幣發行額度控管方式(@ExchUnitLmt)為（『0.僅發行新台幣』或『1.單一幣別』或（『2.外幣總額』且「《收付幣別》」為『TWD.新台幣』））
+加總預估截至該筆申購之發行在外單位數(@EstUnit)，再乘以該幣別之額度控管的換算比率(@UnitConvRate)，最後四捨五入至小數點第單位數小數位數(@UnitDotLen)位
+若外幣發行額度控管方式(@ExchUnitLmt)為『2.外幣總額』且「《收付幣別》」非『TWD.新台幣』
+依幣別加總預估截至該筆申購之發行在外單位數(@EstUnit)，再乘以該幣別之額度控管的換算比率(@UnitConvRate)
+加總所有幣別之【4.2.8.2.1.】，最後四捨五入至小數點第單位數小數位數(@UnitDotLen)位
+額控單位數(@QuotaUnit)：淨發行單位數上限(@LmtUnit)＊額度控管比率(@FundQuoLmtRate)
+若「發行幣在外單位數(@TotEstUnit)」大於額控單位數(@QuotaUnit)，則回傳『Y.是』；反之，則回傳『N.否』
+三、UTY2010003：TACKSingleDebitLimit
+檢核扣款行的單筆扣款限額(For交易) Url：{root}/TAapi/Utility/Biz/TxChkData/TACKSingleDebitLimit
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+扣款平台類別\nDebitPlatType	String	V	1．選項(OPT：TA-000167)
+扣款機構\nOrgCode	String	V
+扣款幣別\nCryID	String	V
+扣款金額\nDebitAmt	Decimal	V
+
+邏輯說明
+資料來源檔案
+檢核單筆扣款限額(TABizUtility.ChkSingleDebitLimit)
+資料處理說明
+以傳入參數至【檢核單筆扣款限額(TABizUtility.ChkSingleDebitLimit)】取得資料
+若「檢核失敗否(IsCheckFailed)」為『True』，則回傳結果代碼{TA00040}
+四、UTY2010004：TACKDailyDebitLimit
+檢核扣款行的每日扣款限額(For交易) Url：{root}/TAapi/Utility/Biz/TxCHK/TACKDailyDebitLimit
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+扣款平台類別\nDebitPlatType	String	V	1．選項(OPT：TA-000167)
+扣款機構\nOrgCode	String	V
+扣款幣別\nCryID	String	V
+扣款金額\nDebitAmt	Decimal	V
+扣款日期\nDebitDate	DateTime	V
+財金每日扣款限額類別\nFISDailyLimitType	String	O	1．扣款平台類別為『FIS』時，為必填欄位\n2．選項(OPT：TA-000096)
+
+邏輯說明
+資料來源檔案
+檢核每日扣款限額(TABizUtility.ChkDailyDebitLimit)
+資料處理說明
+以傳入參數至【檢核每日扣款限額(TABizUtility.ChkDailyDebitLimit)】取得資料
+若「檢核失敗否(IsCheckFailed)」為『True』，則回傳結果代碼{TA00041}
+五、UTY2010005：TACKFundTxnRisk
+檢核受益人風險屬性與基金風險屬性是否符合 Url：{root}/TAapi/Utility/Biz/TxChkData/TACKFundTxnRisk
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+最新受益人風險屬性BFRiskLevel	String	V	1．選項(OPT：TA-000073)\n2．此為受益人基本資料登載的「最新KYC風險屬性」
+基金風險屬性FundRiskLevel	String	V	1．選項(OPT：TA-000003)
+KYC過期否\nIsExpired	Bool	V
+
+邏輯說明
+資料來源檔案
+檢核受益人與基金的風險屬性配對(BizUtility.ChkBFFundRisk)
+資料處理說明
+以傳入參數至【檢核受益人與基金的風險屬性配對(BizUtility.ChkBFFundRisk)】取得資料
+若「檢核失敗否(IsCheckFailed)」為『True』時，判斷《KYC過期否》
+為『True』時，則回傳結果代碼{TXN0013}
+為『False』時，則回傳結果代碼{TXN0005}
+六、UTY2010006：TACKAgentTxData
+檢核銷售機構是否已有交易資料 Url：{root}/TAapi/Utility/Biz/TxChkData/TACKAgentTxData
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+銷售機構類別\nAgentType	String	V	1．選項(OPT：TA-000053)
+銷售機構代碼\nAgentCode	String	V
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+交易清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+已有交易否\nIsHaveData	Bool
+
+邏輯說明
+資料來源檔案
+TA申購交易委託檔(DTA_TXN_RcvSubs)
+TA申購交易委託Edit檔(DTA_TXN_RcvSubs_Edit)
+TA買回交易委託檔(DTA_TXN_RcvRdm)
+TA買回交易委託Edit檔(DTA_TXN_RcvRdm_Edit)
+TA申購交易人工維護檔(DTA_TXN_SubsTxnMan)
+TA申購交易人工維護Edit檔(DTA_TXN_SubsTxnMan_Edit)
+TA買回交易人工維護檔(DTA_TXN_RdmTxnMan)
+TA買回交易人工維護Edit檔(DTA_TXN_RdmTxnMan_Edit)
+TA買回交易明細人工維護檔(DTA_TXN_RdmTxnManDtl)
+TA買回交易明細人工維護Edit檔(DTA_TXN_RdmTxnManDtl_Edit)
+TARSP契約檔(DTA_RSP_RSPTrade)
+TARSP契約Edit檔(DTA_RSP_RSPTrade_Edit)
+資料處理說明
+以傳入參數至【資料來源檔案】取得資料。若任一檔案有取得資料時，為『True』，反之為『False』
+《銷售機構代碼》採模糊搜尋
+七、UTY2010007：TACKFundAgentTxData
+檢核基金承銷售機構是否已有交易資料 Url：{root}/TAapi/Utility/Biz/TxChkData/TACKFundAgentTxData
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+母基金代碼\nPrtFundCode	String	V
+銷售機構類別\nAgentType	String	V	1．選項(OPT：TA-000053)
+銷售機構代碼\nAgentCode	String	V
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+交易清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+已有交易否\nIsHaveData	Bool
+
+邏輯說明
+資料來源檔案
+TA申購交易委託檔(DTA_TXN_RcvSubs)
+TA

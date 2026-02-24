@@ -1,0 +1,269 @@
+User Interface Specification
+目錄
+應用程式介面說明 2
+壹、功能說明 2
+貳、變更說明 2
+叁、傳入傳出參數(Utility) 2
+一、UTY2008001：TAGetCanCPldgUnit 2
+二、UTY2008002：TAGetPldgWriteoffData 3
+三、UTY2008003：TAGetCanBFRCertUnit 5
+四、UTY2008004：TAGetWriteoffCertData 6
+五、UTY2008005：TAGetCanRLossUnit 8
+六、UTY2008006：TAGetLossWriteoffData 8
+七、UTY2008007：TAGetCanCPldgUnit 10
+八、UTY2008008：TAGetFrzWriteoffData 11
+應用程式介面說明
+壹、功能說明
+取得受益權相關資料。
+貳、變更說明
+[TABLE]
+變更日期	變更人員	變更說明
+2025/11/13~2025/11/20	Meg Pan	1．Build
+
+
+叁、傳入傳出參數(Utility)
+一、UTY2008001：TAGetCanCPldgUnit
+取得TA可質解的單位數 Url：{root}/TAapi/Utility/TACertInfo/TAGetCanCPldgUnit
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nU	欄位說明	備註
+公司代碼\nSysCoID	String	V
+基金代碼\nFundCode	String	V
+戶號\nBFNo	Int	V
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+可質解單位數\nCanCPldgUnit	Decimal
+
+邏輯說明
+資料來源檔案
+取得TA可質解單位數(TABizUtility.GetCanCPldgUnit)
+資料處理說明
+依傳入參數至【取得TA可質解單位數(TABizUtility.GetCanCPldgUnit)】取得資料
+二、UTY2008002：TAGetPldgWriteoffData
+取得TA可沖銷的質設設定及憑證資料 Url：{root}/TAapi/Utility/TACertInfo/TAGetPldgWriteoffData
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+資料查詢類別\nQueryDataKind	String	V	1．選項\n1：質設設定、2：受益憑證、9：全部
+基金代碼\nFundCode	String	V
+戶號\nBFNo	Int	V
+質解日期\nCPldgDate	DateTime	V
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+可沖銷清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+質設清單\nPldgList	List
+憑證清單\nCertList	List
+
+質設清單PldgList
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+質設書號\nPldgNo	String
+質設日期\nPldgDate	Datetime
+質權人身分證字號\nPldeID	String
+質權人姓名\nPldeName	String
+原質設單位數\nOrgPldgUnit	Decimal
+可質解單位數\nCanCPldgUnit	Decimal
+質解單位數\nCPldgUnit	Decimal
+
+憑證清單CertList
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+質設書號\nPldgNo	String
+質設日期\nPldgDate	Datetime
+質權人身分證字號\nPldeID	String
+質權人姓名\nPldeName	String
+受益憑證期別\nCertIssueCode	String
+受益憑證號碼\nCertNo	String
+受益憑證檢查碼\nCertChkNo	Int
+憑證號碼\nFullCertNo	String
+憑證單位數\nCertUnit	Decimal
+
+邏輯說明
+資料來源檔案
+取得TA可沖銷質設資料(TABizUtility.GetWriteoffPldg)
+取得TA可沖銷質設憑證資料(TABizUtility.GetWriteoffPldgCert)
+資料處理說明
+若《資料查詢類別》為『1.質設設定』或「9.全部」時
+質設清單(@PldgList)：依傳入參數至【取得TA可沖銷質設資料(TABizUtility.GetWriteoffPldg)】取得資料
+若《資料查詢類別》為『2.受益憑證』或「9.全部」時
+憑證清單(@CertList)：依傳入參數至【取得TA可沖銷質設憑證資料(TABizUtility.GetWriteoffPldgCert)】取得資料
+三、UTY2008003：TAGetCanBFRCertUnit
+取得TA可換發/掛失的憑證單位數 Url：{root}/TAapi/Utility/TACertInfo/TAGetCanBFRCertUnit
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nU	欄位說明	備註
+公司代碼\nSysCoID	String	V
+交易類別\nTxType	String	V	1．選項(OPT：TA-900056)
+基金代碼\nFundCode	String	V
+戶號\nBFNo	Int	V
+交易日期\nTxDate	DateTime	V	1．若《交易類別》為『84.換發』，則傳入值為「換發日期」\n2．若《交易類別》為『85.掛失』，則傳入值為「掛失日期」
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+憑證單位數\nTxnCertUnit	Decimal
+可買回憑證單位數\nCanCertUnit	Decimal
+
+邏輯說明
+資料來源檔案
+取得TA可買回單位數(TABizUtility.GetCanRedemUnit)
+資料處理說明
+依傳入參數至【取得TA可買回單位數(TABizUtility.GetCanRedemUnit)】取得資料
+四、UTY2008004：TAGetWriteoffCertData
+取得TA可沖銷的憑證資料 Url：{root}/TAapi/Utility/TACertInfo/TAGetWriteoffCertData
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+基金代碼\nFundCode	String	V
+戶號\nBFNo	Int	V
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+可沖銷清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+受益憑證期別\nCertIssueCode	String
+受益憑證號碼\nCertNo	String
+受益憑證檢查碼\nCertChkNo	Int
+憑證號碼\nFullCertNo	String
+憑證單位數\nCertUnit	Decimal
+
+邏輯說明
+資料來源檔案
+取得TA可沖銷憑證資料(TABizUtility.GetWriteoffCert)
+資料處理說明
+憑證清單(@CertList)：依傳入參數至【取得TA可沖銷憑證資料(TABizUtility.GetWriteoffCert)】取得資料
+五、UTY2008005：TAGetCanRLossUnit
+取得TA可掛撤/掛補的單位數 Url：{root}/TAapi/Utility/TACertInfo/TAGetCanRLossUnit
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nU	欄位說明	備註
+公司代碼\nSysCoID	String	V
+基金代碼\nFundCode	String	V
+戶號\nBFNo	Int	V
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+可掛撤掛補單位數\nCanRLossUnit	Decimal
+
+邏輯說明
+資料來源檔案
+取得TA可掛撤/掛補單位數(TABizUtility.GetCanRLossUnit)
+資料處理說明
+依傳入參數至【取得TA可掛撤/掛補單位數(TABizUtility.GetCanRLossUnit)】取得資料
+六、UTY2008006：TAGetLossWriteoffData
+取得TA可沖銷的掛失憑證資料 Url：{root}/TAapi/Utility/TACertInfo/TAGetLossWriteoffData
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+交易類別\nTxType	String	V	1．選項(OPT：TA-900056)
+基金代碼\nFundCode	String	V
+戶號\nBFNo	Int	V
+掛撤掛補日期\nRLossDate	DateTime	V
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+可沖銷清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+掛失書號\nLossNo	String
+掛失日期\nLossDate	Datetime
+受益憑證期別\nCertIssueCode	String
+受益憑證號碼\nCertNo	String
+受益憑證檢查碼\nCertChkNo	Int
+憑證號碼\nFullCertNo	String
+憑證單位數\nCertUnit	Decimal
+
+邏輯說明
+資料來源檔案
+取得TA可沖銷掛失憑證資料(TABizUtility.GetWriteoffLossCert)
+資料處理說明
+依傳入參數至【取得TA可沖銷掛失憑證資料(TABizUtility.GetWriteoffLossCert)】取得資料
+七、UTY2008007：TAGetCanCPldgUnit
+取得TA可凍結解除的單位數 Url：{root}/TAapi/Utility/TACertInfo/TAGetCanCFrzUnit
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nU	欄位說明	備註
+公司代碼\nSysCoID	String	V
+基金代碼\nFundCode	String	V
+戶號\nBFNo	Int	V
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+可質解單位數\nCanCPldgUnit	Decimal
+
+邏輯說明
+資料來源檔案
+取得TA可凍結解除單位數(TABizUtility.GetCanCFrzUnit)
+資料處理說明
+依傳入參數至【取得TA可凍結解除單位數(TABizUtility.GetCanCFrzUnit)】取得資料
+八、UTY2008008：TAGetFrzWriteoffData
+取得TA可沖銷的凍結設定及憑證資料 Url：{root}/TAapi/Utility/TACertInfo/TAGetFrzWriteoffData
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+資料查詢類別\nQueryDataKind	String	V	1．選項\n1：凍結設定、2：受益憑證、9：全部
+基金代碼\nFundCode	String	V
+戶號\nBFNo	Int	V
+凍結解除日期\nCFrzDate	DateTime	V
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+可沖銷清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+凍結清單\nCFrzList	List
+憑證清單\nCertList	List
+
+凍結清單CFrzList
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+凍結書號\nFrzNo	String
+凍結日期\nFrzDate	Datetime
+原凍結單位數\nOrgFrzUnit	Decimal
+可凍結解除單位數\nCanCFrzUnit	Decimal
+凍結解除單位數\nCFrzUnit	Decimal
+
+憑證清單CertList
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+凍結書號\nFrzNo	String
+凍結日期\nFrzDate	Datetime
+受益憑證期別\nCertIssueCode	String
+受益憑證號碼\nCertNo	String
+受益憑證檢查碼\nCertChkNo	Int
+憑證號碼\nFullCertNo	String
+憑證單位數\nCertUnit	Decimal
+
+邏輯說明
+資料來源檔案
+取得TA可沖銷凍結資料(TABizUtility.GetWriteoffFrzSubs)
+取得TA可沖銷凍結憑證資料(TABizUtility.GetWriteoffFrzCert)
+資料處理說明
+若《資料查詢類別》為『1.凍結設定』或「9.全部」時
+凍結清單(@FrzList)：依傳入參數至【取得TA可沖銷凍結資料(TABizUtility.GetWriteoffFrzSubs)】取得資料
+若《資料查詢類別》為『2.受益憑證』或「9.全部」時
+憑證清單(@CertList)：依傳入參數至【取得TA可沖銷凍結憑證資料(TABizUtility.GetWriteoffFrzCert)】取得資料

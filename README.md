@@ -66,20 +66,113 @@ docker compose -f deploy/compose/docker-compose.yml up --build
 ## Project Layout
 
 ```
-go-transfer-agent/
-├── api-gateway/          # Gin HTTP gateway (REST + Swagger + JWT)
-├── services/
-│   ├── FND/              # Fund service (gRPC) — MVP target
-│   └── _template/        # Copy-paste scaffold for new services
-├── common/
-│   ├── proto/            # Protobuf contracts
-│   ├── gen/              # Generated Go code (protoc)
-│   └── platform/         # Shared wiring (config, logger, db, grpc)
-├── deploy/
-│   ├── docker/           # Dockerfiles
-│   └── compose/          # Docker Compose
-├── docs/                 # Architecture docs
-└── scripts/              # Dev scripts (swagger gen, proto gen, tests)
+ta-platform/
+  go.mod
+  go.sum
+  README.md
+  docs/
+    architecture.md
+    api/
+      postman_collection.json
+      bruno/
+    thai/
+      README.th.md
+      terminology.th.md
+
+  common/
+    proto/
+      fnd/v1/
+        fnd.proto
+        common.proto
+      customer/v1/
+        customer.proto
+    gen/                 # generated Go code (protoc/buf)
+    middleware/
+      authclaims.go      # shared claims struct + helpers (no framework deps)
+    platform/
+      config/            # viper/envconfig style loader (your choice)
+      logger/            # zap/slog wrapper
+      db/
+        postgres.go      # opens *gorm.DB
+      grpc/
+        interceptors.go  # shared interceptors: auth, logging, request-id
+      errs/
+        grpcerrs.go      # map domain errors -> gRPC status
+
+  api-gateway/
+    cmd/gateway/
+      main.go
+    internal/
+      http/
+        router.go
+        middleware/
+          jwt.go          # hard-coded JWT middleware (MVP)
+          requestid.go
+        handlers/
+          fnd_handlers.go # REST->gRPC mapping
+          health.go
+      grpcclient/
+        fnd.go
+
+  services/
+    _template/            # copy this to create new service
+      cmd/service/main.go
+      internal/
+        adapter/
+          grpc/
+          persistence/
+        domain/
+        usecase/
+      migrations/
+      test/
+
+    FND/
+      cmd/fnd/main.go
+      internal/
+        adapter/
+          grpc/
+            server.go
+            interceptor_auth.go
+            mapper.go
+          persistence/
+            gorm/
+              db.go
+              models.go
+              repos.go
+        domain/
+          money/
+            thb.go
+          transfer/
+            entity.go
+            status.go
+          approval/
+            maker_checker.go
+        usecase/
+          submit.go
+          approve.go
+          query.go
+      migrations/
+        automigrate.go     # uses GORM AutoMigrate (MVP) citeturn1search0
+      test/
+        unit/
+        integration/
+
+  deploy/
+    docker/
+      Dockerfile.gateway
+      Dockerfile.fnd
+    compose/
+      docker-compose.yml
+    gcp/
+      cloudrun.md
+      gke.md
+      env.example
+
+  scripts/
+    gen_proto.sh
+    lint.sh
+    test.sh
+
 ```
 
 ## Architecture

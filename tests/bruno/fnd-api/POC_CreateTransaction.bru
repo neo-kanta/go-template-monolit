@@ -1,0 +1,21 @@
+meta {
+  name: POC - Create Transaction
+  type: http
+  seq: 20
+}
+
+post {
+  url: http://localhost:8081/api/v1/transactions
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "from_account": "1234567890",
+    "to_account": "0987654321",
+    "amount_minor": 1000,
+    "currency": "THB",
+    "memo": "Test transaction"
+  }
+}

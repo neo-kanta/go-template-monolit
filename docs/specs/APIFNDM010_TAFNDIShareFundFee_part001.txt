@@ -1,0 +1,72 @@
+User Interface Specification
+目錄
+應用程式介面說明 2
+APIFNDM010：TAFNDIShareFundFee 2
+壹、功能說明 2
+貳、變更說明 2
+叁、傳入傳出參數(Function) 2
+一、傳入參數 2
+二、傳出參數 3
+三、邏輯說明 4
+肆、傳入傳出參數(檢核) 4
+伍、傳入傳出參數(Get) 4
+應用程式介面說明
+APIFNDM010：TAFNDIShareFundFee
+壹、功能說明
+建立法人級別基金手續費率的收取方式及收取標準。
+Url：{root}/TAapi/Fund/TAFNDIShareFundFee
+貳、變更說明
+[TABLE]
+變更日期	變更人員	變更說明
+2024/03/13	Johnson	1．ReBuild
+2024/07/01	Dechang Chen	Modify，配合多公司別調整\n1．APIFNDM010：新增欄位「公司代碼」
+2024/11/27	Dechang Chen	Modify\n1．APIFNDM010：傳入參數「公司代碼」調整為必填
+2025/02/20	Ann Wu	Modify\n1．配合前端頁籤呈現增加公司代碼回傳資訊
+
+叁、傳入傳出參數(Function)
+一、傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+基金代碼\nFundCode	String	O
+法人級別基金手續費清單\nIShareFundFeeList	List
+
+法人級別基金手續費清單IShareFundFeeList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String
+基金代碼\nFundCode	String
+級距金額(含)以上RangeAmtAbove	Decimal
+申購手續費率(%)\nSubsFeeRate	Decimal
+
+二、傳出參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+基金資訊清單\nResultList \ Master	List	V	V
+法人級別基金手續費清單\nIShareFundFeeList	List		V
+
+ResultList \ Master
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+公司代碼\nSysCoID	String	V	V
+公司名稱\nSysCoIDNM	String		V	1．公司代碼名稱查詢.公司名稱(SysUtility.GetSysCoNM.SysCoIDNM)
+基金代碼\nFundCode	String	V	V
+基金簡稱\nFundCodeNM	String	V	V	1．境內基金簡稱查詢.基金簡稱(SysUtility.GetDFundNM.FundCodeNM)
+
+法人級別基金手續費清單IShareFundFeeList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+公司代碼\nSysCoID	String		V
+基金代碼\nFundCode	String		V
+級距金額(含)以上\nRangeAmtAbove	Decimal		V
+申購手續費率(%)\nSubsFeeRate	Decimal		V
+
+三、邏輯說明
+資料來源檔案
+更新檔案
+法人級別基金手續費率設定Edit檔(DTA_FND_IShareFundFee_Edit)
+法人級別基金手續費率設定Edit明細檔(DTA_FND_IShareFundFeeSub_Edit)
+肆、傳入傳出參數(檢核)
+無。
+伍、傳入傳出參數(Get)
+無。

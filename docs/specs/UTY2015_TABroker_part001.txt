@@ -1,0 +1,179 @@
+User Interface Specification
+目錄
+應用程式介面說明 2
+壹、功能說明 2
+貳、變更說明 2
+叁、傳入傳出參數(Utility) 2
+一、UTY2015001：TAGetBrokerHead 2
+二、UTY2015002：TAGetBrokerBrh 3
+三、UTY2015003：TAGetBroker 4
+四、UTY2015004：TAGetBrokerHeadInfo 5
+五、UTY2015005：TAGetBrokerBrhInfo 6
+六、UTY2015006：TAGetBrokerInfo 8
+應用程式介面說明
+壹、功能說明
+券商相關API
+貳、變更說明
+[TABLE]
+變更日期	變更人員	變更說明
+2023/06/01	Meg Pan	1．Build
+2025/12/26	Meg Pan	Modify，配合前端組件，選項String『Y、N』變更為Bool『True、False』\n1．UTY2015001、UTY2015002、UTY2015003：「有效碼」\n2．UTY2015004、UTY2015005：「有效碼」、「虛擬券商否」\n3．UTY2015006：「有效碼」、「虛擬券商否」、「券商總行否」
+
+叁、傳入傳出參數(Utility)
+一、UTY2015001：TAGetBrokerHead
+取得券商總行代碼(For Searcher) Url：{root}/TAapi/BaseUtility/BrokerInfo/TAGetBrokerHead
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+券商總行代碼\nBrokerHeadID	String	O
+有效碼\nIsValid	Bool	O
+含虛擬券商\nIsInclVirtual	Bool	O	1．預設為False
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+券商清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+券商代碼\nBrokerID	String
+券商簡稱\nBrokerIDNM	String
+
+邏輯說明
+資料來源檔案
+取得券商查詢資料(SysUtility.GetBrokerV)：取得「資料查詢類別」為『1.總行』的資料
+二、UTY2015002：TAGetBrokerBrh
+取得券商分行代碼(For Searcher) Url：{root}/TAapi/BaseUtility/BrokerInfo/TAGetBrokerBrh
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+券商總行代碼\nBrokerHeadID	String	V
+券商代碼\nBrokerID	String	O
+有效碼\nIsValid	Bool	O
+含虛擬券商\nIsInclVirtual	Bool	O	1．預設為False
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+券商清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+券商代碼\nBrokerID	String
+券商簡稱\nBrokerIDNM	String
+
+邏輯說明
+資料來源檔案
+取得券商查詢資料(SysUtility.GetBrokerV)：取得「資料查詢類別」為『2.分行』的資料
+三、UTY2015003：TAGetBroker
+取得券商總行及分行的代碼(For Searcher) Url：{root}/TAapi/BaseUtility/BrokerInfo/TAGetBroker
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+券商總行代碼\nBrokerHeadID	String	O
+券商代碼\nBrokerID	String	O
+有效碼\nIsValid	Bool	O
+含虛擬券商\nIsInclVirtual	Bool	O	1．預設為False
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+券商清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+券商代碼\nBrokerID	String
+券商簡稱\nBrokerIDNM	String
+
+邏輯說明
+資料來源檔案
+取得券商查詢資料(SysUtility.GetBrokerV)：取得「資料查詢類別」為『0.總行+分行』的資料
+四、UTY2015004：TAGetBrokerHeadInfo
+取得券商總行相關資料 Url：{root}/TAapi/BaseUtility/BrokerInfo/TAGetBrokerHeadInfo
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+券商總行代碼\nBrokerHeadID	String	O
+有效碼\nIsValid	Bool	O
+含虛擬券商\nIsInclVirtual	Bool	O	1．預設為False
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+券商清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+券商類型\nBrokerType	String	1．選項(OPT：TA-000082)
+券商代碼\nBrokerID	String
+券商簡稱\nBrokerIDNM	String
+公會代碼\nAssnCode	String
+虛擬券商否\nIsVirtualBroker	Bool
+有效碼\nIsValid	Bool
+
+邏輯說明
+資料來源檔案
+取得券商查詢資料(SysUtility.GetBrokerV)：取得「資料查詢類別」為『1.總行』的資料
+五、UTY2015005：TAGetBrokerBrhInfo
+取得券商分行資料 Url：{root}/TAapi/BaseUtility/BrokerInfo/TAGetBrokerBrhInfo
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+券商總行代碼\nBrokerHeadID	String	V
+券商代碼\nBrokerID	String	O
+有效碼\nIsValid	Bool	O
+含虛擬券商\nIsInclVirtual	Bool	O	1．預設為False
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+券商清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+券商類型\nBrokerType	String	1．選項(OPT：TA-000082)
+券商代碼\nBrokerID	String
+券商簡稱\nBrokerIDNM	String
+公會代碼\nAssnCode	String
+虛擬券商否\nIsVirtualBroker	Bool
+有效碼\nIsValid	Bool
+
+邏輯說明
+資料來源檔案
+取得券商查詢資料(SysUtility.GetBrokerV)：取得「資料查詢類別」為『2.分行』的資料
+六、UTY2015006：TAGetBrokerInfo
+取得券商總行及分行的資料 Url：{root}/TAapi/BaseUtility/BrokerInfo/TAGetBrokerInfo
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+券商總行代碼\nBrokerHeadID	String	O
+券商代碼\nBrokerID	String	O
+有效碼\nIsValid	Bool	O
+含虛擬券商\nIsInclVirtual	Bool	O	1．預設為False
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+券商清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+券商類型\nBrokerType	String	1．選項(OPT：TA-000082)
+券商代碼\nBrokerID	String
+券商簡稱\nBrokerIDNM	String
+券商總行否\nIsHeadBroker	Bool
+券商總行代碼\nBrokerHeadID	String
+券商總行簡稱\nBrokerHeadIDNM	String
+公會代碼\nAssnCode	String
+虛擬券商否\nIsVirtualBroker	Bool
+有效碼\nIsValid	Bool
+
+邏輯說明
+資料來源檔案
+取得券商查詢資料(SysUtility.GetBrokerV)：取得「資料查詢類別」為『0.總行+分行』的資料

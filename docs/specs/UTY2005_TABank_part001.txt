@@ -1,0 +1,459 @@
+User Interface Specification
+目錄
+應用程式介面說明 3
+壹、功能說明 3
+貳、變更說明 3
+叁、傳入傳出參數(Utility) 4
+一、UTY2005001：TAGetBankHead 4
+二、UTY2005002：TAGetBankBrh 5
+三、UTY2005003：TAGetBank 6
+四、UTY2005004：TASetBankHead 8
+五、UTY2005005：TASetBankBrh 9
+六、UTY2005006：TASetBank 10
+七、UTY2005007：TAGetBankHeadInfo 11
+八、UTY2005008：TAGetBankBrhInfo 13
+九、UTY2005009：TAGetBankInfo 15
+十、UTY2005010：TATxBankHead(XX) 17
+十一、UTY2005011：TATxBankBrh 18
+十二、UTY2005012：TATxBank (XX) 19
+十三、UTY2005013：TAGetFHDebitBank 20
+十四、UTY2005014：TACKBankAcctLength 22
+應用程式介面說明
+壹、功能說明
+銀行相關API
+貳、變更說明
+[TABLE]
+變更日期	變更人員	變更說明
+2024/02/27	Meg Pan	1．ReBuild
+2024/04/26~2024/05/07	Meg Pan	Modify\n1．UTY2005013：配合申購作業調整\n2．UTY2005007、UTY2005008、UTY2005009：配合【往來機構資料維護作業(CMMM022)】調整規格，移除「台外幣綜合帳戶否」欄位
+2024/06/07~2024/06/18	Joyce Lin	Modify\n1．UTY2005011：配合受益人作業調整傳出參數增加「虛擬機構否」、「銀行類型」欄位
+2024/06/27	Meg Pan	Modify\n1．UTY2005013：暫不開發，原應用情境消失
+2024/07/09	Dechang Chen	Modify，配合多公司別調整\n1．UTY2005001、UTY2005002、UTY2005003、UTY2005004、UTY2005005、UTY2005006、UTY2005007、UTY2005008、UTY2005009、UTY2005011：新增傳入參數「公司代碼」
+2024/12/04	Meg Pan	Modify，配合TA_CMM_Org 新增欄位「帳號長度檢核類別」\n1．UTY2005005、UTY2005007、UTY2005008、UTY2005009、UTY2005011：刪除傳出參數「帳號長度1」~「帳號長度4」\n2．UTY2005014：Add
+2024/12/05	Joyce Lin	Modify\n1．UTY2005014：錯誤訊息代碼調整、Url調整
+2025/02/21	Meg Pan	Modify\n1．UTY2005013：Rebulid，重新定義為【取得投信扣款機構代碼】
+2025/05/07	Joyce Lin	Modify\n1．UTY2005013：調整《查詢類型》為『B.機構代碼』的判斷邏輯
+2025/07/28	Dechang Chen	Modify\n1．UTY2005013：調整《查詢類型》判斷邏輯
+2005/12/15	Meg Pan	Modify，，配合【定額契約作業(RSPM001)】\n1．UTY2005001：新增傳入參數「查詢類型」、新增傳出參數「銀行類型」
+2025/12/26	Meg Pan	Modify，配合前端組件，選項String『Y、N』變更為Bit『1.True、0.False』\n1．UTY2005001、UTY2005002、UTY2005003：「有效碼」、「線上開戶買回銀行」、「EC核印-晶片金融卡」、「EC核印-網路銀行」\n2．UTY2005004、UTY2005005、UTY2005006：「有效碼」\n3．UTY2005007、UTY2005008、UTY2005009：「有效碼」、「線上開戶買回銀行」、「EC核印-晶片金融卡」、「EC核印-網路銀行」、「未參加ACH代付業務否」、「虛擬銀行否」\n4．UTY2005011：「有效碼」、「虛擬銀行否」\n5．UTY2005013：「總機構否」相關欄位判斷規則
+2026/01/26	Meg Pan	Modify，配合前端組件，「檢核失敗否」變更為Bool『True、False』\n1．UTY2005014
+
+叁、傳入傳出參數(Utility)
+一、UTY2005001：TAGetBankHead
+取得銀行總行代碼(Searcher For 查詢/報表條件) Url：{root}/TAapi/BaseUtility/BankInfo/TAGetBankHead
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+銀行總行代碼\nBankHeadID	String	O
+有效碼\nIsValid	Bool	O
+含虛擬銀行\nIsInclVirtual	Bool	O	1．預設為True
+線上開戶買回銀行\nIsOnlinePayBank	Bool	O
+EC核印-晶片金融卡\nIsChipCardSealBank	Bool	O
+EC核印-網路銀行\nIsOnlineSealBank	Bool	O
+查詢類型\nQueryType	String	O	1．選項\nSMP：簡易資料、ALL：詳細資料\n2．預設為SMP
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+銀行清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+銀行代碼\nBankID	String
+銀行簡稱\nBankIDNM	String
+銀行類型\nBankType	String	1．《查詢類型》為『ALL.詳細資料』時，才有傳出值\n2．選項(OPT：TA-000021)
+
+邏輯說明
+資料來源檔案
+取得銀行查詢資料(SysUtility.GetBankV)：取得「資料查詢類別」為『1.總行』的資料
+二、UTY2005002：TAGetBankBrh
+取得銀行分行代碼(Searcher For 查詢/報表條件) Url：{root}/TAapi/BaseUtility/BankInfo/TAGetBankBrh
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+銀行總行代碼\nBankHeadID	String	O
+銀行代碼\nBankID	String	O
+有效碼\nIsValid	Bool	O
+含虛擬銀行\nIsInclVirtual	Bool	O	1．預設為True
+線上開戶買回銀行\nIsOnlinePayBank	Bool	O
+EC核印-晶片金融卡\nIsChipCardSealBank	Bool	O
+EC核印-網路銀行\nIsOnlineSealBank	Bool	O
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+銀行清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+銀行代碼\nBankID	String
+銀行簡稱\nBankIDNM	String
+
+邏輯說明
+資料來源檔案
+取得銀行查詢資料(SysUtility.GetBankV)：取得「資料查詢類別」為『2.分行』的資料
+三、UTY2005003：TAGetBank
+取得銀行代碼(Searcher For 查詢/報表條件) Url：{root}/TAapi/BaseUtility/BankInfo/TAGetBank
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+銀行總行代碼\nBankHeadID	String	O
+銀行代碼\nBankID	String	O
+有效碼\nIsValid	Bool	O
+含虛擬銀行\nIsInclVirtual	Bool	O	1．預設為True
+線上開戶買回銀行\nIsOnlinePayBank	Bool	O
+EC核印-晶片金融卡\nIsChipCardSealBank	Bool	O
+EC核印-網路銀行\nIsOnlineSealBank	Bool	O
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+銀行清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+銀行代碼\nBankID	String
+銀行簡稱\nBankIDNM	String
+
+邏輯說明
+資料來源檔案
+取得銀行查詢資料(SysUtility.GetBankV)：取得「資料查詢類別」為『0.總行+分行』的資料
+四、UTY2005004：TASetBankHead
+取得銀行總行資料(Searcher For 其他作業特殊欄位使用) Url：{root}/TAapi/BaseUtility/BankInfo/TASetBankHead
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+銀行總行代碼\nBankHeadID	String	O
+有效碼\nIsValid	Bool	O	1．預設為『True』
+含虛擬銀行\nIsInclVirtual	Bool	O	1．預設為『True』
+查詢類型\nQueryType	String	O	1．選項\nSMP：簡易資料、ALL：詳細資料\n2．預設為SMP
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+銀行清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+銀行代碼\nBankID	String
+銀行簡稱\nBankIDNM	String
+SWIFT代碼\nSWIFTCode	String	1．《查詢類型》為『ALL.詳細資料』時，才有傳出值
+公司地址\nAddr	String	1．《查詢類型》為『ALL.詳細資料』時，才有傳出值
+銀行次要名稱\nBankSName	String	1．《查詢類型》為『ALL.詳細資料』時，才有傳出值
+
+邏輯說明
+資料來源檔案
+取得銀行查詢資料(SysUtility.GetBankV)：取得「資料查詢類別」為『1.總行』的資料
+五、UTY2005005：TASetBankBrh
+取得銀行分行資料(Searcher For 其他作業特殊欄位使用) Url：{root}/TAapi/BaseUtility/BankInfo/TASetBankBrh
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+銀行總行代碼\nBankHeadID	String	O
+銀行代碼\nBankID	String	O
+有效碼\nIsValid	Bool	O	1．預設為『True』
+含虛擬銀行\nIsInclVirtual	Bool	O	1．預設為『True』
+查詢類型\nQueryType	String	O	1．選項\nSMP：簡易資料、ALL：詳細資料\n2．預設為SMP
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+銀行清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+銀行代碼\nBankID	String
+銀行簡稱\nBankIDNM	String
+SWIFT代碼\nSWIFTCode	String	1．《查詢類型》為『ALL.詳細資料』時，才有傳出值
+
+邏輯說明
+資料來源檔案
+取得銀行查詢資料(SysUtility.GetBankV)：取得「資料查詢類別」為『2.分行』的資料
+六、UTY2005006：TASetBank
+取得銀行資料(Searcher For 其他作業特殊欄位使用) Url：{root}/TAapi/BaseUtility/BankInfo/TASetBank
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+銀行總行代碼\nBankHeadID	String	O
+銀行代碼\nBankID	String	O
+有效碼\nIsValid	Bool	O	1．預設為『True』
+含虛擬銀行\nIsInclVirtual	Bool	O	1．預設為『True』
+查詢類型\nQueryType	String	O	1．選項\nSMP：簡易資料、ALL：詳細資料\n2．預設為SMP
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+銀行清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+銀行代碼\nBankID	String
+銀行簡稱\nBankIDNM	String
+SWIFT代碼\nSWIFTCode	String	1．《查詢類型》為『ALL.詳細資料』時，才有傳出值
+
+邏輯說明
+資料來源檔案
+取得銀行查詢資料(SysUtility.GetBankV)：取得「資料查詢類別」為『0.總行+分行』的資料
+七、UTY2005007：TAGetBankHeadInfo
+取得銀行總行相關資料 Url：{root}/TAapi/BaseUtility/BankInfo/TAGetBankHeadInfo
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+銀行總行代碼\nBankHeadID	String	O
+有效碼\nIsValid	Bool	O
+含虛擬銀行\nIsInclVirtual	Bool	O	1．預設為True
+線上開戶買回銀行\nIsOnlinePayBank	Bool	O
+EC核印-晶片金融卡\nIsChipCardSealBank	Bool	O
+EC核印-網路銀行\nIsOnlineSealBank	Bool	O
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+銀行清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+銀行類型\nBankType	String	1．選項(OPT：TA-000021)
+銀行代碼\nBankID	String
+銀行簡稱\nBankIDNM	String
+銀行全稱\nBankIDName	String
+公會代碼\nAssnCode	String
+未參加ACH代付業務否\nIsNoACHPay	Bool
+SWIFT代碼\nSWIFTCode	String
+CNAPS 代碼\nCNAPSCode	String
+IBAN代碼\nIBANCode	String
+公司地址\nZipAddr	String
+虛擬銀行否\nIsVirtualBank	Bool
+有效碼\nIsValid	Bool
+
+邏輯說明
+資料來源檔案
+取得銀行查詢資料(SysUtility.GetBankV)：取得「資料查詢類別」為『1.總行』的資料
+八、UTY2005008：TAGetBankBrhInfo
+取得銀行分行相關資料 Url：{root}/TAapi/BaseUtility/BankInfo/TAGetBankBrhInfo
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+銀行總行代碼\nBankHeadID	String	O
+銀行代碼\nBankID	String	O
+有效碼\nIsValid	Bool	O
+含虛擬銀行\nIsInclVirtual	Bool	O	1．預設為True
+線上開戶買回銀行\nIsOnlinePayBank	Bool	O
+EC核印-晶片金融卡\nIsChipCardSealBank	Bool	O
+EC核印-網路銀行\nIsOnlineSealBank	Bool	O
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+銀行清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+銀行類型\nBankType	String	1．選項(OPT：TA-000021)
+銀行代碼\nBankID	String
+銀行簡稱\nBankIDNM	String
+銀行全稱\nBankIDName	String
+公會代碼\nAssnCode	String
+未參加ACH代付業務否\nIsNoACHPay	Bool
+SWIFT代碼\nSWIFTCode	String
+CNAPS 代碼\nCNAPSCode	String
+IBAN代碼\nIBANCode	String
+公司地址\nZipAddr	String
+虛擬銀行否\nIsVirtualBank	Bool
+有效碼\nIsValid	Bool
+
+邏輯說明
+資料來源檔案
+取得銀行查詢資料(SysUtility.GetBankV)：取得「資料查詢類別」為『2.分行』的資料
+九、UTY2005009：TAGetBankInfo
+取得銀行相關資料 Url：{root}/TAapi/BaseUtility/BankInfo/TAGetBankInfo
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+銀行總行代碼\nBankHeadID	String	O
+銀行代碼\nBankID	String	O
+有效碼\nIsValid	Bool	O
+含虛擬銀行\nIsInclVirtual	Bool	O	1．預設為True
+線上開戶買回銀行\nIsOnlinePayBank	Bool	O
+EC核印-晶片金融卡\nIsChipCardSealBank	Bool	O
+EC核印-網路銀行\nIsOnlineSealBank	Bool	O
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+銀行清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+銀行類型\nBankType	String	1．選項(OPT：TA-000021)
+銀行代碼\nBankID	String
+銀行簡稱\nBankIDNM	String
+銀行全稱\nBankIDName	String
+銀行總行否\nIsHeadBank	Bool
+銀行總行代碼\nBankHeadID	String
+銀行總行簡稱\nBankHeadIDNM	String
+公會代碼\nAssnCode	String
+未參加ACH代付業務否\nIsNoACHPay	Bool
+SWIFT代碼\nSWIFTCode	String
+CNAPS 代碼\nCNAPSCode	String
+IBAN代碼\nIBANCode	String
+公司地址\nZipAddr	String
+虛擬銀行否\nIsVirtualBank	Bool
+有效碼\nIsValid	Bool
+
+邏輯說明
+資料來源檔案
+取得銀行查詢資料(SysUtility.GetBankV)：取得「資料查詢類別」為『0.總行+分行』的資料
+十、UTY2005010：TATxBankHead(XX)
+20240227 Pan：暫不開發，沒有想到情境
+取得銀行總行代碼(交易)(Searcher For 交易) Url：{root}/TAapi/BaseUtility/BankInfo/TATxBankHead
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+銀行總行代碼\nBankHeadID	String	O
+有效碼\nIsValid	String	O	1．選項(OPT：TA-000000)\n2．預設為Y
+含虛擬銀行\nIsInclVirtual	Bool	O	1．預設為True
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+銀行清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+銀行代碼\nBankID	String
+銀行簡稱\nBankIDNM	String
+
+邏輯說明
+資料來源檔案
+取得銀行查詢資料(SysUtility.GetBankV)：取得「資料查詢類別」為『1.總行』的資料
+十一、UTY2005011：TATxBankBrh
+取得銀行分行代碼(交易)(Searcher For 交易) Url：{root}/TAapi/BaseUtility/BankInfo/TATxBankBrh
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+銀行總行代碼\nBankHeadID	String	O
+銀行代碼\nBankID	String	O
+有效碼\nIsValid	Bool	O	1．預設為True
+含虛擬銀行\nIsInclVirtual	Bool	O	1．預設為True
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+銀行清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+銀行代碼\nBankID	String
+銀行簡稱\nBankIDNM	String
+虛擬銀行否\nIsVirtualBank	Bool
+銀行類型\nBankType	String	1．選項(OPT：TA-000021)
+
+邏輯說明
+資料來源檔案
+取得銀行查詢資料(SysUtility.GetBankV)：取得「資料查詢類別」為『2.分行』的資料
+十二、UTY2005012：TATxBank (XX)
+20240227 Pan：暫不開發，沒有想到情境
+取得銀行代碼(交易) (For Searcher) Url：{root}/TAapi/BaseUtility/BankInfo/TATxBank
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+銀行總行代碼\nBankHeadID	String	O
+銀行代碼\nBankID	String	O
+有效碼\nIsValid	String	O	1．選項(OPT：TA-000000)\n2．預設為Y
+含虛擬銀行\nIsInclVirtual	Bool	O	1．預設為True
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+銀行清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+銀行代碼\nBankID	String
+銀行簡稱\nBankIDNM	String
+
+邏輯說明
+資料來源檔案
+取得銀行查詢資料(SysUtility.GetBankV) ：取得「資料查詢類別」為『0.總行+分行』的資料
+十三、UTY2005013：TAGetFHDebitBank
+取得投信扣款機構的總行或分行代碼(For Searcher) Url：{root}/TAapi/BaseUtility/BankInfo/TAGetFHDebitBank
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+銀行代碼\nBankID	String	O
+扣款平台類別\nDebitPlatType	String	O	1．選項(OPT：TA-000167)\n2．資料用『，』串接
+查詢類型\nQueryType	String	O	1．選項\nH：總機構代碼；B：機構代碼\n2．預設為H
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+扣款行清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+銀行代碼\nBankID	String
+銀行簡稱\nBankIDNM	String	1．銀行簡稱查詢.銀行簡稱(SysUtility.GetBankVNM.BankIDNM)
+
+邏輯說明
+資料來源檔案
+機構核印扣款設定明細檔(TA_CMM_OrgSealDebit)
+機構檔(TA_CMM_Org)
+資料處理說明
+扣款機構清單(@DebitBankList)：至【機構核印扣款設定明細檔(TA_CMM_OrgSealDebit)】及【機構檔(TA_CMM_Org)】取得資料
+查詢條件
+「機構類別」＝『01.銀行』
+「公司代碼」＝《公司代碼》
+「扣款機構類別」＝{『1.投信』及『3.投信+集保』}
+「扣款平台類別」存在於《扣款平台類別》
+若《銀行代碼》有傳入值時，判斷《查詢類型》
+為『H.總機構代碼』時，「機構代碼」＝《銀行代碼》且「總機構否」為『True』
+為『B.機構代碼』時，「總機構代碼」＋「機構代碼」＝《銀行代碼》且「總機構否」為『False』
+取得欄位
+銀行代碼(@BankID)：判斷《查詢類型》
+為『H.總機構代碼』時，取得不重覆的「機構代碼」
+為『B.機構代碼』時，取得不重覆的「總機構代碼」＋「機構代碼」
+十四、UTY2005014：TACKBankAcctLength
+檢核銀行帳號長度的合法性 Url：{root}/TAapi/BaseUtility/BankChkData/TACKBankAcctLength
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+銀行代碼\nBankID	String	V
+銀行帳號\nBankAcctNo	String	V
+
+邏輯說明
+資料來源檔案
+檢核銀行帳號長度(BizUtility.ChkBankAcctLength)
+資料處理說明
+以傳入參數至【檢核銀行帳號長度(BizUtility.ChkBankAcctLength)】取得資料
+若「檢核失敗否(IsCheckFailed)」為『True』，判斷「帳號長度檢核類別(AcctLengthChkType)」
+為『Fix.固定長度』時，回傳結果代碼{TA00050}
+為『Max.最大長度』時，回傳結果代碼{TA00051}
+為『Min.最小長度』，回傳結果代碼{TA00052}

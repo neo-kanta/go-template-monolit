@@ -1,0 +1,4271 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Systemweb.ACETA.API.ApiCore.TA;
+using Systemweb.ACETA.API.Control.Fund;
+using Systemweb.ACETA.API.MappingCode;
+using Systemweb.ACETA.API.Model.Fund;
+using Systemweb.WFP.API.Core;
+using Systemweb.WFP.API.Infra.Models;
+using Systemweb.WFP.API.Models;
+
+namespace Systemweb.ACETA.TaAPI.Controllers.TA.Fund
+{
+    /// <summary> 基金基本資料維護作業 Controller </summary>
+    [Route("TAapi/Fund/[controller]")]
+    [ApiController]
+    [Authorize(Roles = OAuthDefaults.RoleUser)]
+    public class TAFNDFundInfoController : TAApiController
+    {
+        /// <summary> TAFNDFundInfoCtl Interface </summary>
+        private readonly ITAFNDFundInfoCtl _Ctl;
+
+        /// <summary> 基金基本資料維護作業 Controller Constructor </summary>
+        /// <param name="di">BaseApiService</param>
+        /// <param name="control">TAFNDFundInfoCtl</param>
+        public TAFNDFundInfoController(BaseApiService di, IBaseControl<TAFNDFundInfoCtl> control) : base(di)
+        {
+            _Ctl = control.Create();
+        }
+
+        #region AUD相關
+
+        /// <summary>APIFNDM001Post-基金基本資料維護作業 新增</summary>
+        /// <param name="request">TAFNDFundInfoRequest</param>
+        /// <returns>AUDResponse</returns>
+        [HttpPost]
+        public async Task<ActionResult<ResultModel<AUDResponse>>> PostAUDData([FromBody] TAFNDFundInfoRequest request)
+        {
+            return await RunAsync(request, async request =>
+            {
+                return await _Ctl.AUDData(request);
+            });
+        }
+
+        /// <summary>APIFNDM001Put-基金基本資料維護作業 修改</summary>
+        /// <param name="request">TAFNDFundInfoRequest</param>
+        /// <returns>AUDResponse</returns>
+        [HttpPut]
+        public async Task<ActionResult<ResultModel<AUDResponse>>> PutAUDData([FromBody] TAFNDFundInfoRequest request)
+        {
+            return await RunAsync(request, async request =>
+            {
+                return await _Ctl.AUDData(request);
+            });
+        }
+
+        /// <summary>APIFNDM001Delete-基金基本資料維護作業 刪除</summary>
+        /// <param name="DataID">DataID</param>
+        /// <param name="DataFlag">DataFlag</param>
+        /// <returns>AUDResponse</returns>
+        [HttpDelete]
+        [Route("Delete/{DataID}/{DataFlag}")]
+        public async Task<ActionResult<ResultModel<AUDResponse>>> DeleteAUDData(string DataID, string DataFlag)
+        {
+            _ = Guid.TryParse(DataID, out Guid dataID);
+            byte[] dataFlag = Convert.FromBase64String(DecodeUrlBase64String(DataFlag));
+            TAFNDFundInfoRequest request = new() { Master = new TAFNDFundInfo { DataID = dataID, DataFlag = dataFlag } };
+
+            return await RunDeleteAsync(request, async request =>
+            {
+                request.SetAction(ActionOption.Delete);
+
+                return await _Ctl.AUDData(request);
+            });
+        }
+
+        /// <summary>APIFNDM001Recover-基金基本資料維護作業 復原</summary>
+        /// <param name="DataID">DataID</param>
+        /// <param name="DataFlag">DataFlag</param>
+        /// <returns>AUDResponse</returns>
+        [HttpDelete]
+        [Route("Recover/{DataID}/{DataFlag}")]
+        public async Task<ActionResult<ResultModel<AUDResponse>>> RecoverAUDData(string DataID, string DataFlag)
+        {
+            _ = Guid.TryParse(DataID, out Guid dataID);
+            byte[] dataFlag = Convert.FromBase64String(DecodeUrlBase64String(DataFlag));
+            TAFNDFundInfoRequest request = new() { Master = new TAFNDFundInfo { DataID = dataID, DataFlag = dataFlag } };
+
+            return await RunDeleteAsync(request, async request =>
+            {
+                request.SetAction(ActionOption.Recover);
+
+                return await _Ctl.AUDData(request);
+            });
+        }
+
+        /// <summary>APIFNDM001Unlock-基金基本資料維護作業 解鎖</summary>
+        /// <param name="DataID">DataID</param>
+        /// <param name="DataFlag">DataFlag</param>
+        /// <returns>AUDResponse</returns>
+        [HttpDelete]
+        [Route("Unlock/{DataID}/{DataFlag}")]
+        public async Task<ActionResult<ResultModel<AUDResponse>>> UnlockAUDData(string DataID, string DataFlag)
+        {
+            _ = Guid.TryParse(DataID, out Guid dataID);
+            byte[] dataFlag = Convert.FromBase64String(DecodeUrlBase64String(DataFlag));
+            TAFNDFundInfoRequest request = new() { Master = new TAFNDFundInfo { DataID = dataID, DataFlag = dataFlag } };
+
+            return await RunDeleteAsync(request, async request =>
+            {
+                request.SetAction(ActionOption.Unlock);
+
+                return await _Ctl.AUDData(request);
+            });
+        }
+
+        #endregion AUD相關
+
+        #region 查詢相關
+
+        /// <summary>APIFNDM001Get-基金基本資料維護作業 一般查詢</summary>
+        /// <param name="filters">TAFNDFundInfoFilterRequest</param>
+        /// <returns>TAFNDFundInfoResponse</returns>
+        [HttpGet]
+        [Route("GetData")]
+        public async Task<ActionResult<ResultModel<TAFNDFundInfoResponse>>> GetData([FromQuery] TAFNDFundInfoFilterRequest filters)
+        {
+            return await RunAsync(filters, async request =>
+            {
+                return await _Ctl.GetData(request);
+            });
+        }
+
+        /// <summary>APIFNDM001GetMaintain-基金基本資料維護作業 Maintain查詢</summary>
+        /// <param name="DataID">DataID</param>
+        /// <returns>TAFNDFundInfoAUDResponse</returns>
+        [HttpGet]
+        [Route("GetData/{DataID}")]
+        public async Task<ActionResult<ResultModel<TAFNDFundInfoAUDResponse>>> GetData(string DataID)
+        {
+            _ = Guid.TryParse(DataID, out Guid dataID);
+            TAFNDFundInfoQueryRequest filters = new() { DataID = dataID };
+
+            return await RunAsync(filters, async request =>
+            {
+                request.SetAction(ActionType.GetMaintainData);
+                return await _Ctl.GetMaintainData(request);
+            });
+        }
+
+        /// <summary>GFNDM00101-取得境內母基金發行幣別代碼(For Searcher) Info查詢</summary>
+        /// <param name="filters">TAGetDPrtFundIssueCryRequest</param>
+        /// <returns>TAGetDPrtFundIssueCryResponse</returns>
+        [HttpGet]
+        [Route("GetInfo/TAGetDPrtFundIssueCry")]
+        public async Task<ActionResult<ResultModel<TAGetDPrtFundIssueCryResponse>>> TAGetDPrtFundIssueCry([FromQuery] TAGetDPrtFundIssueCryRequest filters)
+        {
+            return await RunAsync(filters, async request =>
+            {
+                request.SetActionMethod("TAGetDPrtFundIssueCry");
+                return await _Ctl.TAGetDPrtFundIssueCry(request);
+            });
+        }
+
+        /// <summary>GFNDM00104-取得境內基金可交易幣別代碼(For Searcher) Info查詢</summary>
+        /// <param name="filters">TAGetDTxCryRequest</param>
+        /// <returns>TAGetDTxCryResponse</returns>
+        [HttpGet]
+        [Route("GetInfo/TAGetDTxCry")]
+        public async Task<ActionResult<ResultModel<TAGetDTxCryResponse>>> TAGetDTxCry([FromQuery] TAGetDTxCryRequest filters)
+        {
+            return await RunAsync(filters, async request =>
+            {
+                request.SetActionMethod("TAGetDTxCry");
+                return await _Ctl.TAGetDTxCry(request);
+            });
+        }
+
+        #endregion 查詢相關
+
+        #region 檢核相關
+
+        /// <summary>KFNDM00101-檢核集保平台款項生效日期</summary>
+        /// <param name="CHK">TACKCSDPrtFundSetlDateCHKRequest</param>
+        /// <returns>ResultModel</returns>
+        [HttpGet]
+        [Route("ChkData/TACKCSDPrtFundSetlDate")]
+        public async Task<ActionResult<ResultModel>> TACKCSDPrtFundSetlDate([FromQuery] TACKCSDPrtFundSetlDateCHKRequest CHK)
+        {
+            CHK.SetActionMethod("TACKCSDPrtFundSetlDate");
+            return await _Ctl.TACKCSDPrtFundSetlDate(CHK);
+        }
+
+        /// <summary>KFNDM00103-檢核基金代碼是否已被設定過</summary>
+        /// <param name="CHK">TACKFundCodeExistCHKRequest</param>
+        /// <returns>ResultModel</returns>
+        [HttpGet]
+        [Route("ChkData/TACKFundCodeExist")]
+        public async Task<ActionResult<ResultModel>> TACKFundCodeExist([FromQuery] TACKFundCodeExistCHKRequest CHK)
+        {
+            CHK.SetActionMethod("TACKFundCodeExist");
+            return await _Ctl.TACKFundCodeExist(CHK);
+        }
+
+        #endregion 檢核相關
+    }
+}
+
+using Systemweb.ACETA.API.MappingCode;
+using Systemweb.ACETA.API.Model.TA;
+using Systemweb.WFP.API.Models;
+
+namespace Systemweb.ACETA.API.Model.Fund
+{
+    #region Filter Request
+
+    /// <summary> 基金資訊(共用)檔 一般查詢 Request </summary>
+    public class TAFNDFundInfoFilterRequest : TAFilterModel<TAFNDFundInfoResponse>
+    {
+        /// <summary> 公司代碼 </summary>
+        [RequiredValidator]
+        public string? SysCoID { get; set; }
+
+        /// <summary> 母基金代碼 </summary>
+        public string? PrtFundCode { get; set; }
+
+        /// <summary> 基金統編 </summary>
+        public string? UniCode { get; set; }
+    }
+
+    /// <summary> 基金資訊(共用)檔 Maintain查詢 Request </summary>
+    public class TAFNDFundInfoQueryRequest : TAFilterModel<TAFNDFundInfoAUDResponse>
+    { }
+
+    /// <summary> 取得境內母基金發行幣別代碼(For Searcher) TAGetDPrtFundIssueCry Info查詢 Request </summary>
+    public class TAGetDPrtFundIssueCryRequest : TAInfoFilterModel_Oth<TAGetDPrtFundIssueCryResponse>
+    {
+        /// <summary> 公司代碼 </summary>
+        [RequiredValidator]
+        public string? SysCoID { get; set; }
+
+        /// <summary> 含全部幣別選項 </summary>
+        public bool IsALL { get; set; } = false;
+
+        /// <summary> 母基金代碼 </summary>
+        public string? PrtFundCode { get; set; }
+
+        /// <summary> 幣別代碼 </summary>
+        public string? CryID { get; set; }
+
+        /// <summary> 收取手續費類型 </summary>
+        [AllowedValues(MappingCode.FeeChargeType.B, MappingCode.FeeChargeType.P, MappingCode.FeeChargeType.C, MappingCode.FeeChargeType.N, MappingCode.FeeChargeType.BN, MappingCode.FeeChargeType.PC)]
+        public string? FeeChargeType { get; set; }
+
+        /// <summary> 排除幣別代碼 </summary>
+        public string? FilterItem { get; set; }
+
+        /// <summary> 查詢類別 </summary>
+        [AllowedValues(ApiQueryType.SMP, ApiQueryType.ALL)]
+        public string? QueryType { get; set; } = ApiQueryType.SMP;
+    }
+
+    /// <summary> 取得境內基金可交易幣別代碼(For Searcher) TAGetDTxCry Info查詢 Request </summary>
+    public class TAGetDTxCryRequest : TAInfoFilterModel_Oth<TAGetDTxCryResponse>
+    {
+        /// <summary> 公司代碼 </summary>
+        [RequiredValidator]
+        public string? SysCoID { get; set; }
+
+        /// <summary> 含全部幣別選項 </summary>
+        public bool IsALL { get; set; } = false;
+
+        /// <summary> 母基金代碼 </summary>
+        public string? PrtFundCode { get; set; }
+
+        /// <summary> 幣別代碼 </summary>
+        public string? CryID { get; set; }
+
+        /// <summary> 幣別來源 </summary>
+        [AllowedValues(MappingCode.CryDataSrc.FundCry, MappingCode.CryDataSrc.OthTxCry)]
+        public string? CryDataSrc { get; set; }
+
+        /// <summary> 排除中心幣別 </summary>
+        public bool IsExcludeCCY { get; set; } = false;
+
+        /// <summary> 查詢類別 </summary>
+        [AllowedValues(ApiQueryType.SMP, ApiQueryType.ALL)]
+        public string? QueryType { get; set; } = ApiQueryType.SMP;
+    }
+
+    /// <summary> 檢核集保平台款項生效日期 CHKRequest </summary>
+    public class TACKCSDPrtFundSetlDateCHKRequest : TACHKFilterModel<ResultModel>
+    {
+        /// <summary> 公司代碼 </summary>
+        [RequiredValidator]
+        public string? SysCoID { get; set; }
+
+        /// <summary> 集保平台款項生效日期 </summary>
+        [RequiredValidator]
+        public DateTimeOffset? CSDPrtFundSetlDate { get; set; }
+
+        /// <summary> 基金代碼 </summary>
+        public string? FundCode { get; set; }
+    }
+
+    /// <summary> 檢核基金代碼是否已被設定過 CHKRequest </summary>
+    public class TACKFundCodeExistCHKRequest : TACHKFilterModel<ResultModel>
+    {
+        /// <summary> 公司代碼 </summary>
+        [RequiredValidator]
+        public string? SysCoID { get; set; }
+
+        /// <summary> 基金代碼 </summary>
+        [RequiredValidator]
+        public string? FundCode { get; set; }
+    }
+
+    #endregion  Filter Request
+
+    #region AUD Request
+
+    /// <summary> 基金資訊(共用)檔 維護 Request </summary>
+    public class TAFNDFundInfoRequest : TAAudModel
+    {
+        /// <summary> 基金資訊(共用)檔 TA_FND_FundInfo </summary>
+        public TAFNDFundInfo Master { get; set; } = new();
+
+        /// <summary> 境內基金資訊檔 DTA_FND_FundInfo </summary>
+        public List<DTAFNDFundInfo> DTAFundInfoList { get; set; } = new();
+
+        /// <summary> 境內基金保管銀行聯絡人資料檔 DTA_FND_FundCustContact </summary>
+        public List<DTAFNDFundCustContact> DTACustContactList { get; set; } = new();
+
+        /// <summary> 境內基金特殊型相關資料檔 DTA_FND_FundSpecial </summary>
+        public List<DTAFNDFundSpecial> DTASpecialList { get; set; } = new();
+
+        /// <summary> 境內基金發行幣別設定檔 DTA_FND_FundCryGroup </summary>
+        public List<DTAFNDFundCryGroup> DTACryGroupList { get; set; } = new();
+
+        /// <summary> 境內子基金明細檔 DTA_FND_FundDetail </summary>
+        public List<DTAFNDFundDetail> DTAFundDetailList { get; set; } = new();
+
+        /// <summary> 境內子基金相關帳號檔 DTA_FND_FundAccount </summary>
+        public List<DTAFNDFundAccount> DTAFundAccountList { get; set; } = new();
+
+        /// <summary> 境內子基金相關群組檔 DTA_FND_FundRelGroup </summary>
+        public List<DTAFNDFundRelGroup> DTAFundRelGroupList { get; set; } = new();
+
+        /// <summary> 境內子基金確認單揭露費用檔 DTA_FND_FundDisclosureFee </summary>
+        public List<DTAFNDFundDisclosureFee> DTAFundDisFeeList { get; set; } = new();
+
+        /// <summary> 境內子基金可交易幣別檔 DTA_FND_FundTxCry </summary>
+        public List<DTAFNDFundTxCry> DTAFundTxCryList { get; set; } = new();
+
+        /// <summary> 境內基金短線交易費率設定檔 DTA_FND_FundShortInf </summary>
+        public List<DTAFNDFundShortInf> DTAFundShortInfList { get; set; } = new();
+
+        /// <summary> 境內基金短線交易費率設定明細檔 DTA_FND_FundShortDtl </summary>
+        public List<DTAFNDFundShortDtl> DTAShortDtlList { get; set; } = new();
+
+        /// <summary> 境內基金反稀釋設定檔 DTA_FND_FundAntiDilution </summary>
+        public List<DTAFNDFundAntiDilution> DTAFundAntiDilList { get; set; } = new();
+
+        /// <summary> 境內基金經理費率設定檔 DTA_FND_FundMGTFeeInf </summary>
+        public List<DTAFNDFundMGTFeeInf> DTAFundMGTFeeList { get; set; } = new();
+
+        /// <summary> 境內基金經理費率設定明細檔 DTA_FND_FundMGTFeeDtl </summary>
+        public List<DTAFNDFundMGTFeeDtl> DTAMGTFeeDtlList { get; set; } = new();
+    }
+
+    #endregion  AUD Request
+
+    #region AUD Class
+
+    /// <summary> 基金資訊(共用)檔 </summary>
+    [MainTable("TA_FND_FundInfo")]
+    public class TAFNDFundInfo : TAMainTableRowModel
+    {
+        /// <summary> 公司代碼 </summary>
+        [RequiredValidator]
+        public string? SysCoID { get; set; }
+
+        /// <summary> 母基金代碼 </summary>
+        [RequiredValidator]
+        public string? PrtFundCode { get; set; }
+
+        /// <summary> 基金統編 </summary>
+        public string? UniCode { get; set; }
+
+        /// <summary> 基金內部簡稱 </summary>
+        public string? FundInShName { get; set; }
+
+        /// <summary> 基金主要名稱 </summary>
+        public string? FundMName { get; set; }
+
+        /// <summary> 基金主要簡稱 </summary>
+        public string? FundShMName { get; set; }
+
+        /// <summary> 基金次要名稱 </summary>
+        public string? FundSName { get; set; }
+
+        /// <summary> 基金次要簡稱 </summary>
+        public string? FundShSName { get; set; }
+
+        /// <summary> 基金風險屬性 </summary>
+        public string? FundRiskLevel { get; set; }
+
+        /// <summary> 發行基準貨幣代碼 </summary>
+        public string? IssueBaseCry { get; set; }
+
+        /// <summary> 成立日期 </summary>
+        public DateTimeOffset? FundSetupDate { get; set; }
+
+        /// <summary> GIIN </summary>
+        public string? GIINNo { get; set; }
+
+        /// <summary> 基金狀態 </summary>
+        public string? FundStatus { get; set; }
+
+        /// <summary> 基金警語 </summary>
+        public string? FundWarningMsg { get; set; }
+
+        /// <summary> 單位數小數位數 </summary>
+        public byte? UnitDotLen { get; set; }
+
+        /// <summary> 基金申購方式 </summary>
+        public string? FundSubsWay { get; set; }
+
+        /// <summary> 基金買回方式 </summary>
+        public string? FundRdmWay { get; set; }
+
+        /// <summary> 買回預估NAV基準日 </summary>
+        public short? RdmFNavDay { get; set; }
+
+        /// <summary> 買回預估NAV折扣方式 </summary>
+        public string? RdmFNavWay { get; set; }
+
+        /// <summary> 買回預估NAV折扣率 </summary>
+        public decimal? RdmFNavDRate { get; set; }
+
+        /// <summary> 買回預估NAV折扣值 </summary>
+        public decimal? RdmFNavDVal { get; set; }
+
+        /// <summary> 短線交易費收取否 </summary>
+        public string? IsShortFee { get; set; }
+
+        /// <summary> 反稀釋費用收取否 </summary>
+        public string? IsAntiDilFee { get; set; }
+
+        /// <summary> ETF基金否 </summary>
+        public string? IsETF { get; set; }
+
+        /// <summary> ETF代碼 </summary>
+        public string? ETFCode { get; set; }
+
+        /// <summary> 全委基金否 </summary>
+        public string? IsDIM { get; set; }
+
+        /// <summary> 境內外基金識別碼 </summary>
+        public string? ShoreID { get; set; }
+
+        /// <summary> 基金公司代碼 </summary>
+        public string? OFDFHCode { get; set; }
+    }
+
+    /// <summary> 境內基金資訊檔 </summary>
+    [Table("DTA_FND_FundInfo")]
+    public class DTAFNDFundInfo : TableRowModel
+    {
+        /// <summary> 公司代碼 </summary>
+        [RequiredValidator]
+        public string? SysCoID { get; set; }
+
+        /// <summary> 母基金代碼 </summary>
+        [RequiredValidator]
+        public string? PrtFundCode { get; set; }
+
+        /// <summary> 公會基金類型代碼 </summary>
+        public string? SITCAFundType { get; set; }
+
+        /// <summary> 基金型態 </summary>
+        public string? DFundType { get; set; }
+
+        /// <summary> 基金投資地區 </summary>
+        public string? DInvArea { get; set; }
+
+        /// <summary> 募集型態 </summary>
+        public string? OfferType { get; set; }
+
+        /// <summary> 基準貨幣發行上限金額 </summary>
+        public decimal? BCFundQuoUpAmt { get; set; }
+
+        /// <summary> 基準貨幣發行下限金額 </summary>
+        public decimal? BCFundQuoMinAmt { get; set; }
+
+        /// <summary> 額度控管比率(%) </summary>
+        public decimal? FundQuoLmtRate { get; set; }
+
+        /// <summary> 基金交易警示金額 </summary>
+        public decimal? TradeWarningAmt { get; set; }
+
+        /// <summary> 外幣發行額度控管方式 </summary>
+        public string? ExchUnitLmt { get; set; }
+
+        /// <summary> 法幣總額淨發行單位數上限 </summary>
+        public decimal? FMNetQuoUpUnit { get; set; }
+
+        /// <summary> 外幣總額淨發行單位數上限 </summary>
+        public decimal? ExchNetQuoUpUnit { get; set; }
+
+        /// <summary> 首次募集日期 </summary>
+        public DateTimeOffset? FundIPODate { get; set; }
+
+        /// <summary> 開放買回日期 </summary>
+        public DateTimeOffset? BegRdmDate { get; set; }
+
+        /// <summary> 基金發行方式 </summary>
+        public string? FundIssueType { get; set; }
+
+        /// <summary> 受益憑證發行日期 </summary>
+        public DateTimeOffset? FundIssueDate { get; set; }
+
+        /// <summary> 轉換無實體上線日期 </summary>
+        public DateTimeOffset? CSDOnlineDate { get; set; }
+
+        /// <summary> 集保平台款項生效日期 </summary>
+        public DateTimeOffset? CSDPrtFundSetlDate { get; set; }
+
+        /// <summary> 核準日期 </summary>
+        public DateTimeOffset? ApprovelDate { get; set; }
+
+        /// <summary> 清算／合併日期 </summary>
+        public DateTimeOffset? ClearDate { get; set; }
+
+        /// <summary> 最後申購日期 </summary>
+        public DateTimeOffset? LastSubsDate { get; set; }
+
+        /// <summary> 最後買回日期 </summary>
+        public DateTimeOffset? LastRdmDate { get; set; }
+
+        /// <summary> 基金營業日定義 </summary>
+        public string? BIZDayDef { get; set; }
+
+        /// <summary> 申購行事曆識別碼 </summary>
+        public string? SubsDateType { get; set; }
+
+        /// <summary> 買回行事曆識別碼 </summary>
+        public string? RdmDateType { get; set; }
+
+        /// <summary> 付款行事曆識別碼 </summary>
+        public string? RdmPayDateType { get; set; }
+
+        /// <summary> 申購NAV基準日 </summary>
+        public byte? SubsNavDay { get; set; }
+
+        /// <summary> 買回NAV基準日 </summary>
+        public byte? RdmNavDay { get; set; }
+
+        /// <summary> 買回付款基準日 </summary>
+        public byte? RdmPayDay { get; set; }
+
+        /// <summary> 保管銀行代碼 </summary>
+        public string? CustBankHeadID { get; set; }
+
+        /// <summary> 基金專戶主要名稱 </summary>
+        public string? FundAccMName { get; set; }
+
+        /// <summary> 基金專戶次要名稱 </summary>
+        public string? FundAccSName { get; set; }
+
+        /// <summary> 提票日(非保銀他行) </summary>
+        public short? CheckDiffDay { get; set; }
+
+        /// <summary> 兌現日(非保銀他行) </summary>
+        public short? CashDiffDay { get; set; }
+
+        /// <summary> FA申購放帳日 </summary>
+        public short? FASubsInDay { get; set; }
+
+        /// <summary> FA買回放帳日 </summary>
+        public short? FARdmOutDay { get; set; }
+
+        /// <summary> FA申購交割日 </summary>
+        public short? FASubsSetlDay { get; set; }
+
+        /// <summary> FA買回交割日 </summary>
+        public short? FARdmSetlDay { get; set; }
+
+        /// <summary> 前收型手續費率群組 </summary>
+        public string? SubsFeeGroup { get; set; }
+
+        /// <summary> 遞延型手續費率群組 </summary>
+        public string? CDSCFeeGroup { get; set; }
+
+        /// <summary> 收益分配日期基金群組 </summary>
+        public string? DivFundGroup { get; set; }
+
+        /// <summary> 集保平台申購截止時間 </summary>
+        public string? CSDSubsDeadline { get; set; }
+
+        /// <summary> 集保平台買回截止時間 </summary>
+        public string? CSDRdmDeadline { get; set; }
+
+        /// <summary> 短線交易開始日期 </summary>
+        public DateTimeOffset? BeginShortDate { get; set; }
+
+        /// <summary> 短線交易買回計算方式 </summary>
+        public string? ShortCalcMemo { get; set; }
+
+        /// <summary> 其他短線交易規定 </summary>
+        public string? ShortTxMemo { get; set; }
+
+        /// <summary> 短線交易備註 </summary>
+        public string? ShortMemo { get; set; }
+
+        /// <summary> 匯費類型 </summary>
+        public string? RemitChargeCD { get; set; }
+
+        /// <summary> 募集期基金否 </summary>
+        public string? IsIPO { get; set; }
+    }
+
+    /// <summary> 境內基金保管銀行聯絡人資料檔 </summary>
+    [Table("DTA_FND_FundCustContact")]
+    public class DTAFNDFundCustContact : TableRowModel
+    {
+        /// <summary> 公司代碼 </summary>
+        [RequiredValidator]
+        public string? SysCoID { get; set; }
+
+        /// <summary> 母基金代碼 </summary>
+        [RequiredValidator]
+        public string? PrtFundCode { get; set; }
+
+        /// <summary> 資料序號 </summary>
+        [RequiredValidator]
+        public int? DataSeq { get; set; }
+
+        /// <summary> 主要聯絡窗口否 </summary>
+        public string? IsMainContact { get; set; }
+
+        /// <summary> 聯絡人 </summary>
+        public string? ContactMan { get; set; }
+
+        /// <summary> 聯絡電話 </summary>
+        public string? ContactTel { get; set; }
+
+        /// <summary> 傳真電話一 </summary>
+        public string? Fax1 { get; set; }
+
+        /// <summary> 傳真電話二 </summary>
+        public string? Fax2 { get; set; }
+
+        /// <summary> 工作項目 </summary>
+        public string? WorkItem { get; set; }
+    }
+
+    /// <summary> 境內基金特殊型相關資料檔 </summary>
+    [Table("DTA_FND_FundSpecial")]
+    public class DTAFNDFundSpecial : TableRowModel
+    {
+        /// <summary> 公司代碼 </summary>
+        [RequiredValidator]
+        public string? SysCoID { get; set; }
+
+        /// <summary> 母基金代碼 </summary>
+        [RequiredValidator]
+        public string? PrtFundCode { get; set; }
+
+        /// <summary> 非投資等級基金否 </summary>
+        public string? IsHighRisk { get; set; }
+
+        /// <summary> 保本型基金否 </summary>
+        public string? IsPGF { get; set; }
+
+        /// <summary> 存續期間-保本型 </summary>
+        public string? PGFStay { get; set; }
+
+        /// <summary> 到期年限-保本型 </summary>
+        public byte? PGFMatureYear { get; set; }
+
+        /// <summary> 停止申購交易基準日-保本型 </summary>
+        public short? PGFStopSubsDay { get; set; }
+
+        /// <summary> 到期日期-保本型 </summary>
+        public DateTimeOffset? PGFExpiryDate { get; set; }
+
+        /// <summary> 收取買回費否-保本型 </summary>
+        public string? IsPGFRdmFee { get; set; }
+
+        /// <summary> 到期型基金否 </summary>
+        public string? IsTMF { get; set; }
+
+        /// <summary> 到期方式-到期型 </summary>
+        public string? TMFKind { get; set; }
+
+        /// <summary> 停止申購交易基準日-到期型 </summary>
+        public short? TMFStopSubsDay { get; set; }
+
+        /// <summary> 目標日期-到期型 </summary>
+        public DateTimeOffset? TMFTargetDate { get; set; }
+
+        /// <summary> 到期／存續年限-到期型 </summary>
+        public byte? TMFStay { get; set; }
+
+        /// <summary> 到期日期-到期型 </summary>
+        public DateTimeOffset? TMFExpiryDate { get; set; }
+
+        /// <summary> 鎖利報酬計價幣別-到期型 </summary>
+        public string? TMFReturnBC { get; set; }
+
+        /// <summary> 鎖利報酬啟動依據 </summary>
+        public string? TMFReturnStarr { get; set; }
+
+        /// <summary> 收取買回費否-到期型 </summary>
+        public string? IsTMFRdmFee { get; set; }
+
+        /// <summary> 純外幣計價基金否 </summary>
+        public string? IsPFF { get; set; }
+
+        /// <summary> 私募人數上限 </summary>
+        public byte? PvtFundLimit { get; set; }
+
+        /// <summary> 收取績效費否 </summary>
+        public string? IsPerformanceFee { get; set; }
+
+        /// <summary> 傘型架構否 </summary>
+        public string? IsUmbrella { get; set; }
+
+        /// <summary> 傘型名稱 </summary>
+        public string? UmbrellaName { get; set; }
+
+        /// <summary> 基金其他說明事項 </summary>
+        public string? FundMemo { get; set; }
+    }
+
+    /// <summary> 境內基金發行幣別設定檔 </summary>
+    [Table("DTA_FND_FundCryGroup")]
+    public class DTAFNDFundCryGroup : TableRowModel
+    {
+        /// <summary> 公司代碼 </summary>
+        [RequiredValidator]
+        public string? SysCoID { get; set; }
+
+        /// <summary> 母基金代碼 </summary>
+        [RequiredValidator]
+        public string? PrtFundCode { get; set; }
+
+        /// <summary> 發行幣別代碼 </summary>
+        [RequiredValidator]
+        public string? IssueCry { get; set; }
+
+        /// <summary> 單位面額 </summary>
+        public decimal? FundFaceAmt { get; set; }
+
+        /// <summary> NAV小數位數 </summary>
+        public byte? NavDotLen { get; set; }
+
+        /// <summary> 可交易其他交易幣別 </summary>
+        public string? IsOthTxCry { get; set; }
+
+        /// <summary> 其他交易幣別 </summary>
+        public string? OthTxCry { get; set; }
+
+        /// <summary> 基準貨幣發行總面額 </summary>
+        public decimal? FundQuoAmtBC { get; set; }
+
+        /// <summary> 額度控管換算比率(%) </summary>
+        public decimal? UnitConvRate { get; set; }
+
+        /// <summary> 淨發行單位數上限(額控) </summary>
+        public decimal? FundQuoUnit { get; set; }
+
+        /// <summary> 募集手續費優惠方式 </summary>
+        public string? IPOSubsFeeDisType { get; set; }
+
+        /// <summary> 募集固定費率(%) </summary>
+        public decimal? IPOFixRate { get; set; }
+
+        /// <summary> 募集牌告折數(%) </summary>
+        public decimal? IPODiscRateOff { get; set; }
+
+        /// <summary> 基金主專戶分行 </summary>
+        public string? FundMBankBrh { get; set; }
+
+        /// <summary> 基金主專戶帳號 </summary>
+        public string? FundMAccount { get; set; }
+
+        /// <summary> 公司代墊外幣匯費自行支付方式 </summary>
+        public string? CRemitFeeID { get; set; }
+
+        /// <summary> 公司代墊外幣匯費自行－固定法幣金額 </summary>
+        public decimal? CRemitFeeFM { get; set; }
+
+        /// <summary> 公司代墊外幣匯費他行支付方式 </summary>
+        public string? CRemitFeeOtherID { get; set; }
+
+        /// <summary> 公司代墊外幣匯費他行－固定法幣金額 </summary>
+        public decimal? CRemitFeeOtherFM { get; set; }
+
+        /// <summary> 基金開放RSP否 </summary>
+        public string? IsRSP { get; set; }
+
+        /// <summary> RSP開始扣款日期 </summary>
+        public DateTimeOffset? BeginRspDate { get; set; }
+
+        /// <summary> RSP最低扣款金額 </summary>
+        public decimal? RSPMinAmt { get; set; }
+
+        /// <summary> RSP扣款累進金額 </summary>
+        public decimal? RSPAmtApc { get; set; }
+
+        /// <summary> RSP最高扣款金額 </summary>
+        public decimal? RSPMaxAmt { get; set; }
+
+        /// <summary> RSP最低扣款金額－其他交易幣 </summary>
+        public decimal? RSPMinAmtTxC { get; set; }
+
+        /// <summary> RSP最低扣款累進金額－其他交易幣 </summary>
+        public decimal? RSPAmtApcTxC { get; set; }
+
+        /// <summary> RSP最高扣款金額－其他交易幣 </summary>
+        public decimal? RSPMaxAmtTxC { get; set; }
+
+        /// <summary> RSP連續扣款失敗終止次數 </summary>
+        public byte? RSPConFailCnt { get; set; }
+
+        /// <summary> 定期定額手續費率(%) </summary>
+        public decimal? RSPFeeRate { get; set; }
+
+        /// <summary> RSP異動不可調升金額否 </summary>
+        public string? IsRSPChgAmt { get; set; }
+
+        /// <summary> RSP依級別調整設定否 </summary>
+        public string? IsRSPShareSet { get; set; }
+
+        /// <summary> 基金開放配息否 </summary>
+        public string? IsDividend { get; set; }
+
+        /// <summary> 收益分配方式 </summary>
+        public string? DivType { get; set; }
+
+        /// <summary> 最小配現金額 </summary>
+        public decimal? DivMinAmt { get; set; }
+
+        /// <summary> 配息頻率 </summary>
+        public string? DivCycle { get; set; }
+
+        /// <summary> 配息付款平台 </summary>
+        public string? DivPayPlatform { get; set; }
+
+        /// <summary> 國稅局預設申報所得格式 </summary>
+        public string? TaxFormat { get; set; }
+
+        /// <summary> 大額申購金額 </summary>
+        public decimal? LakhSubsAmt { get; set; }
+
+        /// <summary> 大額買回金額 </summary>
+        public decimal? LakhRdmAmt { get; set; }
+    }
+
+    /// <summary> 境內子基金明細檔 </summary>
+    [Table("DTA_FND_FundDetail")]
+    public class DTAFNDFundDetail : TableRowModel
+    {
+        /// <summary> 公司代碼 </summary>
+        [RequiredValidator]
+        public string? SysCoID { get; set; }
+
+        /// <summary> 母基金代碼 </summary>
+        [RequiredValidator]
+        public string? PrtFundCode { get; set; }
+
+        /// <summary> 基金代碼 </summary>
+        [RequiredValidator]
+        public string? FundCode { get; set; }
+
+        /// <summary> 計價幣別 </summary>
+        public string? FundCry { get; set; }
+
+        /// <summary> 基金內部簡稱 </summary>
+        public string? FundInShName { get; set; }
+
+        /// <summary> 基金主要簡稱 </summary>
+        public string? FundShMName { get; set; }
+
+        /// <summary> 基金次要簡稱 </summary>
+        public string? FundShSName { get; set; }
+
+        /// <summary> 公司基金級別代碼 </summary>
+        public string? FHFundShare { get; set; }
+
+        /// <summary> 級別首次銷售日期 </summary>
+        public DateTimeOffset? ShareFirSaleDate { get; set; }
+
+        /// <summary> 受益憑證代碼 </summary>
+        public string? SMARTFundCode { get; set; }
+
+        /// <summary> 集保平台下單基金代碼 </summary>
+        public string? CSDFundCode { get; set; }
+
+        /// <summary> 公會申報基金代碼 </summary>
+        public string? SITCAFundCode { get; set; }
+
+        /// <summary> FA基金代碼 </summary>
+        public string? FAFundCode { get; set; }
+
+        /// <summary> 財金平台費用代碼 </summary>
+        public string? FISFeeCode { get; set; }
+
+        /// <summary> ISIN代碼 </summary>
+        public string? ISINCode { get; set; }
+
+        /// <summary> TISA基金 </summary>
+        public string? IsTISA { get; set; }
+
+        /// <summary> 法人級別否 </summary>
+        public string? IsIShare { get; set; }
+
+        /// <summary> 限制專業投資人交易否 </summary>
+        public string? IsPITrd { get; set; }
+
+        /// <summary> 計息種類 </summary>
+        public string? DivCalcType { get; set; }
+
+        /// <summary> 申購手續費收取方式 </summary>
+        public string? SubsFeeType { get; set; }
+
+        /// <summary> 單筆最低申購金額 </summary>
+        public decimal? SubsMinAmt { get; set; }
+
+        /// <summary> 單筆申購累進金額 </summary>
+        public decimal? SubsAmtApc { get; set; }
+
+        /// <summary> 最低轉申購金額 </summary>
+        public decimal? SwMinAmt { get; set; }
+
+        /// <summary> 收取分銷費否 </summary>
+        public string? IsDistributionFee { get; set; }
+
+        /// <summary> 到期年限 </summary>
+        public byte? MatureYear { get; set; }
+
+        /// <summary> 到期後轉入基金代碼 </summary>
+        public string? MatureFund { get; set; }
+
+        /// <summary> 集保申購款項生效日期 </summary>
+        public DateTimeOffset? CSDSubsSetlDate { get; set; }
+
+        /// <summary> 最低剩餘單位數 </summary>
+        public decimal? RdmMinUnitSur { get; set; }
+
+        /// <summary> 最低買回單位數 </summary>
+        public decimal? RdmMinUnit { get; set; }
+
+        /// <summary> 最低買回金額 </summary>
+        public decimal? RdmMinAmt { get; set; }
+
+        /// <summary> 集保買回款項生效日期 </summary>
+        public DateTimeOffset? CSDRdmSetlDate { get; set; }
+
+        /// <summary> 基金級別不開放RSP否 </summary>
+        public string? IsShareRSP { get; set; }
+
+        /// <summary> RSP最低扣款金額 </summary>
+        public decimal? RSPMinAmt { get; set; }
+
+        /// <summary> RSP扣款累進金額 </summary>
+        public decimal? RSPAmtApc { get; set; }
+
+        /// <summary> RSP最高扣款金額 </summary>
+        public decimal? RSPMaxAmt { get; set; }
+
+        /// <summary> 單筆最低申購金額－其他交易幣 </summary>
+        public decimal? SubsMinAmtTxC { get; set; }
+
+        /// <summary> 單筆申購累進金額－其他交易幣 </summary>
+        public decimal? SubsAmtApcTxC { get; set; }
+
+        /// <summary> 最低轉申購金額－其他交易幣 </summary>
+        public decimal? SwMinAmtTxC { get; set; }
+
+        /// <summary> RSP最低扣款金額－其他交易幣 </summary>
+        public decimal? RSPMinAmtTxC { get; set; }
+
+        /// <summary> RSP最低扣款累進金額－其他交易幣 </summary>
+        public decimal? RSPAmtApcTxC { get; set; }
+
+        /// <summary> RSP最高扣款金額－其他交易幣 </summary>
+        public decimal? RSPMaxAmtTxC { get; set; }
+
+        /// <summary> 加發基金否 </summary>
+        public string? IsAdditional { get; set; }
+
+        /// <summary> 舊資料否 </summary>
+        public string? IsOld { get; set; }
+    }
+
+    /// <summary> 境內子基金相關帳號檔 </summary>
+    [Table("DTA_FND_FundAccount")]
+    public class DTAFNDFundAccount : TableRowModel
+    {
+        /// <summary> 公司代碼 </summary>
+        [RequiredValidator]
+        public string? SysCoID { get; set; }
+
+        /// <summary> 母基金代碼 </summary>
+        [RequiredValidator]
+        public string? PrtFundCode { get; set; }
+
+        /// <summary> 基金代碼 </summary>
+        [RequiredValidator]
+        public string? FundCode { get; set; }
+
+        /// <summary> 資料序號 </summary>
+        [RequiredValidator]
+        public int? DataSeq { get; set; }
+
+        /// <summary> 基金專戶分行 </summary>
+        public string? CusBankBrh { get; set; }
+
+        /// <summary> 基金專戶帳號 </summary>
+        public string? FundAccount { get; set; }
+
+        /// <summary> 申購匯款虛擬帳號代碼 </summary>
+        public string? SRemitVCode { get; set; }
+
+        /// <summary> 帳號用途集合 </summary>
+        public string? AccountUseSet { get; set; }
+
+        /// <summary> 備註 </summary>
+        public string? Remark { get; set; }
+    }
+
+    /// <summary> 境內子基金相關群組檔 </summary>
+    [Table("DTA_FND_FundRelGroup")]
+    public class DTAFNDFundRelGroup : TableRowModel
+    {
+        /// <summary> 公司代碼 </summary>
+        [RequiredValidator]
+        public string? SysCoID { get; set; }
+
+        /// <summary> 母基金代碼 </summary>
+        [RequiredValidator]
+        public string? PrtFundCode { get; set; }
+
+        /// <summary> 基金代碼 </summary>
+        [RequiredValidator]
+        public string? FundCode { get; set; }
+
+        /// <summary> 群組分類代碼 </summary>
+        [RequiredValidator]
+        public string? FundGroupNo { get; set; }
+
+        /// <summary> 分類代碼 </summary>
+        public string? GroupTypeNo { get; set; }
+    }
+
+    /// <summary> 境內子基金確認單揭露費用檔 </summary>
+    [Table("DTA_FND_FundDisclosureFee")]
+    public class DTAFNDFundDisclosureFee : TableRowModel
+    {
+        /// <summary> 公司代碼 </summary>
+        [RequiredValidator]
+        public string? SysCoID { get; set; }
+
+        /// <summary> 母基金代碼 </summary>
+        [RequiredValidator]
+        public string? PrtFundCode { get; set; }
+
+        /// <summary> 基金代碼 </summary>
+        [RequiredValidator]
+        public string? FundCode { get; set; }
+
+        /// <summary> 生效日期 </summary>
+        [RequiredValidator]
+        public DateTimeOffset? EffDate { get; set; }
+
+        /// <summary> 公告經理費率 </summary>
+        public string? AnnManagerRate { get; set; }
+
+        /// <summary> 公告保管費率 </summary>
+        public string? AnnCustodyRate { get; set; }
+
+        /// <summary> 公告分銷費率 </summary>
+        public string? AnnDistributionRate { get; set; }
+
+        /// <summary> 公告其他費用 </summary>
+        public string? AnnOtherFee { get; set; }
+    }
+
+    /// <summary> 境內子基金可交易幣別檔 </summary>
+    [Table("DTA_FND_FundTxCry")]
+    public class DTAFNDFundTxCry : TableRowModel
+    {
+        /// <summary> 公司代碼 </summary>
+        [RequiredValidator]
+        public string? SysCoID { get; set; }
+
+        /// <summary> 母基金代碼 </summary>
+        [RequiredValidator]
+        public string? PrtFundCode { get; set; }
+
+        /// <summary> 基金代碼 </summary>
+        [RequiredValidator]
+        public string? FundCode { get; set; }
+
+        /// <summary> 幣別代碼 </summary>
+        [RequiredValidator]
+        public string? CryID { get; set; }
+
+        /// <summary> 幣別資料來源 </summary>
+        public string? CryDataSrc { get; set; }
+    }
+
+    /// <summary> 境內基金短線交易費率設定檔 </summary>
+    [Table("DTA_FND_FundShortInf")]
+    public class DTAFNDFundShortInf : TableRowModel
+    {
+        /// <summary> 公司代碼 </summary>
+        [RequiredValidator]
+        public string? SysCoID { get; set; }
+
+        /// <summary> 母基金代碼 </summary>
+        [RequiredValidator]
+        public string? PrtFundCode { get; set; }
+
+        /// <summary> 買回區間 </summary>
+        public string? RdmRangeType { get; set; }
+
+        /// <summary> 短線計算行事曆類別 </summary>
+        public string? ShortDateType { get; set; }
+
+        /// <summary> 買回基準日 </summary>
+        public string? RdmBaseID { get; set; }
+
+        /// <summary> 申購基準日 </summary>
+        public string? SubsBaseID { get; set; }
+
+        /// <summary> 短線計算規則 </summary>
+        public string? ShortCalcID { get; set; }
+    }
+
+    /// <summary> 境內基金短線交易費率設定明細檔 </summary>
+    [Table("DTA_FND_FundShortDtl")]
+    public class DTAFNDFundShortDtl : TableRowModel
+    {
+        /// <summary> 公司代碼 </summary>
+        [RequiredValidator]
+        public string? SysCoID { get; set; }
+
+        /// <summary> 母基金代碼 </summary>
+        [RequiredValidator]
+        public string? PrtFundCode { get; set; }
+
+        /// <summary> 起算日／月(含) </summary>
+        [RequiredValidator]
+        public byte? BeginDay { get; set; }
+
+        /// <summary> 終止日／月(含) </summary>
+        public byte? EndDay { get; set; }
+
+        /// <summary> 短線交易費率(%) </summary>
+        public decimal? ShortFeeRate { get; set; }
+
+        /// <summary> 判斷上限否 </summary>
+        public string? IsMaxAmt { get; set; }
+
+        /// <summary> 上限金額 </summary>
+        public decimal? MaxAmt { get; set; }
+
+        /// <summary> 判斷下限否 </summary>
+        public string? IsMinAmt { get; set; }
+
+        /// <summary> 下限金額 </summary>
+        public decimal? MinAmt { get; set; }
+    }
+
+    /// <summary> 境內基金反稀釋設定檔 </summary>
+    [Table("DTA_FND_FundAntiDilution")]
+    public class DTAFNDFundAntiDilution : TableRowModel
+    {
+        /// <summary> 公司代碼 </summary>
+        [RequiredValidator]
+        public string? SysCoID { get; set; }
+
+        /// <summary> 母基金代碼 </summary>
+        [RequiredValidator]
+        public string? PrtFundCode { get; set; }
+
+        /// <summary> 反稀釋設定適用類型 </summary>
+        [RequiredValidator]
+        public string? AntiDilSetType { get; set; }
+
+        /// <summary> 生效日期 </summary>
+        [RequiredValidator]
+        public DateTimeOffset? EffDate { get; set; }
+
+        /// <summary> 終止日期 </summary>
+        public DateTimeOffset? TermDate { get; set; }
+
+        /// <summary> 啟動門檻(AUM%) </summary>
+        public decimal? AntiDilTrigger { get; set; }
+
+        /// <summary> 反稀釋費率(%) </summary>
+        public decimal? AntiDilFeeRate { get; set; }
+
+        /// <summary> 調整原因 </summary>
+        public string? AdjRsn { get; set; }
+
+        /// <summary> 備註 </summary>
+        public string? Remark { get; set; }
+    }
+
+    /// <summary> 境內基金經理費率設定檔 </summary>
+    [Table("DTA_FND_FundMGTFeeInf")]
+    public class DTAFNDFundMGTFeeInf : TableRowModel
+    {
+        /// <summary> 公司代碼 </summary>
+        [RequiredValidator]
+        public string? SysCoID { get; set; }
+
+        /// <summary> 母基金代碼 </summary>
+        [RequiredValidator]
+        public string? PrtFundCode { get; set; }
+
+        /// <summary> 公司基金級別代碼 </summary>
+        [RequiredValidator]
+        public string? FHFundShare { get; set; }
+
+        /// <summary> 生效日期 </summary>
+        [RequiredValidator]
+        public DateTimeOffset? EffDate { get; set; }
+
+        /// <summary> 經理費計算規則 </summary>
+        public string? MGTFeeCalcID { get; set; }
+    }
+
+    /// <summary> 境內基金經理費率設定明細檔 </summary>
+    [Table("DTA_FND_FundMGTFeeDtl")]
+    public class DTAFNDFundMGTFeeDtl : TableRowModel
+    {
+        /// <summary> 公司代碼 </summary>
+        [RequiredValidator]
+        public string? SysCoID { get; set; }
+
+        /// <summary> 母基金代碼 </summary>
+        [RequiredValidator]
+        public string? PrtFundCode { get; set; }
+
+        /// <summary> 公司基金級別代碼 </summary>
+        [RequiredValidator]
+        public string? FHFundShare { get; set; }
+
+        /// <summary> 生效日期 </summary>
+        [RequiredValidator]
+        public DateTimeOffset? EffDate { get; set; }
+
+        /// <summary> 基金規模下限金額 </summary>
+        [RequiredValidator]
+        public decimal? AUMMinAmt { get; set; }
+
+        /// <summary> 經理費率(%) </summary>
+        public decimal? ManagerRate { get; set; }
+    }
+
+    #endregion AUD Class
+
+    #region Response Class
+
+    /// <summary> 基金資訊(共用)檔 一般查詢 DTO </summary>
+    public class TAFNDFundInfoDTO : TABasicResponse
+    {
+        /// <summary> 母基金代碼 </summary>
+        public string PrtFundCode { get; set; } = null!;
+
+        /// <summary> 基金統編 </summary>
+        public string UniCode { get; set; } = null!;
+
+        /// <summary> 基金內部簡稱 </summary>
+        public string FundInShName { get; set; } = null!;
+
+        /// <summary> 基金主要名稱 </summary>
+        public string FundMName { get; set; } = null!;
+
+        /// <summary> 基金主要簡稱 </summary>
+        public string FundShMName { get; set; } = null!;
+
+        /// <summary> 基金次要名稱 </summary>
+        public string FundSName { get; set; } = null!;
+
+        /// <summary> 基金次要簡稱 </summary>
+        public string FundShSName { get; set; } = null!;
+
+        /// <summary> 基金風險屬性 </summary>
+        public string FundRiskLevelNM { get; set; } = null!;
+
+        /// <summary> 發行基準貨幣代碼 </summary>
+        public string IssueBaseCry { get; set; } = null!;
+
+        /// <summary> 發行基準貨幣名稱 </summary>
+        public string IssueBaseCryNM { get; set; } = null!;
+
+        /// <summary> 成立日期 </summary>
+        public DateTimeOffset FundSetupDate { get; set; }
+
+        /// <summary> 基金狀態 </summary>
+        public string FundStatusNM { get; set; } = null!;
+    }
+
+    /// <summary> 基金資訊(共用)檔 一般查詢 Response </summary>
+    public class TAFNDFundInfoResponse
+    {
+        public List<TAFNDFundInfoDTO> ResultList { get; set; } = new();
+    }
+
+    /// <summary> 基金資訊(共用)檔 Maintain查詢 Master DTO </summary>
+    public class TAFNDFundInfoMaintainMasterDTO : TABasicResponse
+    {
+        /// <summary> 公司代碼 </summary>
+        public string SysCoID { get; set; } = null!;
+
+        /// <summary> 公司名稱 </summary>
+        public string SysCoIDNM { get; set; } = null!;
+
+        /// <summary> 母基金代碼 </summary>
+        public string PrtFundCode { get; set; } = null!;
+
+        /// <summary> 基金統編 </summary>
+        public string UniCode { get; set; } = null!;
+
+        /// <summary> 基金內部簡稱 </summary>
+        public string FundInShName { get; set; } = null!;
+
+        /// <summary> 基金主要名稱 </summary>
+        public string FundMName { get; set; } = null!;
+
+        /// <summary> 基金主要簡稱 </summary>
+        public string FundShMName { get; set; } = null!;
+
+        /// <summary> 基金次要名稱 </summary>
+        public string FundSName { get; set; } = null!;
+
+        /// <summary> 基金次要簡稱 </summary>
+        public string FundShSName { get; set; } = null!;
+
+        /// <summary> 基金風險屬性 </summary>
+        public string FundRiskLevel { get; set; } = null!;
+
+        /// <summary> 發行基準貨幣代碼 </summary>
+        public string IssueBaseCry { get; set; } = null!;
+
+        /// <summary> 發行基準貨幣名稱 </summary>
+        public string IssueBaseCryNM { get; set; } = null!;
+
+        /// <summary> 成立日期 </summary>
+        public DateTimeOffset FundSetupDate { get; set; }
+
+        /// <summary> GIIN CODE </summary>
+        public string GIINNo { get; set; } = null!;
+
+        /// <summary> 基金狀態 </summary>
+        public string FundStatus { get; set; } = null!;
+
+        /// <summary> 基金警語 </summary>
+        public string FundWarningMsg { get; set; } = null!;
+
+        /// <summary> 單位數小數位數 </summary>
+        public byte UnitDotLen { get; set; }
+
+        /// <summary> 基金申購方式 </summary>
+        public string FundSubsWay { get; set; } = null!;
+
+        /// <summary> 基金買回方式 </summary>
+        public string FundRdmWay { get; set; } = null!;
+
+        /// <summary> 買回預估NAV基準日 </summary>
+        public short RdmFNavDay { get; set; }
+
+        /// <summary> 買回預估NAV折扣方式 </summary>
+        public string RdmFNavWay { get; set; } = null!;
+
+        /// <summary> 買回預估NAV折扣率 </summary>
+        public decimal RdmFNavDRate { get; set; }
+
+        /// <summary> 買回預估NAV折扣值 </summary>
+        public decimal RdmFNavDVal { get; set; }
+
+        /// <summary> 短線交易費收取否 </summary>
+        public string IsShortFee { get; set; } = null!;
+
+        /// <summary> 反稀釋費用收取否 </summary>
+        public string IsAntiDilFee { get; set; } = null!;
+
+        /// <summary> ETF基金否 </summary>
+        public string IsETF { get; set; } = null!;
+
+        /// <summary> ETF代碼 </summary>
+        public string ETFCode { get; set; } = null!;
+
+        /// <summary> 全委基金否 </summary>
+        public string IsDIM { get; set; } = null!;
+
+        /// <summary> 境內外基金識別碼 </summary>
+        public string ShoreID { get; set; } = null!;
+
+        /// <summary> 基金公司代碼 </summary>
+        public string OFDFHCode { get; set; } = null!;
+
+        /// <summary> 公會基金類型代碼 </summary>
+        public string SITCAFundType { get; set; } = null!;
+
+        /// <summary> 公會基金類型代碼 </summary>
+        public string SITCAFundTypeNM { get; set; } = null!;
+
+        /// <summary> 基金型態 </summary>
+        public string DFundType { get; set; } = null!;
+
+        /// <summary> 基金投資地區 </summary>
+        public string DInvArea { get; set; } = null!;
+
+        /// <summary> 募集型態 </summary>
+        public string OfferType { get; set; } = null!;
+
+        /// <summary> 基準貨幣發行上限金額 </summary>
+        public decimal BCFundQuoUpAmt { get; set; }
+
+        /// <summary> 基準貨幣發行下限金額 </summary>
+        public decimal BCFundQuoMinAmt { get; set; }
+
+        /// <summary> 額度控管比率(%) </summary>
+        public decimal FundQuoLmtRate { get; set; }
+
+        /// <summary> 基金交易警示金額 </summary>
+        public decimal TradeWarningAmt { get; set; }
+
+        /// <summary> 外幣發行額度控管方式 </summary>
+        public string ExchUnitLmt { get; set; } = null!;
+
+        /// <summary> 法幣總額淨發行單位數上限 </summary>
+        public decimal FMNetQuoUpUnit { get; set; }
+
+        /// <summary> 外幣總額淨發行單位數上限 </summary>
+        public decimal ExchNetQuoUpUnit { get; set; }
+
+        /// <summary> 首次募集日期 </summary>
+        public DateTimeOffset FundIPODate { get; set; }
+
+        /// <summary> 開放買回日期 </summary>
+        public DateTimeOffset BegRdmDate { get; set; }
+
+        /// <summary> 基金發行方式 </summary>
+        public string FundIssueType { get; set; } = null!;
+
+        /// <summary> 受益憑證發行日期 </summary>
+        public DateTimeOffset FundIssueDate { get; set; }
+
+        /// <summary> 轉換無實體上線日期 </summary>
+        public DateTimeOffset CSDOnlineDate { get; set; }
+
+        /// <summary> 集保平台款項生效日期 </summary>
+        public DateTimeOffset CSDPrtFundSetlDate { get; set; }
+
+        /// <summary> 核準日期 </summary>
+        public DateTimeOffset ApprovelDate { get; set; }
+
+        /// <summary> 清算／合併日期 </summary>
+        public DateTimeOffset ClearDate { get; set; }
+
+        /// <summary> 最後申購日期 </summary>
+        public DateTimeOffset LastSubsDate { get; set; }
+
+        /// <summary> 最後買回日期 </summary>
+        public DateTimeOffset LastRdmDate { get; set; }
+
+        /// <summary> 基金營業日定義 </summary>
+        public string BIZDayDef { get; set; } = null!;
+
+        /// <summary> 申購行事曆識別碼 </summary>
+        public string SubsDateType { get; set; } = null!;
+
+        /// <summary> 買回行事曆識別碼 </summary>
+        public string RdmDateType { get; set; } = null!;
+
+        /// <summary> 付款行事曆識別碼 </summary>
+        public string RdmPayDateType { get; set; } = null!;
+
+        /// <summary> 申購NAV基準日 </summary>
+        public byte SubsNavDay { get; set; }
+
+        /// <summary> 買回NAV基準日 </summary>
+        public byte RdmNavDay { get; set; }
+
+        /// <summary> 買回付款基準日 </summary>
+        public byte RdmPayDay { get; set; }
+
+        /// <summary> 保管銀行代碼 </summary>
+        public string CustBankHeadID { get; set; } = null!;
+
+        /// <summary> 保管銀行簡稱 </summary>
+        public string CustBankHeadIDNM { get; set; } = null!;
+
+        /// <summary> SWIFT代碼 </summary>
+        public string SWIFTCode { get; set; } = null!;
+
+        /// <summary> 保銀英文名稱 </summary>
+        public string BankSName { get; set; } = null!;
+
+        /// <summary> 保銀地址 </summary>
+        public string Addr { get; set; } = null!;
+
+        /// <summary> 基金專戶主要名稱 </summary>
+        public string FundAccMName { get; set; } = null!;
+
+        /// <summary> 基金專戶次要名稱 </summary>
+        public string FundAccSName { get; set; } = null!;
+
+        /// <summary> 提票日(非保銀他行) </summary>
+        public short CheckDiffDay { get; set; }
+
+        /// <summary> 兌現日(非保銀他行) </summary>
+        public short CashDiffDay { get; set; }
+
+        /// <summary> FA申購放帳日 </summary>
+        public short FASubsInDay { get; set; }
+
+        /// <summary> FA買回放帳日 </summary>
+        public short FARdmOutDay { get; set; }
+
+        /// <summary> FA申購交割日 </summary>
+        public short FASubsSetlDay { get; set; }
+
+        /// <summary> FA買回交割日 </summary>
+        public short FARdmSetlDay { get; set; }
+
+        /// <summary> 前收型手續費率群組 </summary>
+        public string SubsFeeGroup { get; set; } = null!;
+
+        /// <summary> 前收型手續費率群組名稱 </summary>
+        public string SubsFeeGroupNM { get; set; } = null!;
+
+        /// <summary> 遞延型手續費率群組 </summary>
+        public string CDSCFeeGroup { get; set; } = null!;
+
+        /// <summary> 遞延型手續費率群組名稱 </summary>
+        public string CDSCFeeGroupNM { get; set; } = null!;
+
+        /// <summary> 收益分配日期基金群組 </summary>
+        public string DivFundGroup { get; set; } = null!;
+
+        /// <summary> 收益分配日期基金群組名稱 </summary>
+        public string DivFundGroupNM { get; set; } = null!;
+
+        /// <summary> 集保平台申購截止時間 </summary>
+        public string CSDSubsDeadline { get; set; } = null!;
+
+        /// <summary> 集保平台買回截止時間 </summary>
+        public string CSDRdmDeadline { get; set; } = null!;
+
+        /// <summary> 短線交易開始日期 </summary>
+        public DateTimeOffset BeginShortDate { get; set; }
+
+        /// <summary> 短線交易買回計算方式 </summary>
+        public string ShortCalcMemo { get; set; } = null!;
+
+        /// <summary> 其他短線交易規定 </summary>
+        public string ShortTxMemo { get; set; } = null!;
+
+        /// <summary> 短線交易備註 </summary>
+        public string ShortMemo { get; set; } = null!;
+
+        /// <summary> 匯費類型 </summary>
+        public string RemitChargeCD { get; set; } = null!;
+
+        /// <summary> 募集期基金否 </summary>
+        public string IsIPO { get; set; } = null!;
+
+        /// <summary> 非投資等級基金否 </summary>
+        public string IsHighRisk { get; set; } = null!;
+
+        /// <summary> 保本型基金否 </summary>
+        public string IsPGF { get; set; } = null!;
+
+        /// <summary> 存續期間-保本型 </summary>
+        public string PGFStay { get; set; } = null!;
+
+        /// <summary> 到期年限-保本型 </summary>
+        public byte PGFMatureYear { get; set; }
+
+        /// <summary> 停止申購交易基準日-保本型 </summary>
+        public short PGFStopSubsDay { get; set; }
+
+        /// <summary> 到期日期-保本型 </summary>
+        public DateTimeOffset PGFExpiryDate { get; set; }
+
+        /// <summary> 收取買回費否-保本型 </summary>
+        public string IsPGFRdmFee { get; set; } = null!;
+
+        /// <summary> 到期型基金否 </summary>
+        public string IsTMF { get; set; } = null!;
+
+        /// <summary> 到期方式-到期型 </summary>
+        public string TMFKind { get; set; } = null!;
+
+        /// <summary> 停止申購交易基準日-到期型 </summary>
+        public short TMFStopSubsDay { get; set; }
+
+        /// <summary> 目標日期-到期型 </summary>
+        public DateTimeOffset TMFTargetDate { get; set; }
+
+        /// <summary> 到期／存續年限-到期型 </summary>
+        public byte TMFStay { get; set; }
+
+        /// <summary> 到期日期-到期型 </summary>
+        public DateTimeOffset TMFExpiryDate { get; set; }
+
+        /// <summary> 鎖利報酬計價幣別-到期型 </summary>
+        public string TMFReturnBC { get; set; } = null!;
+
+        /// <summary> 鎖利報酬計價幣別名稱-到期型 </summary>
+        public string TMFReturnBCNM { get; set; } = null!;
+
+        /// <summary> 鎖利報酬啟動依據 </summary>
+        public string TMFReturnStarr { get; set; } = null!;
+
+        /// <summary> 收取買回費否-到期型 </summary>
+        public string IsTMFRdmFee { get; set; } = null!;
+
+        /// <summary> 純外幣計價基金否 </summary>
+        public string IsPFF { get; set; } = null!;
+
+        /// <summary> 私募人數上限 </summary>
+        public byte PvtFundLimit { get; set; }
+
+        /// <summary> 收取績效費否 </summary>
+        public string IsPerformanceFee { get; set; } = null!;
+
+        /// <summary> 傘型架構否 </summary>
+        public string IsUmbrella { get; set; } = null!;
+
+        /// <summary> 傘型名稱 </summary>
+        public string UmbrellaName { get; set; } = null!;
+
+        /// <summary> 基金其他說明事項 </summary>
+        public string FundMemo { get; set; } = null!;
+
+        /// <summary> 買回區間 </summary>
+        public string RdmRangeType { get; set; } = null!;
+
+        /// <summary> 短線計算行事曆類別 </summary>
+        public string ShortDateType { get; set; } = null!;
+
+        /// <summary> 買回基準日 </summary>
+        public string RdmBaseID { get; set; } = null!;
+
+        /// <summary> 申購基準日 </summary>
+        public string SubsBaseID { get; set; } = null!;
+
+        /// <summary> 短線計算規則 </summary>
+        public string ShortCalcID { get; set; } = null!;
+    }
+
+    /// <summary> 基金資訊(共用)檔 Maintain查詢 Detail DTO 保管銀行聯絡人清單 </summary>
+    public class DTACustContactListDTO : TABasicResponse
+    {
+        /// <summary> 公司代碼 </summary>
+        public string SysCoID { get; set; } = null!;
+
+        /// <summary> 母基金代碼 </summary>
+        public string PrtFundCode { get; set; } = null!;
+
+        /// <summary> 資料序號 </summary>
+        public int DataSeq { get; set; }
+
+        /// <summary> 主要聯絡窗口否 </summary>
+        public string IsMainContact { get; set; } = null!;
+
+        /// <summary> 聯絡人 </summary>
+        public string ContactMan { get; set; } = null!;
+
+        /// <summary> 聯絡電話 </summary>
+        public string ContactTel { get; set; } = null!;
+
+        /// <summary> 傳真電話一 </summary>
+        public string Fax1 { get; set; } = null!;
+
+        /// <summary> 傳真電話二 </summary>
+        public string Fax2 { get; set; } = null!;
+
+        /// <summary> 工作項目 </summary>
+        public string WorkItem { get; set; } = null!;
+    }
+
+    /// <summary> 基金資訊(共用)檔 Maintain查詢 Detail DTO 基金發行幣別清單 </summary>
+    public class DTACryGroupListDTO : TABasicResponse
+    {
+        /// <summary> 公司代碼 </summary>
+        public string SysCoID { get; set; } = null!;
+
+        /// <summary> 母基金代碼 </summary>
+        public string PrtFundCode { get; set; } = null!;
+
+        /// <summary> 發行幣別代碼 </summary>
+        public string IssueCry { get; set; } = null!;
+
+        /// <summary> 發行幣別名稱 </summary>
+        public string IssueCryNM { get; set; } = null!;
+
+        /// <summary> 單位面額 </summary>
+        public decimal FundFaceAmt { get; set; }
+
+        /// <summary> NAV小數位數 </summary>
+        public byte NavDotLen { get; set; }
+
+        /// <summary> 可交易其他交易幣 </summary>
+        public string IsOthTxCry { get; set; } = null!;
+
+        /// <summary> 其他交易幣別 </summary>
+        public string OthTxCry { get; set; } = null!;
+
+        /// <summary> 其他交易幣別名稱 </summary>
+        public string OthTxCryNM { get; set; } = null!;
+
+        /// <summary> 基準貨幣發行總面額 </summary>
+        public decimal FundQuoAmtBC { get; set; }
+
+        /// <summary> 額度控管換算比率(%) </summary>
+        public decimal UnitConvRate { get; set; }
+
+        /// <summary> 淨發行單位數上限(額控) </summary>
+        public decimal FundQuoUnit { get; set; }
+
+        /// <summary> 募集手續費優惠方式 </summary>
+        public string IPOSubsFeeDisType { get; set; } = null!;
+
+        /// <summary> 募集固定費率(%) </summary>
+        public decimal IPOFixRate { get; set; }
+
+        /// <summary> 募集牌告折數(%) </summary>
+        public decimal IPODiscRateOff { get; set; }
+
+        /// <summary> 基金主專戶分行 </summary>
+        public string FundMBankBrh { get; set; } = null!;
+
+        /// <summary> 基金主專戶分行簡稱 </summary>
+        public string FundMBankBrhNM { get; set; } = null!;
+
+        /// <summary> SWIFT代碼 </summary>
+        public string SWIFTCode { get; set; } = null!;
+
+        /// <summary> 基金主專戶帳號 </summary>
+        public string FundMAccount { get; set; } = null!;
+
+        /// <summary> 公司代墊外幣匯費自行支付方式 </summary>
+        public string CRemitFeeID { get; set; } = null!;
+
+        /// <summary> 公司代墊外幣匯費自行－固定法幣金額 </summary>
+        public decimal CRemitFeeFM { get; set; }
+
+        /// <summary> 公司代墊外幣匯費他行支付方式 </summary>
+        public string CRemitFeeOtherID { get; set; } = null!;
+
+        /// <summary> 公司代墊外幣匯費他行－固定法幣金額 </summary>
+        public decimal CRemitFeeOtherFM { get; set; }
+
+        /// <summary> 基金開放RSP否 </summary>
+        public string IsRSP { get; set; } = null!;
+
+        /// <summary> RSP開始扣款日期 </summary>
+        public DateTimeOffset BeginRspDate { get; set; }
+
+        /// <summary> RSP最低扣款金額 </summary>
+        public decimal RSPMinAmt { get; set; }
+
+        /// <summary> RSP扣款累進金額 </summary>
+        public decimal RSPAmtApc { get; set; }
+
+        /// <summary> RSP最高扣款金額 </summary>
+        public decimal RSPMaxAmt { get; set; }
+
+        /// <summary> RSP最低扣款金額－其他交易幣 </summary>
+        public decimal RSPMinAmtTxC { get; set; }
+
+        /// <summary> RSP最低扣款累進金額－其他交易幣 </summary>
+        public decimal RSPAmtApcTxC { get; set; }
+
+        /// <summary> RSP最高扣款金額－其他交易幣 </summary>
+        public decimal RSPMaxAmtTxC { get; set; }
+
+        /// <summary> RSP連續扣款失敗終止次數 </summary>
+        public byte RSPConFailCnt { get; set; }
+
+        /// <summary> 定期定額手續費率(%) </summary>
+        public decimal RSPFeeRate { get; set; }
+
+        /// <summary> RSP異動不可調升金額否 </summary>
+        public string IsRSPChgAmt { get; set; } = null!;
+
+        /// <summary> RSP依級別調整設定否 </summary>
+        public string IsRSPShareSet { get; set; } = null!;
+
+        /// <summary> 基金開放配息否 </summary>
+        public string IsDividend { get; set; } = null!;
+
+        /// <summary> 收益分配方式 </summary>
+        public string DivType { get; set; } = null!;
+
+        /// <summary> 最小配現金額 </summary>
+        public decimal DivMinAmt { get; set; }
+
+        /// <summary> 配息頻率 </summary>
+        public string DivCycle { get; set; } = null!;
+
+        /// <summary> 配息付款平台 </summary>
+        public string DivPayPlatform { get; set; } = null!;
+
+        /// <summary> 國稅局預設申報所得格式 </summary>
+        public string TaxFormat { get; set; } = null!;
+
+        /// <summary> 大額申購金額 </summary>
+        public decimal LakhSubsAmt { get; set; }
+
+        /// <summary> 大額買回金額 </summary>
+        public decimal LakhRdmAmt { get; set; }
+    }
+
+    /// <summary> 基金資訊(共用)檔 Maintain查詢 Detail DTO 子基金清單 </summary>
+    public class DTAFundDetailListDTO : TABasicResponse
+    {
+        /// <summary> 公司代碼 </summary>
+        public string SysCoID { get; set; } = null!;
+
+        /// <summary> 母基金代碼 </summary>
+        public string PrtFundCode { get; set; } = null!;
+
+        /// <summary> 基金代碼 </summary>
+        public string FundCode { get; set; } = null!;
+
+        /// <summary> 計價幣別 </summary>
+        public string FundCry { get; set; } = null!;
+
+        /// <summary> 計價幣別名稱 </summary>
+        public string FundCryNM { get; set; } = null!;
+
+        /// <summary> 基金內部簡稱 </summary>
+        public string FundInShName { get; set; } = null!;
+
+        /// <summary> 基金主要簡稱 </summary>
+        public string FundShMName { get; set; } = null!;
+
+        /// <summary> 基金次要簡稱 </summary>
+        public string FundShSName { get; set; } = null!;
+
+        /// <summary> 公司基金級別代碼 </summary>
+        public string FHFundShare { get; set; } = null!;
+
+        /// <summary> 公司基金級別說明 </summary>
+        public string FHFundShareNM { get; set; } = null!;
+
+        /// <summary> 級別首次銷售日期 </summary>
+        public DateTimeOffset ShareFirSaleDate { get; set; }
+
+        /// <summary> 受益憑證代碼 </summary>
+        public string SMARTFundCode { get; set; } = null!;
+
+        /// <summary> 集保平台下單基金代碼 </summary>
+        public string CSDFundCode { get; set; } = null!;
+
+        /// <summary> 公會申報基金代碼 </summary>
+        public string SITCAFundCode { get; set; } = null!;
+
+        /// <summary> FA公會基金代碼 </summary>
+        public string FAFundCode { get; set; } = null!;
+
+        /// <summary> 財金平台費用代碼 </summary>
+        public string FISFeeCode { get; set; } = null!;
+
+        /// <summary> ISIN代碼 </summary>
+        public string ISINCode { get; set; } = null!;
+
+        /// <summary> TISA基金 </summary>
+        public string IsTISA { get; set; } = null!;
+
+        /// <summary> 法人級別否 </summary>
+        public string IsIShare { get; set; } = null!;
+
+        /// <summary> 限制專業投資人交易否 </summary>
+        public string IsPITrd { get; set; } = null!;
+
+        /// <summary> 計息種類 </summary>
+        public string DivCalcType { get; set; } = null!;
+
+        /// <summary> 申購手續費收取方式 </summary>
+        public string SubsFeeType { get; set; } = null!;
+
+        /// <summary> 單筆最低申購金額 </summary>
+        public decimal SubsMinAmt { get; set; }
+
+        /// <summary> 單筆申購累進金額 </summary>
+        public decimal SubsAmtApc { get; set; }
+
+        /// <summary> 最低轉申購金額 </summary>
+        public decimal SwMinAmt { get; set; }
+
+        /// <summary> 收取分銷費否 </summary>
+        public string IsDistributionFee { get; set; } = null!;
+
+        /// <summary> 到期年限 </summary>
+        public byte MatureYear { get; set; }
+
+        /// <summary> 到期後轉入基金代碼 </summary>
+        public string MatureFund { get; set; } = null!;
+
+        /// <summary> 到期後轉入基金簡稱 </summary>
+        public string MatureFundNM { get; set; } = null!;
+
+        /// <summary> 集保申購款項生效日期 </summary>
+        public DateTimeOffset CSDSubsSetlDate { get; set; }
+
+        /// <summary> 最低剩餘單位數 </summary>
+        public decimal RdmMinUnitSur { get; set; }
+
+        /// <summary> 最低買回單位數 </summary>
+        public decimal RdmMinUnit { get; set; }
+
+        /// <summary> 最低買回金額 </summary>
+        public decimal RdmMinAmt { get; set; }
+
+        /// <summary> 集保買回款項生效日期 </summary>
+        public DateTimeOffset CSDRdmSetlDate { get; set; }
+
+        /// <summary> 基金級別不開放RSP否 </summary>
+        public string IsShareRSP { get; set; } = null!;
+
+        /// <summary> RSP最低扣款金額 </summary>
+        public decimal RSPMinAmt { get; set; }
+
+        /// <summary> RSP扣款累進金額 </summary>
+        public decimal RSPAmtApc { get; set; }
+
+        /// <summary> RSP最高扣款金額 </summary>
+        public decimal RSPMaxAmt { get; set; }
+
+        /// <summary> 單筆最低申購金額－其他交易幣 </summary>
+        public decimal SubsMinAmtTxC { get; set; }
+
+        /// <summary> 單筆申購累進金額－其他交易幣 </summary>
+        public decimal SubsAmtApcTxC { get; set; }
+
+        /// <summary> 單筆最低轉申購金額－其他交易幣 </summary>
+        public decimal SwMinAmtTxC { get; set; }
+
+        /// <summary> RSP最低扣款金額－其他交易幣 </summary>
+        public decimal RSPMinAmtTxC { get; set; }
+
+        /// <summary> RSP扣款累進金額－其他交易幣 </summary>
+        public decimal RSPAmtApcTxC { get; set; }
+
+        /// <summary> RSP最高扣款金額－其他交易幣 </summary>
+        public decimal RSPMaxAmtTxC { get; set; }
+
+        /// <summary> 加發基金否 </summary>
+        public string IsAdditional { get; set; } = null!;
+
+        /// <summary> 舊資料否 </summary>
+        public string IsOld { get; set; } = null!;
+    }
+
+    /// <summary> 基金資訊(共用)檔 Maintain查詢 Detail DTO 子基金相關帳號清單 </summary>
+    public class DTAFundAccountListDTO : TABasicResponse
+    {
+        /// <summary> 公司代碼 </summary>
+        public string SysCoID { get; set; } = null!;
+
+        /// <summary> 母基金代碼 </summary>
+        public string PrtFundCode { get; set; } = null!;
+
+        /// <summary> 基金代碼 </summary>
+        public string FundCode { get; set; } = null!;
+
+        /// <summary> 資料序號 </summary>
+        public int DataSeq { get; set; }
+
+        /// <summary> 基金專戶分行 </summary>
+        public string CusBankBrh { get; set; } = null!;
+
+        /// <summary> 基金專戶分行簡稱 </summary>
+        public string CusBankBrhNM { get; set; } = null!;
+
+        /// <summary> 基金專戶帳號 </summary>
+        public string FundAccount { get; set; } = null!;
+
+        /// <summary> 申購匯款虛擬帳號代碼 </summary>
+        public string SRemitVCode { get; set; } = null!;
+
+        /// <summary> SWIFT代碼 </summary>
+        public string SWIFTCode { get; set; } = null!;
+
+        /// <summary> 帳號用途集合 </summary>
+        public string AccountUseSet { get; set; } = null!;
+
+        /// <summary> 備註 </summary>
+        public string Remark { get; set; } = null!;
+    }
+
+    /// <summary> 基金資訊(共用)檔 Maintain查詢 Detail DTO 子基金相關群組清單 </summary>
+    public class DTAFundRelGroupListDTO : TABasicResponse
+    {
+        /// <summary> 公司代碼 </summary>
+        public string SysCoID { get; set; } = null!;
+
+        /// <summary> 母基金代碼 </summary>
+        public string PrtFundCode { get; set; } = null!;
+
+        /// <summary> 基金代碼 </summary>
+        public string FundCode { get; set; } = null!;
+
+        /// <summary> 群組分類代碼 </summary>
+        public string FundGroupNo { get; set; } = null!;
+
+        /// <summary> 群組分類說明 </summary>
+        public string FundGroupNoNM { get; set; } = null!;
+
+        /// <summary> 分類代碼 </summary>
+        public string GroupTypeNo { get; set; } = null!;
+
+        /// <summary> 分類說明 </summary>
+        public string GroupTypeNoNM { get; set; } = null!;
+    }
+
+    /// <summary> 基金資訊(共用)檔 Maintain查詢 Detail DTO 子基金確認單揭露費用清單 </summary>
+    public class DTAFundDisFeeListDTO : TABasicResponse
+    {
+        /// <summary> 公司代碼 </summary>
+        public string SysCoID { get; set; } = null!;
+
+        /// <summary> 母基金代碼 </summary>
+        public string PrtFundCode { get; set; } = null!;
+
+        /// <summary> 基金代碼 </summary>
+        public string FundCode { get; set; } = null!;
+
+        /// <summary> 生效日期 </summary>
+        public DateTimeOffset EffDate { get; set; }
+
+        /// <summary> 公告經理費率 </summary>
+        public string AnnManagerRate { get; set; } = null!;
+
+        /// <summary> 公告保管費率 </summary>
+        public string AnnCustodyRate { get; set; } = null!;
+
+        /// <summary> 公告分銷費率 </summary>
+        public string AnnDistributionRate { get; set; } = null!;
+
+        /// <summary> 公告其他費用 </summary>
+        public string AnnOtherFee { get; set; } = null!;
+    }
+
+    /// <summary> 基金資訊(共用)檔 Maintain查詢 Detail DTO 子基金可交易幣別清單 </summary>
+    public class DTAFundTxCryListDTO : TABasicResponse
+    {
+        /// <summary> 公司代碼 </summary>
+        public string SysCoID { get; set; } = null!;
+
+        /// <summary> 母基金代碼 </summary>
+        public string PrtFundCode { get; set; } = null!;
+
+        /// <summary> 基金代碼 </summary>
+        public string FundCode { get; set; } = null!;
+
+        /// <summary> 幣別代碼 </summary>
+        public string CryID { get; set; } = null!;
+
+        /// <summary> 幣別資料來源 </summary>
+        public string CryDataSrc { get; set; } = null!;
+    }
+
+    /// <summary> 基金資訊(共用)檔 Maintain查詢 Detail DTO 短線交易費率明細清單 </summary>
+    public class DTAShortDtlListDTO : TABasicResponse
+    {
+        /// <summary> 公司代碼 </summary>
+        public string SysCoID { get; set; } = null!;
+
+        /// <summary> 母基金代碼 </summary>
+        public string PrtFundCode { get; set; } = null!;
+
+        /// <summary> 起算日／月(含) </summary>
+        public byte BeginDay { get; set; }
+
+        /// <summary> 終止日／月(含) </summary>
+        public byte EndDay { get; set; }
+
+        /// <summary> 短線交易費率(%) </summary>
+        public decimal ShortFeeRate { get; set; }
+
+        /// <summary> 判斷上限否 </summary>
+        public string IsMaxAmt { get; set; } = null!;
+
+        /// <summary> 上限金額 </summary>
+        public decimal MaxAmt { get; set; }
+
+        /// <summary> 判斷下限否 </summary>
+        public string IsMinAmt { get; set; } = null!;
+
+        /// <summary> 下限金額 </summary>
+        public decimal MinAmt { get; set; }
+    }
+
+    /// <summary> 基金資訊(共用)檔 Maintain查詢 Detail DTO 反稀釋設定清單 </summary>
+    public class DTAFundAntiDilListDTO : TABasicResponse
+    {
+        /// <summary> 公司代碼 </summary>
+        public string SysCoID { get; set; } = null!;
+
+        /// <summary> 母基金代碼 </summary>
+        public string PrtFundCode { get; set; } = null!;
+
+        /// <summary> 反稀釋設定適用類型 </summary>
+        public string AntiDilSetType { get; set; } = null!;
+
+        /// <summary> 生效日期 </summary>
+        public DateTimeOffset EffDate { get; set; }
+
+        /// <summary> 終止日期 </summary>
+        public DateTimeOffset TermDate { get; set; }
+
+        /// <summary> 啟動門檻(AUM%) </summary>
+        public decimal AntiDilTrigger { get; set; }
+
+        /// <summary> 反稀釋費率(%) </summary>
+        public decimal AntiDilFeeRate { get; set; }
+
+        /// <summary> 調整原因 </summary>
+        public string AdjRsn { get; set; } = null!;
+
+        /// <summary> 備註 </summary>
+        public string Remark { get; set; } = null!;
+    }
+
+    /// <summary> 基金資訊(共用)檔 Maintain查詢 Detail DTO 反稀釋調整清單 </summary>
+    public class DTAFundAntiDilAdjListDTO : TABasicResponse
+    {
+        /// <summary> 公司代碼 </summary>
+        public string SysCoID { get; set; } = null!;
+
+        /// <summary> 母基金代碼 </summary>
+        public string PrtFundCode { get; set; } = null!;
+
+        /// <summary> 反稀釋設定適用類型 </summary>
+        public string AntiDilSetType { get; set; } = null!;
+
+        /// <summary> 生效日期 </summary>
+        public DateTimeOffset EffDate { get; set; }
+
+        /// <summary> 終止日期 </summary>
+        public DateTimeOffset TermDate { get; set; }
+
+        /// <summary> 啟動門檻(AUM%) </summary>
+        public decimal AntiDilTrigger { get; set; }
+
+        /// <summary> 反稀釋費率(%) </summary>
+        public decimal AntiDilFeeRate { get; set; }
+
+        /// <summary> 調整原因 </summary>
+        public string AdjRsn { get; set; } = null!;
+
+        /// <summary> 備註 </summary>
+        public string Remark { get; set; } = null!;
+    }
+
+    /// <summary> 基金資訊(共用)檔 Maintain查詢 Detail DTO 反稀釋機制清單 </summary>
+    public class DTAFundAntiDilMechListDTO : TABasicResponse
+    {
+        /// <summary> 公司代碼 </summary>
+        public string SysCoID { get; set; } = null!;
+
+        /// <summary> 母基金代碼 </summary>
+        public string PrtFundCode { get; set; } = null!;
+
+        /// <summary> 生效日期 </summary>
+        public DateTimeOffset EffDate { get; set; }
+
+        /// <summary> 啟動門檻(AUM%) </summary>
+        public decimal AntiDilTrigger { get; set; }
+
+        /// <summary> 反稀釋費率(%) </summary>
+        public decimal AntiDilFeeRate { get; set; }
+
+        /// <summary> 備註 </summary>
+        public string Remark { get; set; } = null!;
+    }
+
+    /// <summary> 基金資訊(共用)檔 Maintain查詢 Detail DTO 經理費率清單 </summary>
+    public class DTAFundMGTFeeListDTO : TABasicResponse
+    {
+        /// <summary> 公司代碼 </summary>
+        public string SysCoID { get; set; } = null!;
+
+        /// <summary> 母基金代碼 </summary>
+        public string PrtFundCode { get; set; } = null!;
+
+        /// <summary> 公司基金級別代碼 </summary>
+        public string FHFundShare { get; set; } = null!;
+
+        /// <summary> 公司基金級別說明 </summary>
+        public string FHFundShareNM { get; set; } = null!;
+
+        /// <summary> 生效日期 </summary>
+        public DateTimeOffset EffDate { get; set; }
+
+        /// <summary> 經理費計算規則 </summary>
+        public string MGTFeeCalcID { get; set; } = null!;
+    }
+
+    /// <summary> 基金資訊(共用)檔 Maintain查詢 Detail DTO 經理費率明細清單 </summary>
+    public class DTAMGTFeeDtlListDTO : TABasicResponse
+    {
+        /// <summary> 公司代碼 </summary>
+        public string SysCoID { get; set; } = null!;
+
+        /// <summary> 母基金代碼 </summary>
+        public string PrtFundCode { get; set; } = null!;
+
+        /// <summary> 公司基金級別代碼 </summary>
+        public string FHFundShare { get; set; } = null!;
+
+        /// <summary> 生效日期 </summary>
+        public DateTimeOffset EffDate { get; set; }
+
+        /// <summary> 基金規模下限金額 </summary>
+        public decimal AUMMinAmt { get; set; }
+
+        /// <summary> 經理費率(%) </summary>
+        public decimal ManagerRate { get; set; }
+    }
+
+    /// <summary> 基金資訊(共用)檔 Maintain查詢 Response DataPack </summary>
+    public class TAFNDFundInfoDataPack
+    {
+        public TAFNDFundInfoMaintainMasterDTO Master { get; set; } = new();
+
+        public List<DTACustContactListDTO> DTACustContactList { get; set; } = new();
+
+        public List<DTACryGroupListDTO> DTACryGroupList { get; set; } = new();
+
+        public List<DTAFundDetailListDTO> DTAFundDetailList { get; set; } = new();
+
+        public List<DTAFundAccountListDTO> DTAFundAccountList { get; set; } = new();
+
+        public List<DTAFundRelGroupListDTO> DTAFundRelGroupList { get; set; } = new();
+
+        public List<DTAFundDisFeeListDTO> DTAFundDisFeeList { get; set; } = new();
+
+        public List<DTAFundTxCryListDTO> DTAFundTxCryList { get; set; } = new();
+
+        public List<DTAShortDtlListDTO> DTAShortDtlList { get; set; } = new();
+
+        public List<DTAFundAntiDilListDTO> DTAFundAntiDilList { get; set; } = new();
+
+        public List<DTAFundAntiDilAdjListDTO> DTAFundAntiDilAdjList { get; set; } = new();
+
+        public List<DTAFundAntiDilMechListDTO> DTAFundAntiDilMechList { get; set; } = new();
+
+        public List<DTAFundMGTFeeListDTO> DTAFundMGTFeeList { get; set; } = new();
+
+        public List<DTAMGTFeeDtlListDTO> DTAMGTFeeDtlList { get; set; } = new();
+    }
+
+    /// <summary> 基金資訊(共用)檔 Maintain查詢 Response </summary>
+    public class TAFNDFundInfoAUDResponse : MaintainResultModel<TAFNDFundInfoDataPack>
+    { }
+
+    /// <summary> 取得境內母基金發行幣別代碼(For Searcher) TAGetDPrtFundIssueCry Info DTO </summary>
+    public class TAGetDPrtFundIssueCryDTO
+    {
+        /// <summary> 幣別代碼 </summary>
+        public string CryID { get; set; } = null!;
+
+        /// <summary> 幣別名稱 </summary>
+        public string CryIDNM { get; set; } = null!;
+
+        /// <summary> 基金開放RSP否 </summary>
+        public string? IsRSP { get; set; }
+    }
+
+    /// <summary> 取得境內母基金發行幣別代碼(For Searcher) TAGetDPrtFundIssueCry Info Response </summary>
+    public class TAGetDPrtFundIssueCryResponse
+    {
+        public List<TAGetDPrtFundIssueCryDTO> Master { get; set; } = new();
+    }
+
+    /// <summary> 取得境內基金可交易幣別代碼(For Searcher) TAGetDTxCry Info DTO </summary>
+    public class TAGetDTxCryDTO
+    {
+        /// <summary> 幣別代碼 </summary>
+        public string CryID { get; set; } = null!;
+
+        /// <summary> 幣別名稱 </summary>
+        public string CryIDNM { get; set; } = null!;
+
+        /// <summary> 金額小數 </summary>
+        public int DecLen { get; set; }
+
+        /// <summary> 雜幣否 </summary>
+        public string? IsMCY { get; set; }
+    }
+
+    /// <summary> 取得境內基金可交易幣別代碼(For Searcher) TAGetDTxCry Info Response </summary>
+    public class TAGetDTxCryResponse
+    {
+        public List<TAGetDTxCryDTO> Master { get; set; } = new();
+    }
+
+    #endregion Response Class
+}
+
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Immutable;
+using Systemweb.ACETA.API.ApiCore.Base;
+using Systemweb.ACETA.API.ApiCore.TA;
+using Systemweb.ACETA.API.MappingCode;
+using Systemweb.ACETA.API.Model.BaseUtility;
+using Systemweb.ACETA.API.Model.Fund;
+using Systemweb.WFP.API.Core;
+using Systemweb.WFP.API.Core.Models;
+using Systemweb.WFP.API.Core.Services;
+using Systemweb.WFP.API.DataAccess;
+using Systemweb.WFP.API.Models;
+
+namespace Systemweb.ACETA.API.Handler.Fund.Query
+{
+    #region 一般查詢 Handler
+
+    /// <summary> 基金資訊(共用)檔 一般查詢 Handler </summary>
+    public class TAFNDFundInfoHandler : TAHandlerQuery, IRequestHandler<TAFNDFundInfoFilterRequest, ResultModel<TAFNDFundInfoResponse>>
+    {
+        private readonly BaseApiService _Service;
+
+        /// <summary> TAFNDFundInfoHandler Constructor </summary>
+        /// <param name="basequery">IBaseQuery</param>
+        /// <param name="baseApiService">BaseApiService</param>
+        /// <param name="mapper">IMapper</param>
+        public TAFNDFundInfoHandler(IBaseQuery basequery, BaseApiService baseApiService) : base(basequery, baseApiService)
+        {
+            _Service = baseApiService;
+        }
+
+        /// <summary> Handle </summary>
+        /// <param name="request">TAFNDFundInfoFilterRequest</param>
+        /// <param name="cancellationToken">CancellationToken</param>
+        /// <returns>TAFNDFundInfoResponse</returns>
+        public async Task<ResultModel<TAFNDFundInfoResponse>> Handle(TAFNDFundInfoFilterRequest request, CancellationToken cancellationToken)
+        {
+            var real = from p in _DbSet.TA_FND_FundInfo
+                       where p.Inspect >= 900 && p.SysCoID == request.SysCoID
+                          && p.ShoreID == ShoreID.DTA
+                          && p.IsETF == MapYN.No
+                       select new
+                       {
+                           p.SysCoID,
+                           p.PrtFundCode,
+                           p.UniCode,
+                           p.FundInShName,
+                           p.FundMName,
+                           p.FundShMName,
+                           p.FundSName,
+                           p.FundShSName,
+                           p.FundRiskLevel,
+                           p.IssueBaseCry,
+                           p.FundSetupDate,
+                           p.FundStatus,
+                           p.DataID,
+                           p.CreateID,
+                           p.CreateDate,
+                           p.Inspect,
+                           p.FlowID,
+                           p.InspectID,
+                           p.InspectDate,
+                           p.UpdateID,
+                           p.UpdateDate,
+                           p.DataFlag,
+                           p.DiffColumns,
+                       };
+
+            //固定條件
+            if (request.InspectSwitch is not null && request.InspectSwitch != 0)
+                real = real.Where(g => g.Inspect / 100 == request.InspectSwitch);
+
+            var edit = from p in _DbSet.TA_FND_FundInfo_Edit
+                       where p.Inspect < 900 && p.SysCoID == request.SysCoID
+                          && p.ShoreID == ShoreID.DTA
+                          && p.IsETF == MapYN.No
+                       select new
+                       {
+                           p.SysCoID,
+                           p.PrtFundCode,
+                           p.UniCode,
+                           p.FundInShName,
+                           p.FundMName,
+                           p.FundShMName,
+                           p.FundSName,
+                           p.FundShSName,
+                           p.FundRiskLevel,
+                           p.IssueBaseCry,
+                           p.FundSetupDate,
+                           p.FundStatus,
+                           p.DataID,
+                           p.CreateID,
+                           p.CreateDate,
+                           p.Inspect,
+                           p.FlowID,
+                           p.InspectID,
+                           p.InspectDate,
+                           p.UpdateID,
+                           p.UpdateDate,
+                           p.DataFlag,
+                           p.DiffColumns,
+                       };
+
+            //固定條件
+            if (request.InspectSwitch is not null && request.InspectSwitch != 0)
+                edit = edit.Where(g => g.Inspect / 100 == request.InspectSwitch);
+
+            var query = real.Concat(edit);
+
+            #region Conditions
+
+            if (!string.IsNullOrWhiteSpace(request.PrtFundCode))
+                query = query.Where(p => p.PrtFundCode == request.PrtFundCode);
+
+            if (!string.IsNullOrWhiteSpace(request.UniCode))
+                query = query.Where(p => p.UniCode == request.UniCode);
+
+            #endregion Conditions
+
+            var data = await (from p in query
+                              orderby p.SysCoID, p.PrtFundCode, p.UniCode
+                              select p).ToListAsync(cancellationToken);
+
+            //查詢結果
+            List<TAFNDFundInfoDTO> list = new();
+
+            if (data.Count > 0)
+            {
+                TAFNDFundInfoMethods method = new(_Langid, _IsMainLang);
+                string cryIDs = string.Join(",", data.Select(p => p.IssueBaseCry));
+                string? nm;
+
+                // Get Opt
+                Dictionary<(string, string), string> dicOpt = await method.GetOpt("000003,000007");
+
+                // Get CryNM
+                Dictionary<string, (string CryIDNM, int DecLen)> dicCry = await method.GetCryNM(cryIDs);
+
+                // data mapping
+                list = data.Select(p => new TAFNDFundInfoDTO
+                {
+                    PrtFundCode = p.PrtFundCode,
+                    UniCode = p.UniCode,
+                    FundInShName = p.FundInShName,
+                    FundMName = p.FundMName,
+                    FundShMName = p.FundShMName,
+                    FundSName = p.FundSName,
+                    FundShSName = p.FundShSName,
+                    FundRiskLevelNM = dicOpt.TryGetValue(("000003", p.FundRiskLevel), out nm) ? nm : string.Empty,
+                    IssueBaseCry = p.IssueBaseCry,
+                    IssueBaseCryNM = dicCry.TryGetValue(p.IssueBaseCry, out var tuple) ? tuple.CryIDNM : string.Empty,
+                    FundSetupDate = p.FundSetupDate,
+                    FundStatusNM = dicOpt.TryGetValue(("000007", p.FundStatus), out nm) ? nm : string.Empty,
+                    DataID = p.DataID,
+                    CreateID = p.CreateID,
+                    CreateDate = p.CreateDate,
+                    Inspect = p.Inspect,
+                    FlowID = p.FlowID,
+                    InspectID = p.InspectID,
+                    InspectDate = p.InspectDate,
+                    UpdateID = p.UpdateID,
+                    UpdateDate = p.UpdateDate,
+                    DataFlag = p.DataFlag,
+                    DiffColumns = p.DiffColumns,
+                }).ToList();
+            }
+
+            //回傳結果
+            return GetQueryResult<TAFNDFundInfoDTO, TAFNDFundInfoResponse>(list, false);
+        }
+    }
+
+    #endregion 一般查詢 Handler
+
+    #region Maintain 查詢 Handler
+
+    /// <summary> 基金資訊(共用)檔 Maintain查詢 Handler </summary>
+    public class TAFNDFundInfoMaintainHandler : TAHandlerQuery, IRequestHandler<TAFNDFundInfoQueryRequest, ResultModel<TAFNDFundInfoAUDResponse>>
+    {
+        private readonly BaseApiService _Service;
+
+        /// <summary> TAFNDFundInfoMaintainHandler Constructor </summary>
+        /// <param name="basequery">IBaseQuery</param>
+        /// <param name="baseApiService">BaseApiService</param>
+        /// <param name="mapper">IMapper</param>
+        public TAFNDFundInfoMaintainHandler(IBaseQuery basequery, BaseApiService baseApiService) : base(basequery, baseApiService)
+        {
+            _Service = baseApiService;
+        }
+
+        /// <summary> Handle </summary>
+        /// <param name="request">TAFNDFundInfoQueryRequest</param>
+        /// <param name="cancellationToken">CancellationToken</param>
+        /// <returns>TAFNDFundInfoAUDResponse</returns>
+        public async Task<ResultModel<TAFNDFundInfoAUDResponse>> Handle(TAFNDFundInfoQueryRequest request, CancellationToken cancellationToken)
+        {
+            #region Master
+
+            var MasterReal = await (from p in _DbSet.TA_FND_FundInfo
+                                    join d in _DbSet.DTA_FND_FundInfo
+                                      on new { p.SysCoID, p.PrtFundCode } equals new { d.SysCoID, d.PrtFundCode }
+                                    join s in _DbSet.DTA_FND_FundSpecial
+                                      on new { p.SysCoID, p.PrtFundCode } equals new { s.SysCoID, s.PrtFundCode } into _s
+                                    from s in _s.DefaultIfEmpty()
+                                    join i in _DbSet.DTA_FND_FundShortInf
+                                      on new { p.SysCoID, p.PrtFundCode } equals new { i.SysCoID, i.PrtFundCode } into _i
+                                    from i in _i.DefaultIfEmpty()
+                                    where p.DataID == request.DataID
+                                    select new TAFNDFundInfoMaintainMasterDTO
+                                    {
+                                        SysCoID = p.SysCoID,
+                                        PrtFundCode = p.PrtFundCode,
+                                        UniCode = p.UniCode,
+                                        FundInShName = p.FundInShName,
+                                        FundMName = p.FundMName,
+                                        FundShMName = p.FundShMName,
+                                        FundSName = p.FundSName,
+                                        FundShSName = p.FundShSName,
+                                        FundRiskLevel = p.FundRiskLevel,
+                                        IssueBaseCry = p.IssueBaseCry,
+                                        FundSetupDate = p.FundSetupDate,
+                                        GIINNo = p.GIINNo,
+                                        FundStatus = p.FundStatus,
+                                        FundWarningMsg = p.FundWarningMsg,
+                                        UnitDotLen = p.UnitDotLen,
+                                        FundSubsWay = p.FundSubsWay,
+                                        FundRdmWay = p.FundRdmWay,
+                                        RdmFNavDay = p.RdmFNavDay,
+                                        RdmFNavWay = p.RdmFNavWay,
+                                        RdmFNavDRate = p.RdmFNavDRate,
+                                        RdmFNavDVal = p.RdmFNavDVal,
+                                        IsShortFee = p.IsShortFee,
+                                        IsAntiDilFee = p.IsAntiDilFee,
+                                        IsETF = p.IsETF,
+                                        ETFCode = p.ETFCode,
+                                        IsDIM = p.IsDIM,
+                                        ShoreID = p.ShoreID,
+                                        OFDFHCode = p.OFDFHCode,
+                                        SITCAFundType = d.SITCAFundType,
+                                        DFundType = d.DFundType,
+                                        DInvArea = d.DInvArea,
+                                        OfferType = d.OfferType,
+                                        BCFundQuoUpAmt = d.BCFundQuoUpAmt,
+                                        BCFundQuoMinAmt = d.BCFundQuoMinAmt,
+                                        FundQuoLmtRate = d.FundQuoLmtRate,
+                                        TradeWarningAmt = d.TradeWarningAmt,
+                                        ExchUnitLmt = d.ExchUnitLmt,
+                                        FMNetQuoUpUnit = d.FMNetQuoUpUnit,
+                                        ExchNetQuoUpUnit = d.ExchNetQuoUpUnit,
+                                        FundIPODate = d.FundIPODate,
+                                        BegRdmDate = d.BegRdmDate,
+                                        FundIssueType = d.FundIssueType,
+                                        FundIssueDate = d.FundIssueDate,
+                                        CSDOnlineDate = d.CSDOnlineDate,
+                                        CSDPrtFundSetlDate = d.CSDPrtFundSetlDate,
+                                        ApprovelDate = d.ApprovelDate,
+                                        ClearDate = d.ClearDate,
+                                        LastSubsDate = d.LastSubsDate,
+                                        LastRdmDate = d.LastRdmDate,
+                                        BIZDayDef = d.BIZDayDef,
+                                        SubsDateType = d.SubsDateType,
+                                        RdmDateType = d.RdmDateType,
+                                        RdmPayDateType = d.RdmPayDateType,
+                                        SubsNavDay = d.SubsNavDay,
+                                        RdmNavDay = d.RdmNavDay,
+                                        RdmPayDay = d.RdmPayDay,
+                                        CustBankHeadID = d.CustBankHeadID,
+                                        FundAccMName = d.FundAccMName,
+                                        FundAccSName = d.FundAccSName,
+                                        CheckDiffDay = d.CheckDiffDay,
+                                        CashDiffDay = d.CashDiffDay,
+                                        FASubsInDay = d.FASubsInDay,
+                                        FARdmOutDay = d.FARdmOutDay,
+                                        FASubsSetlDay = d.FASubsSetlDay,
+                                        FARdmSetlDay = d.FARdmSetlDay,
+                                        SubsFeeGroup = d.SubsFeeGroup,
+                                        CDSCFeeGroup = d.CDSCFeeGroup,
+                                        DivFundGroup = d.DivFundGroup,
+                                        CSDSubsDeadline = d.CSDSubsDeadline,
+                                        CSDRdmDeadline = d.CSDRdmDeadline,
+                                        BeginShortDate = d.BeginShortDate,
+                                        ShortCalcMemo = d.ShortCalcMemo,
+                                        ShortTxMemo = d.ShortTxMemo,
+                                        ShortMemo = d.ShortMemo,
+                                        RemitChargeCD = d.RemitChargeCD,
+                                        IsIPO = d.IsIPO,
+                                        IsHighRisk = s.IsHighRisk,
+                                        IsPGF = s.IsPGF,
+                                        PGFStay = s.PGFStay,
+                                        PGFMatureYear = s.PGFMatureYear,
+                                        PGFStopSubsDay = s.PGFStopSubsDay,
+                                        PGFExpiryDate = s.PGFExpiryDate,
+                                        IsPGFRdmFee = s.IsPGFRdmFee,
+                                        IsTMF = s.IsTMF,
+                                        TMFKind = s.TMFKind,
+                                        TMFStopSubsDay = s.TMFStopSubsDay,
+                                        TMFTargetDate = s.TMFTargetDate,
+                                        TMFStay = s.TMFStay,
+                                        TMFExpiryDate = s.TMFExpiryDate,
+                                        TMFReturnBC = s.TMFReturnBC,
+                                        TMFReturnStarr = s.TMFReturnStarr,
+                                        IsTMFRdmFee = s.IsTMFRdmFee,
+                                        IsPFF = s.IsPFF,
+                                        PvtFundLimit = s.PvtFundLimit,
+                                        IsPerformanceFee = s.IsPerformanceFee,
+                                        IsUmbrella = s.IsUmbrella,
+                                        UmbrellaName = s.UmbrellaName,
+                                        FundMemo = s.FundMemo,
+                                        RdmRangeType = i.RdmRangeType,
+                                        ShortDateType = i.ShortDateType,
+                                        RdmBaseID = i.RdmBaseID,
+                                        SubsBaseID = i.SubsBaseID,
+                                        ShortCalcID = i.ShortCalcID,
+                                        DataID = p.DataID,
+                                        CreateID = p.CreateID,
+                                        CreateDate = p.CreateDate,
+                                        Inspect = p.Inspect,
+                                        FlowID = p.FlowID,
+                                        InspectID = p.InspectID,
+                                        InspectDate = p.InspectDate,
+                                        UpdateID = p.UpdateID,
+                                        UpdateDate = p.UpdateDate,
+                                        DataFlag = p.DataFlag,
+                                        DiffColumns = p.DiffColumns
+                                    }).FirstOrDefaultAsync(cancellationToken);
+
+            var MasterEdit = await (from p in _DbSet.TA_FND_FundInfo_Edit
+                                    join d in _DbSet.DTA_FND_FundInfo_Edit
+                                      on new { p.SysCoID, p.PrtFundCode } equals new { d.SysCoID, d.PrtFundCode }
+                                    join s in _DbSet.DTA_FND_FundSpecial_Edit
+                                      on new { p.SysCoID, p.PrtFundCode } equals new { s.SysCoID, s.PrtFundCode } into _s
+                                    from s in _s.DefaultIfEmpty()
+                                    join i in _DbSet.DTA_FND_FundShortInf_Edit
+                                      on new { p.SysCoID, p.PrtFundCode } equals new { i.SysCoID, i.PrtFundCode } into _i
+                                    from i in _i.DefaultIfEmpty()
+                                    where p.DataID == request.DataID
+                                    select new TAFNDFundInfoMaintainMasterDTO
+                                    {
+                                        SysCoID = p.SysCoID,
+                                        PrtFundCode = p.PrtFundCode,
+                                        UniCode = p.UniCode,
+                                        FundInShName = p.FundInShName,
+                                        FundMName = p.FundMName,
+                                        FundShMName = p.FundShMName,
+                                        FundSName = p.FundSName,
+                                        FundShSName = p.FundShSName,
+                                        FundRiskLevel = p.FundRiskLevel,
+                                        IssueBaseCry = p.IssueBaseCry,
+                                        FundSetupDate = p.FundSetupDate,
+                                        GIINNo = p.GIINNo,
+                                        FundStatus = p.FundStatus,
+                                        FundWarningMsg = p.FundWarningMsg,
+                                        UnitDotLen = p.UnitDotLen,
+                                        FundSubsWay = p.FundSubsWay,
+                                        FundRdmWay = p.FundRdmWay,
+                                        RdmFNavDay = p.RdmFNavDay,
+                                        RdmFNavWay = p.RdmFNavWay,
+                                        RdmFNavDRate = p.RdmFNavDRate,
+                                        RdmFNavDVal = p.RdmFNavDVal,
+                                        IsShortFee = p.IsShortFee,
+                                        IsAntiDilFee = p.IsAntiDilFee,
+                                        IsETF = p.IsETF,
+                                        ETFCode = p.ETFCode,
+                                        ShoreID = p.ShoreID,
+                                        OFDFHCode = p.OFDFHCode,
+                                        SITCAFundType = d.SITCAFundType,
+                                        DFundType = d.DFundType,
+                                        DInvArea = d.DInvArea,
+                                        OfferType = d.OfferType,
+                                        BCFundQuoUpAmt = d.BCFundQuoUpAmt,
+                                        BCFundQuoMinAmt = d.BCFundQuoMinAmt,
+                                        FundQuoLmtRate = d.FundQuoLmtRate,
+                                        TradeWarningAmt = d.TradeWarningAmt,
+                                        ExchUnitLmt = d.ExchUnitLmt,
+                                        FMNetQuoUpUnit = d.FMNetQuoUpUnit,
+                                        ExchNetQuoUpUnit = d.ExchNetQuoUpUnit,
+                                        FundIPODate = d.FundIPODate,
+                                        BegRdmDate = d.BegRdmDate,
+                                        FundIssueType = d.FundIssueType,
+                                        FundIssueDate = d.FundIssueDate,
+                                        CSDOnlineDate = d.CSDOnlineDate,
+                                        CSDPrtFundSetlDate = d.CSDPrtFundSetlDate,
+                                        ApprovelDate = d.ApprovelDate,
+                                        ClearDate = d.ClearDate,
+                                        LastSubsDate = d.LastSubsDate,
+                                        LastRdmDate = d.LastRdmDate,
+                                        BIZDayDef = d.BIZDayDef,
+                                        SubsDateType = d.SubsDateType,
+                                        RdmDateType = d.RdmDateType,
+                                        RdmPayDateType = d.RdmPayDateType,
+                                        SubsNavDay = d.SubsNavDay,
+                                        RdmNavDay = d.RdmNavDay,
+                                        RdmPayDay = d.RdmPayDay,
+                                        CustBankHeadID = d.CustBankHeadID,
+                                        FundAccMName = d.FundAccMName,
+                                        FundAccSName = d.FundAccSName,
+                                        CheckDiffDay = d.CheckDiffDay,
+                                        CashDiffDay = d.CashDiffDay,
+                                        FASubsInDay = d.FASubsInDay,
+                                        FARdmOutDay = d.FARdmOutDay,
+                                        FASubsSetlDay = d.FASubsSetlDay,
+                                        FARdmSetlDay = d.FARdmSetlDay,
+                                        SubsFeeGroup = d.SubsFeeGroup,
+                                        CDSCFeeGroup = d.CDSCFeeGroup,
+                                        DivFundGroup = d.DivFundGroup,
+                                        CSDSubsDeadline = d.CSDSubsDeadline,
+                                        CSDRdmDeadline = d.CSDRdmDeadline,
+                                        BeginShortDate = d.BeginShortDate,
+                                        ShortCalcMemo = d.ShortCalcMemo,
+                                        ShortTxMemo = d.ShortTxMemo,
+                                        ShortMemo = d.ShortMemo,
+                                        RemitChargeCD = d.RemitChargeCD,
+                                        IsIPO = d.IsIPO,
+                                        IsHighRisk = s.IsHighRisk,
+                                        IsPGF = s.IsPGF,
+                                        PGFStay = s.PGFStay,
+                                        PGFMatureYear = s.PGFMatureYear,
+                                        PGFStopSubsDay = s.PGFStopSubsDay,
+                                        PGFExpiryDate = s.PGFExpiryDate,
+                                        IsPGFRdmFee = s.IsPGFRdmFee,
+                                        IsTMF = s.IsTMF,
+                                        TMFKind = s.TMFKind,
+                                        TMFStopSubsDay = s.TMFStopSubsDay,
+                                        TMFTargetDate = s.TMFTargetDate,
+                                        TMFStay = s.TMFStay,
+                                        TMFExpiryDate = s.TMFExpiryDate,
+                                        TMFReturnBC = s.TMFReturnBC,
+                                        TMFReturnStarr = s.TMFReturnStarr,
+                                        IsTMFRdmFee = s.IsTMFRdmFee,
+                                        IsPFF = s.IsPFF,
+                                        PvtFundLimit = s.PvtFundLimit,
+                                        IsPerformanceFee = s.IsPerformanceFee,
+                                        IsUmbrella = s.IsUmbrella,
+                                        UmbrellaName = s.UmbrellaName,
+                                        FundMemo = s.FundMemo,
+                                        RdmRangeType = i.RdmRangeType,
+                                        ShortDateType = i.ShortDateType,
+                                        RdmBaseID = i.RdmBaseID,
+                                        SubsBaseID = i.SubsBaseID,
+                                        ShortCalcID = i.ShortCalcID,
+                                        DataID = p.DataID,
+                                        CreateID = p.CreateID,
+                                        CreateDate = p.CreateDate,
+                                        Inspect = p.Inspect,
+                                        FlowID = p.FlowID,
+                                        InspectID = p.InspectID,
+                                        InspectDate = p.InspectDate,
+                                        UpdateID = p.UpdateID,
+                                        UpdateDate = p.UpdateDate,
+                                        DataFlag = p.DataFlag,
+                                        DiffColumns = p.DiffColumns,
+                                    }).FirstOrDefaultAsync(cancellationToken);
+
+            #endregion Master
+
+            #region Detail DTACustContactList
+
+            var DTACustContactListReal = await (from p in _DbSet.DTA_FND_FundCustContact
+                                                where p.DataID == request.DataID
+                                                select new DTACustContactListDTO
+                                                {
+                                                    SysCoID = p.SysCoID,
+                                                    PrtFundCode = p.PrtFundCode,
+                                                    DataSeq = p.DataSeq,
+                                                    IsMainContact = p.IsMainContact,
+                                                    ContactMan = p.ContactMan,
+                                                    ContactTel = p.ContactTel,
+                                                    Fax1 = p.Fax1,
+                                                    Fax2 = p.Fax2,
+                                                    WorkItem = p.WorkItem,
+                                                    DataID = p.DataID,
+                                                    CreateID = p.CreateID,
+                                                    CreateDate = p.CreateDate,
+                                                    Inspect = p.Inspect,
+                                                    FlowID = p.FlowID,
+                                                    InspectID = p.InspectID,
+                                                    InspectDate = p.InspectDate,
+                                                    UpdateID = p.UpdateID,
+                                                    UpdateDate = p.UpdateDate,
+                                                    DataFlag = p.DataFlag,
+                                                    DiffColumns = p.DiffColumns,
+                                                }).ToListAsync(cancellationToken);
+
+            var DTACustContactListEdit = await (from p in _DbSet.DTA_FND_FundCustContact_Edit
+                                                where p.DataID == request.DataID
+                                                select new DTACustContactListDTO
+                                                {
+                                                    SysCoID = p.SysCoID,
+                                                    PrtFundCode = p.PrtFundCode,
+                                                    DataSeq = p.DataSeq,
+                                                    IsMainContact = p.IsMainContact,
+                                                    ContactMan = p.ContactMan,
+                                                    ContactTel = p.ContactTel,
+                                                    Fax1 = p.Fax1,
+                                                    Fax2 = p.Fax2,
+                                                    WorkItem = p.WorkItem,
+                                                    DataID = p.DataID,
+                                                    CreateID = p.CreateID,
+                                                    CreateDate = p.CreateDate,
+                                                    Inspect = p.Inspect,
+                                                    FlowID = p.FlowID,
+                                                    InspectID = p.InspectID,
+                                                    InspectDate = p.InspectDate,
+                                                    UpdateID = p.UpdateID,
+                                                    UpdateDate = p.UpdateDate,
+                                                    DataFlag = p.DataFlag,
+                                                    DiffColumns = p.DiffColumns,
+                                                }).ToListAsync(cancellationToken);
+
+            #endregion Detail DTACustContactList
+
+            #region Detail DTACryGroupList
+
+            var DTACryGroupListReal = await (from p in _DbSet.DTA_FND_FundCryGroup
+                                             where p.DataID == request.DataID
+                                             select new DTACryGroupListDTO
+                                             {
+                                                 SysCoID = p.SysCoID,
+                                                 PrtFundCode = p.PrtFundCode,
+                                                 IssueCry = p.IssueCry,
+                                                 FundFaceAmt = p.FundFaceAmt,
+                                                 NavDotLen = p.NavDotLen,
+                                                 IsOthTxCry = p.IsOthTxCry,
+                                                 OthTxCry = p.OthTxCry,
+                                                 FundQuoAmtBC = p.FundQuoAmtBC,
+                                                 UnitConvRate = p.UnitConvRate,
+                                                 FundQuoUnit = p.FundQuoUnit,
+                                                 IPOSubsFeeDisType = p.IPOSubsFeeDisType,
+                                                 IPOFixRate = p.IPOFixRate,
+                                                 IPODiscRateOff = p.IPODiscRateOff,
+                                                 FundMBankBrh = p.FundMBankBrh,
+                                                 FundMAccount = p.FundMAccount,
+                                                 CRemitFeeID = p.CRemitFeeID,
+                                                 CRemitFeeFM = p.CRemitFeeFM,
+                                                 CRemitFeeOtherID = p.CRemitFeeOtherID,
+                                                 CRemitFeeOtherFM = p.CRemitFeeOtherFM,
+                                                 IsRSP = p.IsRSP,
+                                                 BeginRspDate = p.BeginRspDate,
+                                                 RSPMinAmt = p.RSPMinAmt,
+                                                 RSPAmtApc = p.RSPAmtApc,
+                                                 RSPMaxAmt = p.RSPMaxAmt,
+                                                 RSPMinAmtTxC = p.RSPMinAmtTxC,
+                                                 RSPAmtApcTxC = p.RSPAmtApcTxC,
+                                                 RSPMaxAmtTxC = p.RSPMaxAmtTxC,
+                                                 RSPConFailCnt = p.RSPConFailCnt,
+                                                 RSPFeeRate = p.RSPFeeRate,
+                                                 IsRSPChgAmt = p.IsRSPChgAmt,
+                                                 IsRSPShareSet = p.IsRSPShareSet,
+                                                 IsDividend = p.IsDividend,
+                                                 DivType = p.DivType,
+                                                 DivMinAmt = p.DivMinAmt,
+                                                 DivCycle = p.DivCycle,
+                                                 DivPayPlatform = p.DivPayPlatform,
+                                                 TaxFormat = p.TaxFormat,
+                                                 LakhSubsAmt = p.LakhSubsAmt,
+                                                 LakhRdmAmt = p.LakhRdmAmt,
+                                                 DataID = p.DataID,
+                                                 CreateID = p.CreateID,
+                                                 CreateDate = p.CreateDate,
+                                                 Inspect = p.Inspect,
+                                                 FlowID = p.FlowID,
+                                                 InspectID = p.InspectID,
+                                                 InspectDate = p.InspectDate,
+                                                 UpdateID = p.UpdateID,
+                                                 UpdateDate = p.UpdateDate,
+                                                 DataFlag = p.DataFlag,
+                                                 DiffColumns = p.DiffColumns,
+                                             }).ToListAsync(cancellationToken);
+
+            var DTACryGroupListEdit = await (from p in _DbSet.DTA_FND_FundCryGroup_Edit
+                                             where p.DataID == request.DataID
+                                             select new DTACryGroupListDTO
+                                             {
+                                                 SysCoID = p.SysCoID,
+                                                 PrtFundCode = p.PrtFundCode,
+                                                 IssueCry = p.IssueCry,
+                                                 FundFaceAmt = p.FundFaceAmt,
+                                                 NavDotLen = p.NavDotLen,
+                                                 IsOthTxCry = p.IsOthTxCry,
+                                                 OthTxCry = p.OthTxCry,
+                                                 FundQuoAmtBC = p.FundQuoAmtBC,
+                                                 UnitConvRate = p.UnitConvRate,
+                                                 FundQuoUnit = p.FundQuoUnit,
+                                                 IPOSubsFeeDisType = p.IPOSubsFeeDisType,
+                                                 IPOFixRate = p.IPOFixRate,
+                                                 IPODiscRateOff = p.IPODiscRateOff,
+                                                 FundMBankBrh = p.FundMBankBrh,
+                                                 FundMAccount = p.FundMAccount,
+                                                 CRemitFeeID = p.CRemitFeeID,
+                                                 CRemitFeeFM = p.CRemitFeeFM,
+                                                 CRemitFeeOtherID = p.CRemitFeeOtherID,
+                                                 CRemitFeeOtherFM = p.CRemitFeeOtherFM,
+                                                 IsRSP = p.IsRSP,
+                                                 BeginRspDate = p.BeginRspDate,
+                                                 RSPMinAmt = p.RSPMinAmt,
+                                                 RSPAmtApc = p.RSPAmtApc,
+                                                 RSPMaxAmt = p.RSPMaxAmt,
+                                                 RSPMinAmtTxC = p.RSPMinAmtTxC,
+                                                 RSPAmtApcTxC = p.RSPAmtApcTxC,
+                                                 RSPMaxAmtTxC = p.RSPMaxAmtTxC,
+                                                 RSPConFailCnt = p.RSPConFailCnt,
+                                                 RSPFeeRate = p.RSPFeeRate,
+                                                 IsRSPChgAmt = p.IsRSPChgAmt,
+                                                 IsRSPShareSet = p.IsRSPShareSet,
+                                                 IsDividend = p.IsDividend,
+                                                 DivType = p.DivType,
+                                                 DivMinAmt = p.DivMinAmt,
+                                                 DivCycle = p.DivCycle,
+                                                 DivPayPlatform = p.DivPayPlatform,
+                                                 TaxFormat = p.TaxFormat,
+                                                 LakhSubsAmt = p.LakhSubsAmt,
+                                                 LakhRdmAmt = p.LakhRdmAmt,
+                                                 DataID = p.DataID,
+                                                 CreateID = p.CreateID,
+                                                 CreateDate = p.CreateDate,
+                                                 Inspect = p.Inspect,
+                                                 FlowID = p.FlowID,
+                                                 InspectID = p.InspectID,
+                                                 InspectDate = p.InspectDate,
+                                                 UpdateID = p.UpdateID,
+                                                 UpdateDate = p.UpdateDate,
+                                                 DataFlag = p.DataFlag,
+                                                 DiffColumns = p.DiffColumns,
+                                             }).ToListAsync(cancellationToken);
+
+            #endregion Detail DTACryGroupList
+
+            #region Detail DTAFundDetailList
+
+            var DTAFundDetailListReal = await (from p in _DbSet.DTA_FND_FundDetail
+                                               where p.DataID == request.DataID
+                                               select new DTAFundDetailListDTO
+                                               {
+                                                   SysCoID = p.SysCoID,
+                                                   PrtFundCode = p.PrtFundCode,
+                                                   FundCode = p.FundCode,
+                                                   FundCry = p.FundCry,
+                                                   FundInShName = p.FundInShName,
+                                                   FundShMName = p.FundShMName,
+                                                   FundShSName = p.FundShSName,
+                                                   FHFundShare = p.FHFundShare,
+                                                   ShareFirSaleDate = p.ShareFirSaleDate,
+                                                   SMARTFundCode = p.SMARTFundCode,
+                                                   CSDFundCode = p.CSDFundCode,
+                                                   SITCAFundCode = p.SITCAFundCode,
+                                                   FAFundCode = p.FAFundCode,
+                                                   FISFeeCode = p.FISFeeCode,
+                                                   ISINCode = p.ISINCode,
+                                                   IsTISA = p.IsTISA,
+                                                   IsIShare = p.IsIShare,
+                                                   IsPITrd = p.IsPITrd,
+                                                   DivCalcType = p.DivCalcType,
+                                                   SubsFeeType = p.SubsFeeType,
+                                                   SubsMinAmt = p.SubsMinAmt,
+                                                   SubsAmtApc = p.SubsAmtApc,
+                                                   SwMinAmt = p.SwMinAmt,
+                                                   IsDistributionFee = p.IsDistributionFee,
+                                                   MatureYear = p.MatureYear,
+                                                   MatureFund = p.MatureFund,
+                                                   CSDSubsSetlDate = p.CSDSubsSetlDate,
+                                                   RdmMinUnitSur = p.RdmMinUnitSur,
+                                                   RdmMinUnit = p.RdmMinUnit,
+                                                   RdmMinAmt = p.RdmMinAmt,
+                                                   CSDRdmSetlDate = p.CSDRdmSetlDate,
+                                                   IsShareRSP = p.IsShareRSP,
+                                                   RSPMinAmt = p.RSPMinAmt,
+                                                   RSPAmtApc = p.RSPAmtApc,
+                                                   RSPMaxAmt = p.RSPMaxAmt,
+                                                   SubsMinAmtTxC = p.SubsMinAmtTxC,
+                                                   SubsAmtApcTxC = p.SubsAmtApcTxC,
+                                                   SwMinAmtTxC = p.SwMinAmtTxC,
+                                                   RSPMinAmtTxC = p.RSPMinAmtTxC,
+                                                   RSPAmtApcTxC = p.RSPAmtApcTxC,
+                                                   RSPMaxAmtTxC = p.RSPMaxAmtTxC,
+                                                   IsAdditional = p.IsAdditional,
+                                                   IsOld = p.IsOld,
+                                                   DataID = p.DataID,
+                                                   CreateID = p.CreateID,
+                                                   CreateDate = p.CreateDate,
+                                                   Inspect = p.Inspect,
+                                                   FlowID = p.FlowID,
+                                                   InspectID = p.InspectID,
+                                                   InspectDate = p.InspectDate,
+                                                   UpdateID = p.UpdateID,
+                                                   UpdateDate = p.UpdateDate,
+                                                   DataFlag = p.DataFlag,
+                                                   DiffColumns = p.DiffColumns,
+                                               }).ToListAsync(cancellationToken);
+
+            var DTAFundDetailListEdit = await (from p in _DbSet.DTA_FND_FundDetail_Edit
+                                               where p.DataID == request.DataID
+                                               select new DTAFundDetailListDTO
+                                               {
+                                                   SysCoID = p.SysCoID,
+                                                   PrtFundCode = p.PrtFundCode,
+                                                   FundCode = p.FundCode,
+                                                   FundCry = p.FundCry,
+                                                   FundInShName = p.FundInShName,
+                                                   FundShMName = p.FundShMName,
+                                                   FundShSName = p.FundShSName,
+                                                   FHFundShare = p.FHFundShare,
+                                                   ShareFirSaleDate = p.ShareFirSaleDate,
+                                                   SMARTFundCode = p.SMARTFundCode,
+                                                   CSDFundCode = p.CSDFundCode,
+                                                   SITCAFundCode = p.SITCAFundCode,
+                                                   FAFundCode = p.FAFundCode,
+                                                   FISFeeCode = p.FISFeeCode,
+                                                   ISINCode = p.ISINCode,
+                                                   IsTISA = p.IsTISA,
+                                                   IsIShare = p.IsIShare,
+                                                   IsPITrd = p.IsPITrd,
+                                                   DivCalcType = p.DivCalcType,
+                                                   SubsFeeType = p.SubsFeeType,
+                                                   SubsMinAmt = p.SubsMinAmt,
+                                                   SubsAmtApc = p.SubsAmtApc,
+                                                   SwMinAmt = p.SwMinAmt,
+                                                   IsDistributionFee = p.IsDistributionFee,
+                                                   MatureYear = p.MatureYear,
+                                                   MatureFund = p.MatureFund,
+                                                   CSDSubsSetlDate = p.CSDSubsSetlDate,
+                                                   RdmMinUnitSur = p.RdmMinUnitSur,
+                                                   RdmMinUnit = p.RdmMinUnit,
+                                                   RdmMinAmt = p.RdmMinAmt,
+                                                   CSDRdmSetlDate = p.CSDRdmSetlDate,
+                                                   IsShareRSP = p.IsShareRSP,
+                                                   RSPMinAmt = p.RSPMinAmt,
+                                                   RSPAmtApc = p.RSPAmtApc,
+                                                   RSPMaxAmt = p.RSPMaxAmt,
+                                                   SubsMinAmtTxC = p.SubsMinAmtTxC,
+                                                   SubsAmtApcTxC = p.SubsAmtApcTxC,
+                                                   SwMinAmtTxC = p.SwMinAmtTxC,
+                                                   RSPMinAmtTxC = p.RSPMinAmtTxC,
+                                                   RSPAmtApcTxC = p.RSPAmtApcTxC,
+                                                   RSPMaxAmtTxC = p.RSPMaxAmtTxC,
+                                                   IsAdditional = p.IsAdditional,
+                                                   IsOld = p.IsOld,
+                                                   DataID = p.DataID,
+                                                   CreateID = p.CreateID,
+                                                   CreateDate = p.CreateDate,
+                                                   Inspect = p.Inspect,
+                                                   FlowID = p.FlowID,
+                                                   InspectID = p.InspectID,
+                                                   InspectDate = p.InspectDate,
+                                                   UpdateID = p.UpdateID,
+                                                   UpdateDate = p.UpdateDate,
+                                                   DataFlag = p.DataFlag,
+                                                   DiffColumns = p.DiffColumns,
+                                               }).ToListAsync(cancellationToken);
+
+            #endregion Detail DTAFundDetailList
+
+            #region Detail DTAFundAccountList
+
+            var DTAFundAccountListReal = await (from p in _DbSet.DTA_FND_FundAccount
+                                                where p.DataID == request.DataID
+                                                select new DTAFundAccountListDTO
+                                                {
+                                                    SysCoID = p.SysCoID,
+                                                    PrtFundCode = p.PrtFundCode,
+                                                    FundCode = p.FundCode,
+                                                    DataSeq = p.DataSeq,
+                                                    CusBankBrh = p.CusBankBrh,
+                                                    FundAccount = p.FundAccount,
+                                                    SRemitVCode = p.SRemitVCode,
+                                                    AccountUseSet = p.AccountUseSet,
+                                                    Remark = p.Remark,
+                                                    DataID = p.DataID,
+                                                    CreateID = p.CreateID,
+                                                    CreateDate = p.CreateDate,
+                                                    Inspect = p.Inspect,
+                                                    FlowID = p.FlowID,
+                                                    InspectID = p.InspectID,
+                                                    InspectDate = p.InspectDate,
+                                                    UpdateID = p.UpdateID,
+                                                    UpdateDate = p.UpdateDate,
+                                                    DataFlag = p.DataFlag,
+                                                    DiffColumns = p.DiffColumns,
+                                                }).ToListAsync(cancellationToken);
+
+            var DTAFundAccountListEdit = await (from p in _DbSet.DTA_FND_FundAccount_Edit
+                                                where p.DataID == request.DataID
+                                                select new DTAFundAccountListDTO
+                                                {
+                                                    SysCoID = p.SysCoID,
+                                                    PrtFundCode = p.PrtFundCode,
+                                                    FundCode = p.FundCode,
+                                                    DataSeq = p.DataSeq,
+                                                    CusBankBrh = p.CusBankBrh,
+                                                    FundAccount = p.FundAccount,
+                                                    SRemitVCode = p.SRemitVCode,
+                                                    AccountUseSet = p.AccountUseSet,
+                                                    Remark = p.Remark,
+                                                    DataID = p.DataID,
+                                                    CreateID = p.CreateID,
+                                                    CreateDate = p.CreateDate,
+                                                    Inspect = p.Inspect,
+                                                    FlowID = p.FlowID,
+                                                    InspectID = p.InspectID,
+                                                    InspectDate = p.InspectDate,
+                                                    UpdateID = p.UpdateID,
+                                                    UpdateDate = p.UpdateDate,
+                                                    DataFlag = p.DataFlag,
+                                                    DiffColumns = p.DiffColumns,
+                                                }).ToListAsync(cancellationToken);
+
+            #endregion Detail DTAFundAccountList
+
+            #region Detail DTAFundRelGroupList
+
+            var DTAFundRelGroupListReal = await (from p in _DbSet.DTA_FND_FundRelGroup
+                                                 where p.DataID == request.DataID
+                                                 select new DTAFundRelGroupListDTO
+                                                 {
+                                                     SysCoID = p.SysCoID,
+                                                     PrtFundCode = p.PrtFundCode,
+                                                     FundCode = p.FundCode,
+                                                     FundGroupNo = p.FundGroupNo,
+                                                     GroupTypeNo = p.GroupTypeNo,
+                                                     DataID = p.DataID,
+                                                     CreateID = p.CreateID,
+                                                     CreateDate = p.CreateDate,
+                                                     Inspect = p.Inspect,
+                                                     FlowID = p.FlowID,
+                                                     InspectID = p.InspectID,
+                                                     InspectDate = p.InspectDate,
+                                                     UpdateID = p.UpdateID,
+                                                     UpdateDate = p.UpdateDate,
+                                                     DataFlag = p.DataFlag,
+                                                     DiffColumns = p.DiffColumns,
+                                                 }).ToListAsync(cancellationToken);
+
+            var DTAFundRelGroupListEdit = await (from p in _DbSet.DTA_FND_FundRelGroup_Edit
+                                                 where p.DataID == request.DataID
+                                                 select new DTAFundRelGroupListDTO
+                                                 {
+                                                     SysCoID = p.SysCoID,
+                                                     PrtFundCode = p.PrtFundCode,
+                                                     FundCode = p.FundCode,
+                                                     FundGroupNo = p.FundGroupNo,
+                                                     GroupTypeNo = p.GroupTypeNo,
+                                                     DataID = p.DataID,
+                                                     CreateID = p.CreateID,
+                                                     CreateDate = p.CreateDate,
+                                                     Inspect = p.Inspect,
+                                                     FlowID = p.FlowID,
+                                                     InspectID = p.InspectID,
+                                                     InspectDate = p.InspectDate,
+                                                     UpdateID = p.UpdateID,
+                                                     UpdateDate = p.UpdateDate,
+                                                     DataFlag = p.DataFlag,
+                                                     DiffColumns = p.DiffColumns,
+                                                 }).ToListAsync(cancellationToken);
+
+            #endregion Detail DTAFundRelGroupList
+
+            #region Detail DTAFundDisFeeList
+
+            var DTAFundDisFeeListReal = await (from p in _DbSet.DTA_FND_FundDisclosureFee
+                                               where p.DataID == request.DataID
+                                               select new DTAFundDisFeeListDTO
+                                               {
+                                                   SysCoID = p.SysCoID,
+                                                   PrtFundCode = p.PrtFundCode,
+                                                   FundCode = p.FundCode,
+                                                   EffDate = p.EffDate,
+                                                   AnnManagerRate = p.AnnManagerRate,
+                                                   AnnCustodyRate = p.AnnCustodyRate,
+                                                   AnnDistributionRate = p.AnnDistributionRate,
+                                                   AnnOtherFee = p.AnnOtherFee,
+                                                   DataID = p.DataID,
+                                                   CreateID = p.CreateID,
+                                                   CreateDate = p.CreateDate,
+                                                   Inspect = p.Inspect,
+                                                   FlowID = p.FlowID,
+                                                   InspectID = p.InspectID,
+                                                   InspectDate = p.InspectDate,
+                                                   UpdateID = p.UpdateID,
+                                                   UpdateDate = p.UpdateDate,
+                                                   DataFlag = p.DataFlag,
+                                                   DiffColumns = p.DiffColumns,
+                                               }).ToListAsync(cancellationToken);
+
+            var DTAFundDisFeeListEdit = await (from p in _DbSet.DTA_FND_FundDisclosureFee_Edit
+                                               where p.DataID == request.DataID
+                                               select new DTAFundDisFeeListDTO
+                                               {
+                                                   SysCoID = p.SysCoID,
+                                                   PrtFundCode = p.PrtFundCode,
+                                                   FundCode = p.FundCode,
+                                                   EffDate = p.EffDate,
+                                                   AnnManagerRate = p.AnnManagerRate,
+                                                   AnnCustodyRate = p.AnnCustodyRate,
+                                                   AnnDistributionRate = p.AnnDistributionRate,
+                                                   AnnOtherFee = p.AnnOtherFee,
+                                                   DataID = p.DataID,
+                                                   CreateID = p.CreateID,
+                                                   CreateDate = p.CreateDate,
+                                                   Inspect = p.Inspect,
+                                                   FlowID = p.FlowID,
+                                                   InspectID = p.InspectID,
+                                                   InspectDate = p.InspectDate,
+                                                   UpdateID = p.UpdateID,
+                                                   UpdateDate = p.UpdateDate,
+                                                   DataFlag = p.DataFlag,
+                                                   DiffColumns = p.DiffColumns,
+                                               }).ToListAsync(cancellationToken);
+
+            #endregion Detail DTAFundDisFeeList
+
+            #region Detail DTAFundTxCryList
+
+            var DTAFundTxCryListReal = await (from p in _DbSet.DTA_FND_FundTxCry
+                                              where p.DataID == request.DataID
+                                              select new DTAFundTxCryListDTO
+                                              {
+                                                  SysCoID = p.SysCoID,
+                                                  PrtFundCode = p.PrtFundCode,
+                                                  FundCode = p.FundCode,
+                                                  CryID = p.CryID,
+                                                  CryDataSrc = p.CryDataSrc,
+                                                  DataID = p.DataID,
+                                                  CreateID = p.CreateID,
+                                                  CreateDate = p.CreateDate,
+                                                  Inspect = p.Inspect,
+                                                  FlowID = p.FlowID,
+                                                  InspectID = p.InspectID,
+                                                  InspectDate = p.InspectDate,
+                                                  UpdateID = p.UpdateID,
+                                                  UpdateDate = p.UpdateDate,
+                                                  DataFlag = p.DataFlag,
+                                                  DiffColumns = p.DiffColumns,
+                                              }).ToListAsync(cancellationToken);
+
+            var DTAFundTxCryListEdit = await (from p in _DbSet.DTA_FND_FundTxCry_Edit
+                                              where p.DataID == request.DataID
+                                              select new DTAFundTxCryListDTO
+                                              {
+                                                  SysCoID = p.SysCoID,
+                                                  PrtFundCode = p.PrtFundCode,
+                                                  FundCode = p.FundCode,
+                                                  CryID = p.CryID,
+                                                  CryDataSrc = p.CryDataSrc,
+                                                  DataID = p.DataID,
+                                                  CreateID = p.CreateID,
+                                                  CreateDate = p.CreateDate,
+                                                  Inspect = p.Inspect,
+                                                  FlowID = p.FlowID,
+                                                  InspectID = p.InspectID,
+                                                  InspectDate = p.InspectDate,
+                                                  UpdateID = p.UpdateID,
+                                                  UpdateDate = p.UpdateDate,
+                                                  DataFlag = p.DataFlag,
+                                                  DiffColumns = p.DiffColumns,
+                                              }).ToListAsync(cancellationToken);
+
+            #endregion Detail DTAFundTxCryList
+
+            #region Detail DTAShortDtlList
+
+            var DTAShortDtlListReal = await (from p in _DbSet.DTA_FND_FundShortDtl
+                                             where p.DataID == request.DataID
+                                             select new DTAShortDtlListDTO
+                                             {
+                                                 SysCoID = p.SysCoID,
+                                                 PrtFundCode = p.PrtFundCode,
+                                                 BeginDay = p.BeginDay,
+                                                 EndDay = p.EndDay,
+                                                 ShortFeeRate = p.ShortFeeRate,
+                                                 IsMaxAmt = p.IsMaxAmt,
+                                                 MaxAmt = p.MaxAmt,
+                                                 IsMinAmt = p.IsMinAmt,
+                                                 MinAmt = p.MinAmt,
+                                                 DataID = p.DataID,
+                                                 CreateID = p.CreateID,
+                                                 CreateDate = p.CreateDate,
+                                                 Inspect = p.Inspect,
+                                                 FlowID = p.FlowID,
+                                                 InspectID = p.InspectID,
+                                                 InspectDate = p.InspectDate,
+                                                 UpdateID = p.UpdateID,
+                                                 UpdateDate = p.UpdateDate,
+                                                 DataFlag = p.DataFlag,
+                                                 DiffColumns = p.DiffColumns,
+                                             }).ToListAsync(cancellationToken);
+
+            var DTAShortDtlListEdit = await (from p in _DbSet.DTA_FND_FundShortDtl_Edit
+                                             where p.DataID == request.DataID
+                                             select new DTAShortDtlListDTO
+                                             {
+                                                 SysCoID = p.SysCoID,
+                                                 PrtFundCode = p.PrtFundCode,
+                                                 BeginDay = p.BeginDay,
+                                                 EndDay = p.EndDay,
+                                                 ShortFeeRate = p.ShortFeeRate,
+                                                 IsMaxAmt = p.IsMaxAmt,
+                                                 MaxAmt = p.MaxAmt,
+                                                 IsMinAmt = p.IsMinAmt,
+                                                 MinAmt = p.MinAmt,
+                                                 DataID = p.DataID,
+                                                 CreateID = p.CreateID,
+                                                 CreateDate = p.CreateDate,
+                                                 Inspect = p.Inspect,
+                                                 FlowID = p.FlowID,
+                                                 InspectID = p.InspectID,
+                                                 InspectDate = p.InspectDate,
+                                                 UpdateID = p.UpdateID,
+                                                 UpdateDate = p.UpdateDate,
+                                                 DataFlag = p.DataFlag,
+                                                 DiffColumns = p.DiffColumns,
+                                             }).ToListAsync(cancellationToken);
+
+            #endregion Detail DTAShortDtlList
+
+            #region Detail DTAFundAntiDilList
+
+            var DTAFundAntiDilListReal = await (from p in _DbSet.DTA_FND_FundAntiDilution
+                                                where p.DataID == request.DataID
+                                                select new DTAFundAntiDilListDTO
+                                                {
+                                                    SysCoID = p.SysCoID,
+                                                    PrtFundCode = p.PrtFundCode,
+                                                    AntiDilSetType = p.AntiDilSetType,
+                                                    EffDate = p.EffDate,
+                                                    TermDate = p.TermDate,
+                                                    AntiDilTrigger = p.AntiDilTrigger,
+                                                    AntiDilFeeRate = p.AntiDilFeeRate,
+                                                    AdjRsn = p.AdjRsn,
+                                                    Remark = p.Remark,
+                                                    DataID = p.DataID,
+                                                    CreateID = p.CreateID,
+                                                    CreateDate = p.CreateDate,
+                                                    Inspect = p.Inspect,
+                                                    FlowID = p.FlowID,
+                                                    InspectID = p.InspectID,
+                                                    InspectDate = p.InspectDate,
+                                                    UpdateID = p.UpdateID,
+                                                    UpdateDate = p.UpdateDate,
+                                                    DataFlag = p.DataFlag,
+                                                    DiffColumns = p.DiffColumns,
+                                                }).ToListAsync(cancellationToken);
+
+            var DTAFundAntiDilListEdit = await (from p in _DbSet.DTA_FND_FundAntiDilution_Edit
+                                                where p.DataID == request.DataID
+                                                select new DTAFundAntiDilListDTO
+                                                {
+                                                    SysCoID = p.SysCoID,
+                                                    PrtFundCode = p.PrtFundCode,
+                                                    AntiDilSetType = p.AntiDilSetType,
+                                                    EffDate = p.EffDate,
+                                                    TermDate = p.TermDate,
+                                                    AntiDilTrigger = p.AntiDilTrigger,
+                                                    AntiDilFeeRate = p.AntiDilFeeRate,
+                                                    AdjRsn = p.AdjRsn,
+                                                    Remark = p.Remark,
+                                                    DataID = p.DataID,
+                                                    CreateID = p.CreateID,
+                                                    CreateDate = p.CreateDate,
+                                                    Inspect = p.Inspect,
+                                                    FlowID = p.FlowID,
+                                                    InspectID = p.InspectID,
+                                                    InspectDate = p.InspectDate,
+                                                    UpdateID = p.UpdateID,
+                                                    UpdateDate = p.UpdateDate,
+                                                    DataFlag = p.DataFlag,
+                                                    DiffColumns = p.DiffColumns,
+                                                }).ToListAsync(cancellationToken);
+
+            #endregion Detail DTAFundAntiDilList
+
+            #region Detail DTAFundAntiDilAdjList
+
+            var DTAFundAntiDilAdjListReal = await (from p in _DbSet.DTA_FND_FundAntiDilution
+                                                   where p.DataID == request.DataID
+                                                      && p.AntiDilSetType != ADFRS.POS
+                                                   select new DTAFundAntiDilAdjListDTO
+                                                   {
+                                                       SysCoID = p.SysCoID,
+                                                       PrtFundCode = p.PrtFundCode,
+                                                       AntiDilSetType = p.AntiDilSetType,
+                                                       EffDate = p.EffDate,
+                                                       TermDate = p.TermDate,
+                                                       AntiDilTrigger = p.AntiDilTrigger,
+                                                       AntiDilFeeRate = p.AntiDilFeeRate,
+                                                       AdjRsn = p.AdjRsn,
+                                                       Remark = p.Remark,
+                                                       DataID = p.DataID,
+                                                       CreateID = p.CreateID,
+                                                       CreateDate = p.CreateDate,
+                                                       Inspect = p.Inspect,
+                                                       FlowID = p.FlowID,
+                                                       InspectID = p.InspectID,
+                                                       InspectDate = p.InspectDate,
+                                                       UpdateID = p.UpdateID,
+                                                       UpdateDate = p.UpdateDate,
+                                                       DataFlag = p.DataFlag,
+                                                       DiffColumns = p.DiffColumns,
+                                                   }).ToListAsync(cancellationToken);
+
+            var DTAFundAntiDilAdjListEdit = await (from p in _DbSet.DTA_FND_FundAntiDilution_Edit
+                                                   where p.DataID == request.DataID
+                                                      && p.AntiDilSetType != ADFRS.POS
+                                                   select new DTAFundAntiDilAdjListDTO
+                                                   {
+                                                       SysCoID = p.SysCoID,
+                                                       PrtFundCode = p.PrtFundCode,
+                                                       AntiDilSetType = p.AntiDilSetType,
+                                                       EffDate = p.EffDate,
+                                                       TermDate = p.TermDate,
+                                                       AntiDilTrigger = p.AntiDilTrigger,
+                                                       AntiDilFeeRate = p.AntiDilFeeRate,
+                                                       AdjRsn = p.AdjRsn,
+                                                       Remark = p.Remark,
+                                                       DataID = p.DataID,
+                                                       CreateID = p.CreateID,
+                                                       CreateDate = p.CreateDate,
+                                                       Inspect = p.Inspect,
+                                                       FlowID = p.FlowID,
+                                                       InspectID = p.InspectID,
+                                                       InspectDate = p.InspectDate,
+                                                       UpdateID = p.UpdateID,
+                                                       UpdateDate = p.UpdateDate,
+                                                       DataFlag = p.DataFlag,
+                                                       DiffColumns = p.DiffColumns,
+                                                   }).ToListAsync(cancellationToken);
+
+            #endregion Detail DTAFundAntiDilAdjList
+
+            #region Detail DTAFundAntiDilMechList
+
+            var DTAFundAntiDilMechListReal = await (from p in _DbSet.DTA_FND_FundAntiDilution
+                                                    where p.DataID == request.DataID
+                                                       && p.AntiDilSetType == ADFRS.POS
+                                                    select new DTAFundAntiDilMechListDTO
+                                                    {
+                                                        SysCoID = p.SysCoID,
+                                                        PrtFundCode = p.PrtFundCode,
+                                                        EffDate = p.EffDate,
+                                                        AntiDilTrigger = p.AntiDilTrigger,
+                                                        AntiDilFeeRate = p.AntiDilFeeRate,
+                                                        Remark = p.Remark,
+                                                        DataID = p.DataID,
+                                                        CreateID = p.CreateID,
+                                                        CreateDate = p.CreateDate,
+                                                        Inspect = p.Inspect,
+                                                        FlowID = p.FlowID,
+                                                        InspectID = p.InspectID,
+                                                        InspectDate = p.InspectDate,
+                                                        UpdateID = p.UpdateID,
+                                                        UpdateDate = p.UpdateDate,
+                                                        DataFlag = p.DataFlag,
+                                                        DiffColumns = p.DiffColumns,
+                                                    }).ToListAsync(cancellationToken);
+
+            var DTAFundAntiDilMechListEdit = await (from p in _DbSet.DTA_FND_FundAntiDilution_Edit
+                                                    where p.DataID == request.DataID
+                                                       && p.AntiDilSetType == ADFRS.POS
+                                                    select new DTAFundAntiDilMechListDTO
+                                                    {
+                                                        SysCoID = p.SysCoID,
+                                                        PrtFundCode = p.PrtFundCode,
+                                                        EffDate = p.EffDate,
+                                                        AntiDilTrigger = p.AntiDilTrigger,
+                                                        AntiDilFeeRate = p.AntiDilFeeRate,
+                                                        Remark = p.Remark,
+                                                        DataID = p.DataID,
+                                                        CreateID = p.CreateID,
+                                                        CreateDate = p.CreateDate,
+                                                        Inspect = p.Inspect,
+                                                        FlowID = p.FlowID,
+                                                        InspectID = p.InspectID,
+                                                        InspectDate = p.InspectDate,
+                                                        UpdateID = p.UpdateID,
+                                                        UpdateDate = p.UpdateDate,
+                                                        DataFlag = p.DataFlag,
+                                                        DiffColumns = p.DiffColumns,
+                                                    }).ToListAsync(cancellationToken);
+
+            #endregion Detail DTAFundAntiDilMechList
+
+            #region Detail DTAFundMGTFeeList
+
+            var DTAFundMGTFeeListReal = await (from p in _DbSet.DTA_FND_FundMGTFeeInf
+                                               where p.DataID == request.DataID
+                                               select new DTAFundMGTFeeListDTO
+                                               {
+                                                   SysCoID = p.SysCoID,
+                                                   PrtFundCode = p.PrtFundCode,
+                                                   FHFundShare = p.FHFundShare,
+                                                   EffDate = p.EffDate,
+                                                   MGTFeeCalcID = p.MGTFeeCalcID,
+                                                   DataID = p.DataID,
+                                                   CreateID = p.CreateID,
+                                                   CreateDate = p.CreateDate,
+                                                   Inspect = p.Inspect,
+                                                   FlowID = p.FlowID,
+                                                   InspectID = p.InspectID,
+                                                   InspectDate = p.InspectDate,
+                                                   UpdateID = p.UpdateID,
+                                                   UpdateDate = p.UpdateDate,
+                                                   DataFlag = p.DataFlag,
+                                                   DiffColumns = p.DiffColumns,
+                                               }).ToListAsync(cancellationToken);
+
+            var DTAFundMGTFeeListEdit = await (from p in _DbSet.DTA_FND_FundMGTFeeInf_Edit
+                                               where p.DataID == request.DataID
+                                               select new DTAFundMGTFeeListDTO
+                                               {
+                                                   SysCoID = p.SysCoID,
+                                                   PrtFundCode = p.PrtFundCode,
+                                                   FHFundShare = p.FHFundShare,
+                                                   EffDate = p.EffDate,
+                                                   MGTFeeCalcID = p.MGTFeeCalcID,
+                                                   DataID = p.DataID,
+                                                   CreateID = p.CreateID,
+                                                   CreateDate = p.CreateDate,
+                                                   Inspect = p.Inspect,
+                                                   FlowID = p.FlowID,
+                                                   InspectID = p.InspectID,
+                                                   InspectDate = p.InspectDate,
+                                                   UpdateID = p.UpdateID,
+                                                   UpdateDate = p.UpdateDate,
+                                                   DataFlag = p.DataFlag,
+                                                   DiffColumns = p.DiffColumns,
+                                               }).ToListAsync(cancellationToken);
+
+            #endregion Detail DTAFundMGTFeeList
+
+            #region Detail DTAMGTFeeDtlList
+
+            var DTAMGTFeeDtlListReal = await (from p in _DbSet.DTA_FND_FundMGTFeeDtl
+                                              where p.DataID == request.DataID
+                                              select new DTAMGTFeeDtlListDTO
+                                              {
+                                                  SysCoID = p.SysCoID,
+                                                  PrtFundCode = p.PrtFundCode,
+                                                  FHFundShare = p.FHFundShare,
+                                                  EffDate = p.EffDate,
+                                                  AUMMinAmt = p.AUMMinAmt,
+                                                  ManagerRate = p.ManagerRate,
+                                                  DataID = p.DataID,
+                                                  CreateID = p.CreateID,
+                                                  CreateDate = p.CreateDate,
+                                                  Inspect = p.Inspect,
+                                                  FlowID = p.FlowID,
+                                                  InspectID = p.InspectID,
+                                                  InspectDate = p.InspectDate,
+                                                  UpdateID = p.UpdateID,
+                                                  UpdateDate = p.UpdateDate,
+                                                  DataFlag = p.DataFlag,
+                                                  DiffColumns = p.DiffColumns,
+                                              }).ToListAsync(cancellationToken);
+
+            var DTAMGTFeeDtlListEdit = await (from p in _DbSet.DTA_FND_FundMGTFeeDtl_Edit
+                                              where p.DataID == request.DataID
+                                              select new DTAMGTFeeDtlListDTO
+                                              {
+                                                  SysCoID = p.SysCoID,
+                                                  PrtFundCode = p.PrtFundCode,
+                                                  FHFundShare = p.FHFundShare,
+                                                  EffDate = p.EffDate,
+                                                  AUMMinAmt = p.AUMMinAmt,
+                                                  ManagerRate = p.ManagerRate,
+                                                  DataID = p.DataID,
+                                                  CreateID = p.CreateID,
+                                                  CreateDate = p.CreateDate,
+                                                  Inspect = p.Inspect,
+                                                  FlowID = p.FlowID,
+                                                  InspectID = p.InspectID,
+                                                  InspectDate = p.InspectDate,
+                                                  UpdateID = p.UpdateID,
+                                                  UpdateDate = p.UpdateDate,
+                                                  DataFlag = p.DataFlag,
+                                                  DiffColumns = p.DiffColumns,
+                                              }).ToListAsync(cancellationToken);
+
+            #endregion Detail DTAMGTFeeDtlList
+
+            #region update master & details
+
+            TAFNDFundInfoMaintainMasterDTO? master = MasterEdit ?? MasterReal;
+
+            if (master is not null)
+            {
+                #region variables
+
+                //utility instance
+                BaseQueryUtility bq = new(_BaseQuery, _Langid, _IsMainLang);
+                TAFNDFundInfoMethods method = new(_Langid, _IsMainLang);
+                BaseFundQueryUtility bfq = new(_BaseQuery, _Langid, _IsMainLang);
+
+                //request instance
+                GetSysCoNMRequest conmRq = new();
+                List<string> cryIDList = [];
+                GetBankVRequest bankRq = new() { QueryDataKind = BankQueryKind.Banks, SysCoID = master.SysCoID };
+                GetBankVNMRequest bankNMRq = new();
+                GetCodeRequest codeRq = new() { CodeType = "001,021,022,030,031,033", SysCoID = master.SysCoID };
+                GetDFundNMRequest DfundNMRq = new() { SysCoID = master.SysCoID };
+                GetCodeTypeRequest codeTypeRq = new() { CustomUse = "F1" };
+
+                //dto
+                List<TAFNDFundInfoMaintainMasterDTO?> MaintainMasterList = [MasterEdit, MasterReal];
+                MaintainMasterList = MaintainMasterList.Where(p => p is not null).ToList();
+                List<List<DTACryGroupListDTO>> DTACryGroupLists = [DTACryGroupListEdit, DTACryGroupListReal];
+                List<List<DTAFundDetailListDTO>> DTAFundDetailLists = [DTAFundDetailListEdit, DTAFundDetailListReal];
+                List<List<DTAFundAccountListDTO>> DTAFundAccountLists = [DTAFundAccountListEdit, DTAFundAccountListReal];
+                List<List<DTAFundRelGroupListDTO>> DTAFundRelGroupLists = [DTAFundRelGroupListEdit, DTAFundRelGroupListReal];
+                List<string> bankIDList = [];
+                List<string> DFundCodeList = [];
+                List<string> codeTypeList = [];
+                (string CryIDNM, int DecLen) crytuple;
+                string? nm;
+
+                #endregion variables
+
+                #region utility requests gathering
+
+                //master
+                //SysCoIDNM request
+                conmRq.SysCoID = master.SysCoID;
+
+                MaintainMasterList.ForEach(p =>
+                {
+                    //GetCryNM request
+                    cryIDList.Add(p!.IssueBaseCry);
+                    cryIDList.Add(p!.TMFReturnBC);
+                });
+
+                //details
+                DTACryGroupLists.ForEach(p =>
+                {
+                    p.ForEach(i =>
+                    {
+                        //GetCryNM request
+                        cryIDList.Add(i.IssueCry);
+                        cryIDList.Add(i.OthTxCry);
+
+                        //GetBankVNM request
+                        bankIDList.Add(i.FundMBankBrh);
+                    });
+                });
+
+                DTAFundDetailLists.ForEach(p =>
+                {
+                    p.ForEach(i =>
+                    {
+                        //GetCryNM request
+                        cryIDList.Add(i.FundCry);
+
+                        //GetDFundNM request
+                        DFundCodeList.Add(i.MatureFund);
+                    });
+                });
+
+                DTAFundAccountLists.ForEach(p =>
+                {
+                    p.ForEach(i =>
+                    {
+                        //GetBankVNM request
+                        bankIDList.Add(i.CusBankBrh);
+                    });
+                });
+
+                DTAFundRelGroupLists.ForEach(p =>
+                {
+                    p.ForEach(i =>
+                    {
+                        //GetCodeType request
+                        codeTypeList.Add(i.FundGroupNo);
+                    });
+                });
+
+                #endregion utility requests gathering
+
+                #region retrieve data for update
+
+                //SysCoIDNM
+                string _sysCoIDNM = (await bq.GetSysCoNM(conmRq)).Master.FirstOrDefault()?.SysCoIDNM ?? string.Empty;
+
+                //BankV
+                bankRq.BankID = string.Join(",", MaintainMasterList.Select(p => p!.CustBankHeadID));
+                Dictionary<string, (string BankIDNM, string SWIFTCode, string BankSName, string ZipAddr)> dicBankV = (await bq.GetBankV(bankRq)).Master
+                .ToDictionary(d => d.BankID, d => (d.BankIDNM, d.SWIFTCode, d.BankSName, d.ZipAddr));
+
+                //CryIDNM data
+                Dictionary<string, (string, int)> dicCryNM = await method.GetCryNM(string.Join(",", cryIDList));
+
+                //BankVNM
+                bankNMRq.BankID = string.Join(",", bankIDList);
+                Dictionary<string, (string BankIDNM, string SWIFTCode)> dicBankNM = (await bq.GetBankVNM(bankNMRq)).Master.ToDictionary(p => p.BankID, p => (p.BankIDNM, p.SWIFTCode));
+
+                //CodeNM
+                Dictionary<(string, string), string> dicCodeNM = (await bq.GetCode(codeRq)).Master.ToDictionary(p => (p.CodeType, p.Code), p => p.CodeNM);
+
+                //DFundNM
+                DfundNMRq.FundCode = string.Join(",", DFundCodeList);
+                Dictionary<string, string> dicDFundNM = (await bfq.GetDFundNM(DfundNMRq)).Master.ToDictionary(p => p.FundCode, p => p.FundCodeNM);
+
+                //CodeTypeNM
+                codeTypeRq.CodeType = string.Join(",", codeTypeList);
+                Dictionary<string, string> dicCodeTypeNM = (await bq.GetCodeType(codeTypeRq)).Master.ToDictionary(p => p.CodeType, p => p.CodeTypeNM);
+
+                #endregion retrieve data for update
+
+                #region update
+
+                //master
+                MaintainMasterList.ForEach(p =>
+                {
+                    p!.SysCoIDNM = _sysCoIDNM;
+                    p!.IssueBaseCryNM = dicCryNM.TryGetValue(p.IssueBaseCry, out crytuple) ? crytuple.CryIDNM : string.Empty;
+                    p!.SITCAFundTypeNM = dicCodeNM.TryGetValue(("001", p.SITCAFundType), out nm) ? nm : string.Empty;
+                    p!.CustBankHeadIDNM = string.Empty;
+                    p!.SWIFTCode = string.Empty;
+                    p!.BankSName = string.Empty;
+                    p!.Addr = string.Empty;
+                    p!.SubsFeeGroupNM = dicCodeNM.TryGetValue(("021", p.SITCAFundType), out nm) ? nm : string.Empty;
+                    p!.CDSCFeeGroupNM = dicCodeNM.TryGetValue(("021", p.SITCAFundType), out nm) ? nm : string.Empty;
+                    p!.DivFundGroupNM = dicCodeNM.TryGetValue(("030", p.SITCAFundType), out nm) ? nm : string.Empty;
+                    p!.TMFReturnBCNM = dicCryNM.TryGetValue(p.TMFReturnBC, out crytuple) ? crytuple.CryIDNM : string.Empty;
+
+                    dicBankV.TryGetValue(p.CustBankHeadID, out var tuple);
+                    p!.CustBankHeadIDNM = tuple.BankIDNM ?? string.Empty;
+                    p!.SWIFTCode = tuple.SWIFTCode ?? string.Empty;
+                    p!.BankSName = tuple.BankSName ?? string.Empty;
+                    p!.Addr = tuple.ZipAddr ?? string.Empty;
+                });
+
+                //details
+                DTACryGroupLists.ForEach(p =>
+                {
+                    p.ForEach(i =>
+                    {
+                        i.IssueCryNM = dicCryNM.TryGetValue(i.IssueCry, out crytuple) ? crytuple.CryIDNM : string.Empty;
+                        i.OthTxCryNM = dicCryNM.TryGetValue(i.OthTxCry, out crytuple) ? crytuple.CryIDNM : string.Empty;
+                        i.FundMBankBrhNM = string.Empty;
+                        i.SWIFTCode = string.Empty;
+
+                        if (dicBankNM.TryGetValue(i.FundMBankBrh, out var tuple))
+                        {
+                            i.FundMBankBrhNM = tuple.BankIDNM;
+                            i.SWIFTCode = tuple.SWIFTCode;
+                        }
+                    });
+                });
+
+                DTAFundDetailLists.ForEach(p =>
+                {
+                    p.ForEach(i =>
+                    {
+                        i.FundCryNM = dicCryNM.TryGetValue(i.FundCry, out crytuple) ? crytuple.CryIDNM : string.Empty;
+                        i.FHFundShareNM = dicCodeNM.TryGetValue(("031", i.FHFundShare), out nm) ? nm : string.Empty;
+
+                        i.MatureFundNM = dicDFundNM.TryGetValue(i.MatureFund, out nm) ? nm : string.Empty;
+                    });
+                });
+
+                DTAFundAccountLists.ForEach(p =>
+                {
+                    p.ForEach(i =>
+                    {
+                        i.CusBankBrhNM = string.Empty;
+                        i.SWIFTCode = string.Empty;
+
+                        if (dicBankNM.TryGetValue(i.CusBankBrh, out var tuple))
+                        {
+                            i.CusBankBrhNM = tuple.BankIDNM;
+                            i.SWIFTCode = tuple.SWIFTCode;
+                        }
+                    });
+                });
+
+                DTAFundRelGroupLists.ForEach(p =>
+                {
+                    string _code = string.Empty;
+
+                    p.ForEach(i =>
+                    {
+                        i.FundGroupNoNM = dicCodeTypeNM.TryGetValue(i.FundGroupNo, out nm) ? nm : string.Empty;
+
+                        //通路服務費
+                        if (i.GroupTypeNo == "022")
+                            _code = "022";
+                        //基金停利
+                        else if (i.GroupTypeNo == "033")
+                            _code = "033";
+
+                        i.GroupTypeNoNM = dicCodeNM.TryGetValue((_code, i.GroupTypeNo), out nm) ? nm : string.Empty;
+                    });
+                });
+
+                #endregion update
+            }
+
+            #endregion update master & details
+
+            List<StructMDetail> lstMD = new()
+            {
+                new() { listName = "Master", readTable = MasterReal, editTable = MasterEdit },
+                new() { listName = "DTACustContactList", readTable = DTACustContactListReal, editTable = DTACustContactListEdit },
+                new() { listName = "DTACryGroupList", readTable = DTACryGroupListReal, editTable = DTACryGroupListEdit },
+                new() { listName = "DTAFundDetailList", readTable = DTAFundDetailListReal, editTable = DTAFundDetailListEdit },
+                new() { listName = "DTAFundAccountList", readTable = DTAFundAccountListReal, editTable = DTAFundAccountListEdit },
+                new() { listName = "DTAFundRelGroupList", readTable = DTAFundRelGroupListReal, editTable = DTAFundRelGroupListEdit },
+                new() { listName = "DTAFundDisFeeList", readTable = DTAFundDisFeeListReal, editTable = DTAFundDisFeeListEdit },
+                new() { listName = "DTAFundTxCryList", readTable = DTAFundTxCryListReal, editTable = DTAFundTxCryListEdit },
+                new() { listName = "DTAShortDtlList", readTable = DTAShortDtlListReal, editTable = DTAShortDtlListEdit },
+                new() { listName = "DTAFundAntiDilList", readTable = DTAFundAntiDilListReal, editTable = DTAFundAntiDilListEdit },
+                new() { listName = "DTAFundAntiDilAdjList", readTable = DTAFundAntiDilAdjListReal, editTable = DTAFundAntiDilAdjListEdit },
+                new() { listName = "DTAFundAntiDilMechList", readTable = DTAFundAntiDilMechListReal, editTable = DTAFundAntiDilMechListEdit },
+                new() { listName = "DTAFundMGTFeeList", readTable = DTAFundMGTFeeListReal, editTable = DTAFundMGTFeeListEdit },
+                new() { listName = "DTAMGTFeeDtlList", readTable = DTAMGTFeeDtlListReal, editTable = DTAMGTFeeDtlListEdit }
+            };
+
+            return GetMaintainResult<TAFNDFundInfoAUDResponse>(lstMD);
+        }
+    }
+
+    #endregion Maintain 查詢 Handler
+
+    #region Info 查詢 Handler
+
+    /// <summary> 取得境內母基金發行幣別代碼(For Searcher) TAGetDPrtFundIssueCry Info Handler </summary>
+    public class TAGetDPrtFundIssueCryHandler : TAHandlerQuery, IRequestHandler<TAGetDPrtFundIssueCryRequest, ResultModel<TAGetDPrtFundIssueCryResponse>>
+    {
+        /// <summary> TAGetDPrtFundIssueCryHandler Constructor </summary>
+        /// <param name="basequery">IBaseQuery</param>
+        /// <param name="baseApiService">BaseApiService</param>
+        public TAGetDPrtFundIssueCryHandler(IBaseQuery basequery, BaseApiService baseApiService) : base(basequery, baseApiService)
+        { }
+
+        /// <summary> 取得境內母基金發行幣別代碼(For Searcher) TAGetDPrtFundIssueCry Info Handler </summary>
+        /// <param name="request">TAGetDPrtFundIssueCryRequest</param>
+        /// <returns>TAGetDPrtFundIssueCryResponse</returns>
+        public async Task<ResultModel<TAGetDPrtFundIssueCryResponse>> Handle(TAGetDPrtFundIssueCryRequest request, CancellationToken cancellationToken)
+        {
+            bool _QueryTypeIsSMP = request.QueryType == ApiQueryType.SMP;
+            bool hasAll = string.IsNullOrWhiteSpace(request.CryID) || request.CryID == SysCtlAllValue.Cry;
+
+            //Query
+            var query = from p in _DbSet.DTA_FND_FundCryGroup
+                        where p.SysCoID == request.SysCoID
+                        select new
+                        {
+                            p.SysCoID,
+                            p.PrtFundCode,
+                            p.IssueCry,
+                            p.IsRSP
+                        };
+
+            #region Conditions
+
+            if (!string.IsNullOrWhiteSpace(request.PrtFundCode))
+                query = query.Where(p => p.PrtFundCode == request.PrtFundCode);
+
+            if (query.Any() && !string.IsNullOrWhiteSpace(request.CryID))
+            {
+                if (request.UIControlType == UICtlType.Searcher && request.SECOptType == SECOptType.Like)
+                {
+                    query = query.Where(p => p.IssueCry.StartsWith(request.CryID));
+                }
+                else
+                {
+                    query = query.Where(p => p.IssueCry == request.CryID);
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(request.FilterItem))
+                query = query.Where(p => p.IssueCry != request.FilterItem);
+
+            if (!string.IsNullOrWhiteSpace(request.FeeChargeType))
+            {
+                string[] arrFeeChargeType = request.FeeChargeType.Trim(',').Split(',');
+
+                var filterQuery = _DbSet.DTA_FND_FundDetail.Select(p => new
+                {
+                    p.SysCoID,
+                    p.PrtFundCode,
+                    p.SubsFeeType
+                });
+
+                if (arrFeeChargeType.Length > 1)
+                    filterQuery = filterQuery.Where(p => arrFeeChargeType.Contains(p.SubsFeeType));
+                else
+                    filterQuery = filterQuery.Where(p => p.SubsFeeType == arrFeeChargeType.ElementAtOrDefault(0));
+
+                var conditionQuery = filterQuery.Select(p => new
+                {
+                    p.SysCoID,
+                    p.PrtFundCode
+                }).Distinct();
+
+                query = from p in query
+                        join c in conditionQuery
+                          on new { p.SysCoID, p.PrtFundCode } equals new { c.SysCoID, c.PrtFundCode }
+                        select p;
+            }
+
+            #endregion Conditions
+
+            //Result
+            var list = (await query.ToListAsync(cancellationToken))
+                       .Select(p => new TAGetDPrtFundIssueCryDTO
+                       {
+                           CryID = p.IssueCry,
+                           IsRSP = p.IsRSP
+                       }).ToList();
+
+            //retrieve CryIDNM data and update
+            if (list.Count > 0)
+            {
+                TAFNDFundInfoMethods method = new(_Langid, _IsMainLang);
+                //distinct CryID list for SMP Mode and also for GetCryNM request
+                List<string> cryIDList = list.Select(p => p.CryID).Distinct().ToList();
+                Dictionary<string, (string CryIDNM, int DecLen)> dicCryNM = await method.GetCryNM(string.Join(",", cryIDList));
+
+                if (_QueryTypeIsSMP)
+                {
+                    list = cryIDList.Select(p => new TAGetDPrtFundIssueCryDTO
+                    {
+                        CryID = p,
+                        CryIDNM = dicCryNM.TryGetValue(p, out var tuple) ? tuple.CryIDNM : string.Empty,
+                        IsRSP = string.Empty,
+                    }).ToList();
+                }
+                else
+                {
+                    list.ForEach(p =>
+                    {
+                        p.CryIDNM = dicCryNM.TryGetValue(p.CryID, out var tuple) ? tuple.CryIDNM : string.Empty;
+                    });
+                }
+            }
+
+            if (request.IsALL && hasAll)
+            {
+                //取得 全部幣別 Hub資料
+                List<SysAllHubInfo> CryAll = SysAllHub.GetSysAllInfo().Where(p => p.AllKey == SysCtlAll.Cry).ToList();
+
+                TAGetDPrtFundIssueCryDTO _cryAll = CryAll.Select(p => new TAGetDPrtFundIssueCryDTO
+                {
+                    CryID = p.AllValue,
+                    CryIDNM = p.AllName,
+                    IsRSP = _QueryTypeIsSMP ? string.Empty : FeatureStatus.Y
+                }).First();
+
+                list.Insert(0, _cryAll);
+            }
+
+            //回傳結果
+            return GetQueryResult<TAGetDPrtFundIssueCryDTO, TAGetDPrtFundIssueCryResponse>(list);
+        }
+    }
+
+    /// <summary> 取得境內基金可交易幣別代碼(For Searcher) TAGetDTxCry Info Handler </summary>
+    public class TAGetDTxCryHandler : BaseHandlerQuery, IRequestHandler<TAGetDTxCryRequest, ResultModel<TAGetDTxCryResponse>>
+    {
+        /// <summary> TAGetDTxCryHandler Constructor </summary>
+        /// <param name="basequery">IBaseQuery</param>
+        /// <param name="baseApiService">BaseApiService</param>
+        public TAGetDTxCryHandler(IBaseQuery basequery, BaseApiService baseApiService) : base(basequery, baseApiService)
+        { }
+
+        /// <summary> 取得境內基金可交易幣別代碼(For Searcher) TAGetDTxCry Info Handler </summary>
+        /// <param name="request">TAGetDTxCryRequest</param>
+        /// <returns>TAGetDTxCryResponse</returns>
+        public async Task<ResultModel<TAGetDTxCryResponse>> Handle(TAGetDTxCryRequest request, CancellationToken cancellationToken)
+        {
+            GetSystemValueRequest sysRq = new() { SysCode = "000022" };
+            GetSysDefValueRequest sysDefRq = new() { SysCode = "000019" };
+            bool _QueryTypeIsSMP = request.QueryType == ApiQueryType.SMP;
+            //中心幣別
+            string CCY = (await BaseHubUtility.GetSystemValue(sysRq)).SysValue;
+            //外幣結算幣別
+            string[] MCY = ((await BaseHubUtility.GetSysDefValue(sysDefRq)).SysValue).Trim(',').Split(',');
+            bool hasAll = string.IsNullOrWhiteSpace(request.CryID) || request.CryID.Split(',').Contains(SysCtlAllValue.Cry);
+
+            //Query
+            var query = from p in _DbSet.DTA_FND_FundTxCry
+                        where p.SysCoID == request.SysCoID
+                        select new
+                        {
+                            p.SysCoID,
+                            p.PrtFundCode,
+                            p.FundCode,
+                            p.CryID,
+                            p.CryDataSrc
+                        };
+
+            #region Conditions
+
+            if (!string.IsNullOrWhiteSpace(request.PrtFundCode))
+                query = query.Where(p => p.PrtFundCode == request.PrtFundCode);
+
+            if (query.Any() && !string.IsNullOrWhiteSpace(request.CryID))
+            {
+                if (request.UIControlType == UICtlType.Searcher && request.SECOptType == SECOptType.Like)
+                {
+                    query = query.Where(p => p.CryID.StartsWith(request.CryID));
+                }
+                else
+                {
+                    string[] aryCry = request.CryID.Split(',');
+                    query = query.Where(p => aryCry.Contains(p.CryID));
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(request.CryDataSrc))
+                query = query.Where(p => p.CryDataSrc == request.CryDataSrc);
+
+            if (request.IsExcludeCCY)
+                query = query.Where(p => p.CryID != CCY);
+
+            #endregion Conditions
+
+            List<string> data = await query.Select(p => p.CryID).Distinct().ToListAsync(cancellationToken);
+
+            //Result
+            List<TAGetDTxCryDTO> list = data.Select(p => new TAGetDTxCryDTO
+            {
+                CryID = p,
+                IsMCY = _QueryTypeIsSMP ? string.Empty : (p == CCY || MCY.Contains(p)) ? MapYN.No : MapYN.Yes
+            }).ToList();
+
+            //retrieve CryIDNM data and update
+            if (list.Count > 0)
+            {
+                TAFNDFundInfoMethods method = new(_Langid, _IsMainLang);
+                Dictionary<string, (string, int)> dicCryNM = await method.GetCryNM(string.Join(",", data));
+                (string CryIDNM, int DecLen) tuple;
+
+                list.ForEach(p =>
+                {
+                    p.CryIDNM = string.Empty;
+                    p.DecLen = 0;
+
+                    if (dicCryNM.TryGetValue(p.CryID, out tuple))
+                    {
+                        p.CryIDNM = tuple.CryIDNM;
+                        p.DecLen = tuple.DecLen;
+                    }
+                });
+            }
+
+            if (request.IsALL && hasAll)
+            {
+                //取得 全部幣別 Hub資料
+                List<SysAllHubInfo> CryAll = SysAllHub.GetSysAllInfo().Where(p => p.AllKey == SysCtlAll.Cry).ToList();
+
+                TAGetDTxCryDTO _cryAll = CryAll.Select(p => new TAGetDTxCryDTO
+                {
+                    CryID = p.AllValue,
+                    CryIDNM = p.AllName,
+                    DecLen = 0,
+                    IsMCY = _QueryTypeIsSMP ? string.Empty : MapYN.No
+                }).First();
+
+                list.Insert(0, _cryAll);
+            }
+
+            //回傳結果
+            return GetQueryResult<TAGetDTxCryDTO, TAGetDTxCryResponse>(list);
+        }
+    }
+
+    #endregion Info 查詢 Handler
+
+    #region 額外提供檢核 Handler
+
+    /// <summary> TACKCSDPrtFundSetlDateCHKHandler </summary>
+    public class TACKCSDPrtFundSetlDateCHKHandler : TAHandlerQuery, IRequestHandler<TACKCSDPrtFundSetlDateCHKRequest, ResultModel>
+    {
+        /// <summary> TACKCSDPrtFundSetlDateCHKHandler Constructor </summary>
+        /// <param name="basequery">IBaseQuery</param>
+        /// <param name="baseApiService">BaseApiService</param>
+        public TACKCSDPrtFundSetlDateCHKHandler(IBaseQuery basequery, BaseApiService baseApiService) : base(basequery, baseApiService)
+        { }
+
+        /// <summary> TACKCSDPrtFundSetlDateCHKHandler Handle </summary>
+        /// <param name="request">TACKCSDPrtFundSetlDateCHKRequest</param>
+        /// <param name="cancellationToken">CancellationToken</param>
+        /// <returns>ResultModel</returns>
+        /// <exception cref="NotImplementedException">未實作處理</exception>
+        public async Task<ResultModel> Handle(TACKCSDPrtFundSetlDateCHKRequest request, CancellationToken cancellationToken)
+        {
+            return request.Action switch
+            {
+                ActionType.ChkData => request.ActMethod switch
+                {
+                    "TACKCSDPrtFundSetlDate" => await TACKCSDPrtFundSetlDate(request),
+                    _ => throw new NotImplementedException()
+                },
+                _ => throw new NotImplementedException()
+            };
+        }
+
+        /// <summary> 檢核集保平台款項生效日期 </summary>
+        /// <param name="request">TACKCSDPrtFundSetlDateCHKRequest</param>
+        /// <returns>ResultModel</returns>
+        private async Task<ResultModel> TACKCSDPrtFundSetlDate(TACKCSDPrtFundSetlDateCHKRequest request)
+        {
+            ResultModel result = new();
+            GetSystemValueRequest sysRq = new() { SysCoID = request.SysCoID, SysCode = "000021" };
+
+            result.SetSuccess();
+
+            //系統日期
+            DateTimeOffset DBDate = DatabaseUtility.GetDatabaseCurrentTime();
+
+            //預設日期
+            DateTimeOffset defaultDate = BaseDefaultValue.DefaultDate;
+
+            //集保平台款項生效日參數
+            string strSysValue = (await BaseHubUtility.GetSystemValue(sysRq)).SysValue;
+            int SysValue = Convert.ToInt32(strSysValue);
+
+            //GetBasicBusinessDate Query
+            DateBizUtility DateBiz = new(_BaseQuery, _Langid);
+            GetBasicBusinessDateRequest rq = new()
+            {
+                SysCoID = request.SysCoID,
+                CalType = BasicCalType.CB,
+                BasicDate = DBDate,
+                CalDays = SysValue
+            };
+
+            //可生效日期
+            DateTimeOffset EffDate = (await DateBiz.GetBasicBusinessDate(rq)).CalDate;
+
+            if (request.CSDPrtFundSetlDate.GetValueOrDefault(defaultDate) < EffDate)
+            {
+                if (!string.IsNullOrWhiteSpace(request.FundCode))
+                {
+                    MessageInfo msgInfo = BaseMsgInfo.GetMsg(_Productid, "FNDM001014", _Langid);
+                    result.SetError(string.Format(msgInfo.MsgContent, request.FundCode, request.CSDPrtFundSetlDate?.ToString("yyyy/MM/dd"), SysValue.ToString()), ResultCodeType.Fail, msgInfo.MsgType);
+                }
+                else
+                {
+                    MessageInfo msgInfo = BaseMsgInfo.GetMsg(_Productid, "FNDM001009", _Langid);
+                    result.SetError(string.Format(msgInfo.MsgContent, request.CSDPrtFundSetlDate?.ToString("yyyy/MM/dd"), SysValue.ToString()), ResultCodeType.Fail, msgInfo.MsgType);
+                }
+            }
+
+            return result;
+        }
+    }
+
+    /// <summary> TACKFundCodeExistCHKHandler </summary>
+    public class TACKFundCodeExistCHKHandler : BaseHandlerQuery, IRequestHandler<TACKFundCodeExistCHKRequest, ResultModel>
+    {
+        /// <summary> TACKFundCodeExistCHKHandler Constructor </summary>
+        /// <param name="basequery">IBaseQuery</param>
+        /// <param name="baseApiService">BaseApiService</param>
+        public TACKFundCodeExistCHKHandler(IBaseQuery basequery, BaseApiService baseApiService) : base(basequery, baseApiService)
+        { }
+
+        /// <summary> TACKFundCodeExistCHKHandler Handle </summary>
+        /// <param name="request">TACKFundCodeExistCHKRequest</param>
+        /// <param name="cancellationToken">CancellationToken</param>
+        /// <returns>ResultModel</returns>
+        /// <exception cref="NotImplementedException">未實作處理</exception>
+        public async Task<ResultModel> Handle(TACKFundCodeExistCHKRequest request, CancellationToken cancellationToken)
+        {
+            return request.Action switch
+            {
+                ActionType.ChkData => request.ActMethod switch
+                {
+                    "TACKFundCodeExist" => await TACKFundCodeExist(request),
+                    _ => throw new NotImplementedException()
+                },
+                _ => throw new NotImplementedException()
+            };
+        }
+
+        /// <summary> 檢核基金代碼是否已被設定過 </summary>
+        /// <param name="request">TACKFundCodeExistCHKRequest</param>
+        /// <returns>ResultModel</returns>
+        private async Task<ResultModel> TACKFundCodeExist(TACKFundCodeExistCHKRequest request)
+        {
+            ResultModel result = new();
+            result.SetSuccess();
+
+            IQueryable<string> real = _DbSet.DTA_FND_FundDetail.Where(p => p.SysCoID == request.SysCoID && p.FundCode == request.FundCode).Select(p => p.FundCode);
+            IQueryable<string> edit = _DbSet.DTA_FND_FundDetail_Edit.Where(p => p.SysCoID == request.SysCoID && p.FundCode == request.FundCode).Select(p => p.FundCode);
+
+            List<IQueryable<string>> dto = [real, edit];
+
+            if (Validate(dto))
+            {
+                MessageInfo msgInfo = BaseMsgInfo.GetMsg(_Productid, "TA00030", _Langid);
+                result.SetError(msgInfo.MsgContent, ResultCodeType.Fail, msgInfo.MsgType);
+            }
+
+            static bool Validate(List<IQueryable<string>> datas)
+            {
+                bool flag = false;
+
+                foreach (var item in datas)
+                {
+                    if (item.Any())
+                    {
+                        flag = true;
+                        break;
+                    }
+                }
+
+                return flag;
+            }
+
+            return await Task.FromResult(result);
+        }
+    }
+
+    #endregion 額外提供檢核 Handler
+
+    #region Methods
+
+    /// <summary> TAFNDFundInfo 私有方法集合 </summary>
+    internal class TAFNDFundInfoMethods
+    {
+        private readonly BaseHubUtility baseHub;
+
+        /// <summary> Constructor </summary>
+        /// <param name="baseQuery">IBaseQuery</param>
+        /// <param name="langCode">string</param>
+        public TAFNDFundInfoMethods(string langCode, bool isMainLang)
+        {
+            baseHub = new(langCode, isMainLang);
+        }
+
+        /// <summary> 取得下拉式選項內容 </summary>
+        /// <param name="OptionID">OptID(可多組，用逗號串接)</param>
+        /// <returns>Dictionary</returns>
+        public async Task<Dictionary<(string, string), string>> GetOpt(string OptionID)
+        {
+            //取得下拉式選項內容
+            GetOptionRequest options = new() { OptID = OptionID };
+            var dicOpt = (await baseHub.GetOption(options)).Master.ToDictionary(p => (p.OptID, p.ItemID), p => p.ItemName);
+
+            return dicOpt;
+        }
+
+        /// <summary> 取得幣別名稱 </summary>
+        /// <param name="cryid">CryID</param>
+        /// <returns>Dictionary</returns>
+        public async Task<Dictionary<string, (string, int)>> GetCryNM(string cryid)
+        {
+            GetCryRequest cryRq = new() { CryID = cryid };
+            Dictionary<string, (string, int)> cryData = (await baseHub.GetCry(cryRq)).Master.ToDictionary(p => p.CryID, p => (p.CryIDNM, p.DecLen));
+
+            return cryData;
+        }
+    }
+
+    #endregion Methods
+}

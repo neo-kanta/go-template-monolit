@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package fnd.v1;
+option go_package = "go-transfer-agent/common/gen/fnd/v1;fndv1";
+
+import "google/api/annotations.proto";
+
+// ═══════════════════════════════════════════════════════════════════
+// FNDM005 Service
+// ═══════════════════════════════════════════════════════════════════
+service FNDM005Service {
+  rpc TAFNDFundCalDate(TAFNDFundCalDateRequest) returns (TAFNDFundCalDateResponse) {
+    option (google.api.http) = { get: "/TAapi/BaseFund/TAFNDFundCalDate" };
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// FNDM005 Messages
+// ═══════════════════════════════════════════════════════════════════
+
+message TAFNDFundCalDateRequest {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string cal_year = 2 [json_name="CalYear"];
+  string fnd_cal_type = 3 [json_name="FndCalType"];
+  string fund_cry = 4 [json_name="FundCry"];
+  repeated FundClosedDateMemoListDTO fund_closed_memo_list = 5 [json_name="FundClosedMemoList"];
+  repeated FundClosedDateFundListDTO fund_closed_date_fund_list = 6 [json_name="FundClosedDateFundList"];
+}
+
+message TAFNDFundCalDateResponse {
+  repeated FundCalMasterDTO result_list = 1 [json_name="ResultList"];
+  repeated FundClosedDateMemoListDTO fund_closed_memo_list = 2 [json_name="FundClosedMemoList"];
+  repeated FundClosedDateFundListDTO fund_closed_date_fund_list = 3 [json_name="FundClosedDateFundList"];
+}
+
+message FundCalMasterDTO {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string sys_co_id_nm = 2 [json_name="SysCoIDNm"];
+  string cal_year = 3 [json_name="CalYear"];
+  string fnd_cal_type = 4 [json_name="FndCalType"];
+  string fund_cry = 5 [json_name="FundCry"];
+  string fund_cry_nm = 6 [json_name="FundCryNm"];
+}
+
+message FundClosedDateMemoListDTO {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string cal_year = 2 [json_name="CalYear"];
+  string fnd_cal_type = 3 [json_name="FndCalType"];
+  string fund_cry = 4 [json_name="FundCry"];
+  string cal_date = 5 [json_name="CalDate"];
+  string remark = 6 [json_name="Remark"];
+}
+
+message FundClosedDateFundListDTO {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string cal_year = 2 [json_name="CalYear"];
+  string fnd_cal_type = 3 [json_name="FndCalType"];
+  string fund_cry = 4 [json_name="FundCry"];
+  string prt_fund_code = 5 [json_name="PrtFundCode"];
+  string prt_fund_code_nm = 6 [json_name="PrtFundCodeNm"];
+  string cal_date = 7 [json_name="CalDate"];
+}

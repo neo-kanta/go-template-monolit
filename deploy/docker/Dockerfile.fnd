@@ -10,7 +10,7 @@ RUN go mod download
 
 COPY . .
 
-RUN CGO_ENABLED=0 GOOS=linux go build -o /bin/fnd ./services/FND/cmd/fnd
+RUN CGO_ENABLED=0 GOOS=linux go build -o /bin/fnd ./services/fnd/cmd/fnd
 
 # ───── Stage 2: Run ─────
 FROM alpine:3.21

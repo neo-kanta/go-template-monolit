@@ -1,0 +1,411 @@
+名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+母基金代碼\nPrtFundCode	String	V
+銷售機構類別\nAgentType	String	V	1．選項(OPT：TA-000053)
+銷售機構代碼\nAgentCode	String	V
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+交易清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+已有交易否\nIsHaveData	Bool
+
+邏輯說明
+資料來源檔案
+TA申購交易委託檔(DTA_TXN_RcvSubs)
+TA申購交易委託Edit檔(DTA_TXN_RcvSubs_Edit)
+TA買回交易委託檔(DTA_TXN_RcvRdm)
+TA買回交易委託Edit檔(DTA_TXN_RcvRdm_Edit)
+TA轉申購交易委託檔(DTA_TXN_RcvSw)
+TA轉申購交易委託Edit檔(DTA_TXN_RcvSw_Edit)
+TA申購交易人工維護檔(DTA_TXN_SubsTxnMan)
+TA申購交易人工維護Edit檔(DTA_TXN_SubsTxnMan_Edit)
+TA買回交易人工維護檔(DTA_TXN_RdmTxnMan)
+TA買回交易人工維護Edit檔(DTA_TXN_RdmTxnMan_Edit)
+TA買回交易明細人工維護明(DTA_TXN_RdmTxnManDtl)
+TA買回交易明細人工維護Edit檔(DTA_TXN_RdmTxnManDtl_Edit)
+TARSP契約檔(DTA_RSP_RSPTrade)
+TARSP契約Edit檔(DTA_RSP_RSPTrade_Edit)
+TARSP契約異動檔(DTA_RSP_RSPTradeChg)
+TARSP契約異動Edit檔(DTA_RSP_RSPTradeChg_Edit)
+資料處理說明
+基金代碼清單(@FundList)：依《母基金代碼》至【境內子基金明細檔(DTA_FND_FundDetail)】取得「基金代碼」
+以傳入參數及基金代碼清單(@FundList)至【資料來源檔案】取得資料。若任一檔案有取得資料時，為『True』，反之為『False』
+《銷售機構代碼》採模糊搜尋
+基金代碼的比對
+為買回轉申購交易時，判斷「轉入基金代碼」
+非買回轉申購交易時，判斷「基金代碼」
+八、UTY2010008：TACKDFundPauseTxn
+檢核TＡ基金暫停交易 Url：{root}/TAapi/Utility/Biz/TxChkData/TACKDFundPauseTxn
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+母基金代碼\nPrtFundCode	String	V
+交易幣別\nTxCry	String	V
+交易日期\nTxDate	Datetime	V
+交易類別\nTxType	String	V	1．選項(OPT：TA-000098)
+
+邏輯說明
+資料來源檔案
+檢核境內基金暫停交易(TABizUtility.ChkDFundPauseTxn)
+資料處理說明
+以傳入參數至【檢核境內基金暫停交易(TABizUtility.ChkDFundPauseTxn)】取得資料
+若「檢核失敗否(IsCheckFailed)」為『True』，則回傳結果代碼{TXN0009}
+九、UTY2010009：TACKDFundTxnClosed
+檢核TA基金是否已結帳 Url：{root}/TAapi/Utility/Biz/TxChkData/TACKDFundTxnClosed
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+交易日期\nTxDate	Datetime	O
+淨值日期\nNavDate	Datetime	O
+檢核基金清單\nChkFundList	List	V
+
+ChkFundList
+[TABLE]
+欄位名稱	資料型態	長度	Method\nQ	欄位說明	備註
+基金代碼\nFundCode	String	10	V
+交易類別\nTxType	String	6	V	1．選項(OPT：TA-900042)
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+錯誤清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+基金代碼\nFundCode	String
+交易類別\nTxType	String	1．選項(OPT：TA-900042)
+
+邏輯說明
+資料來源檔案
+檢核TA基金交易是否已結帳(TABizUtility.ChkDFundTxnClosed)
+資料處理說明
+以傳入參數至【檢核TA基金交易是否已結帳(TABizUtility.ChkDFundTxnClosed)】取得資料
+十、UTY2010010：TACKAgentDFund
+檢核銷售機構是否有承銷境內基金 Url：{root}/TAapi/Utility/Biz/TxChkData/TACKAgentDFund
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+母基金代碼\nPrtFundCode	String	V
+銷售機構類別\nAgentType	String	V	1．選項(OPT：TA-000053)
+銷售機構代碼\nAgentCode	String	V
+收件日期\nRcvDate	Datetime	V
+交易類別\nTxType	String	V	1．選項\nSubs：申購、Rdm：買回
+交易幣別\nTxCry	String	O	1．「交易類別」為『申購』時，才有傳入值
+公司基金級別\nFHFundShare	String	O	1．「交易類別」為『申購』時，才有傳入值
+
+邏輯說明
+資料來源檔案
+檢核銷售機構是否有承銷TA基金(TABizUtility.ChkAgentDFund)
+資料處理說明
+以傳入參數至【檢核銷售機構是否有承銷TA基金(TABizUtility.ChkAgentDFund)】取得資料
+若「檢核失敗否(IsCheckFailed)」為『True』，則回傳結果代碼{TXN0050}
+十一、UTY2010011：TACKCpgnTxData
+檢核促銷活動是否已有交易資料 Url：{root}/TAapi/Utility/Biz/TxChkData/TACKCpgnTxData
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+促銷活動代碼\nCpgnCode	String	V
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+交易清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+已有交易否\nIsHaveData	Bool
+
+邏輯說明
+資料來源檔案
+TA申購交易委託檔(DTA_TXN_RcvSubs)
+TA申購交易委託Edit檔(DTA_TXN_RcvSubs_Edit)
+TA轉申購交易委託檔(DTA_TXN_RcvSw)
+TA轉申購交易委託Edit檔(DTA_TXN_RcvSw_Edit)
+TA申購交易人工維護檔(DTA_TXN_SubsTxnMan)
+TA申購交易人工維護Edit檔(DTA_TXN_SubsTxnMan_Edit)
+TA買回交易明細人工維護檔(DTA_TXN_RdmTxnManDtl)
+TA買回交易明細人工維護Edit檔(DTA_TXN_RdmTxnManDtl_Edit)
+TARSP契約檔(DTA_RSP_RSPTrade)
+TARSP契約Edit檔(DTA_RSP_RSPTrade_Edit)
+TARSP契約異動檔(DTA_RSP_RSPTradeChg)
+TARSP契約異動Edit檔(DTA_RSP_RSPTradeChg_Edit)
+資料處理說明
+以傳入參數至【資料來源檔案】取得資料。若任一檔案有取得資料時，為『True』，反之為『False』
+十二、UTY2010012：TACKDFundTxnDataEdit
+檢核TA基金是否仍有未放行交易資料 Url：{root}/TAapi/Utility/Biz/TxChkData/TACKDFundTxnDataEdit
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+交易類別\nTxType	String	O	1．選項\nAll：全部；Subs：申購；Rdm：買回\n2．預設為All
+基準日期類型\nBaseDateType	String	O	1．選項\nTx：交易日期；Nav：淨值日期\n1．預設為Tx
+基準日期\nBaseDate	Datetime	O
+款項處理機構\nFundsProcAgency	String	O	1．選項(OPT：TA-000099)\n2．《交易類別》非『Rdm.買回』時，此參數才有作用
+申購繳款方式\nSubsPmtType	String	O	1．選項(OPT：TA-000163)\n2．《交易類別》非『Rdm.買回』時，此參數才有作用
+檢核基金集合\nChkFundSet	String	O	1．資料用『，』串接
+檢核單號集合\nChkOrdeSet	String	O	1．資料用『，』串接
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+錯誤清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+基金代碼\nFundCode	String
+
+邏輯說明
+資料來源檔案
+檢核TA基金是否仍有未放行交易資料(TABizUtility.ChkDFundTxnDataEdit)
+資料處理說明
+以傳入參數至【檢核TA基金是否仍有未放行交易資料(TABizUtility.ChkDFundTxnDataEdit)】取得資料
+十三、UTY2010013：TACKDFundTxnRcvDeadline
+檢核TA基金交易資料是否已截止收單 Url：{root}/TAapi/Utility/Biz/TxChkData/TACKDFundTxnRcvDeadline
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+交易類別\nTxType	String	V	1．選項\nSubs：申購；Rdm：買回；Rsp：定額
+收單截止項目\nRcvDdlItem	String	V	1．選項(OPT：TA-900039)\n2．資料用『，』串接
+檢核基金清單\nChkFundList	List	V
+
+檢核基金清單ChkFundList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+基金代碼\nFundCode	String	V
+交易日期\nTxDate	Datetime	V
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+資料清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+已截止收單否\nIsRcvDeadline	Bool
+
+邏輯說明
+資料來源檔案
+取得TA基金交易或契約資料截止收單資料(GetDFundTxnDeadlineData)
+TA申購收單截止控制檔(DTA_TXN_SubsRcvDeadline)：For《交易類別》為『Subs.申購』使用
+TA買回收單截止控制檔(DTA_TXN_RdmRcvDeadline)：For《交易類別》為『Rdm.買回』使用
+資料處理說明
+以傳入參數至【檢核TA基金交易或契約資料是否已截止收單(ChkDFundTxnDeadline)】取得資料。
+傳出欄位說明
+「已截止收單否」：若有取得資料，為『True』，反之為『False』
+十四、UTY2010014：TACKDFundTxnConfirmed
+檢核TA基金交易是否已成交確認 Url：{root}/TAapi/Utility/Biz/TxChkData/TACKDFundTxnConfirmed
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+檢核判斷類型\nChkType	String	V	1．選項\nCfm：已成交確認；UnCfm：尚未成交確認
+基準日期類型\nBaseDateType	String	O	1．選項\nTx：交易日期；Nav：淨值日期\n1．預設為Tx
+基準日期\nBaseDate	Datetime	V
+檢核基金清單\nChkFundList	List	V
+
+檢核基金清單ChkFundList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+基金代碼\nFundCode	String	V
+交易類別\nTxType	String	V	1．選項(OPT：TA-900042)
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+錯誤清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+基金代碼\nFundCode	String
+交易類別\nTxType	String	1．選項(OPT：TA-900042)
+
+邏輯說明
+資料來源檔案
+檢核TA基金交易是否已成交確認(TABizUtility.ChkDFundTxnConfirmed)
+資料處理說明
+以傳入參數至【檢核TA基金交易是否已成交確認(TABizUtility.ChkDFundTxnConfirmed)】取得資料
+十五、UTY2010015：TACKDFundTxnDebitStatus
+檢核TA基金是否仍有未回覆扣款結果交易資料 Url：{root}/TAapi/Utility/Biz/TxChkData/TACKDFundTxnDebitStatus
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+預計扣款日期\nEstDedDate	Datetime	O	1．《申購資料來源》為『02.定額申購』時，則必須傳入
+申購日期\nSubsDate	Datetime	V
+申購資料來源\nSubsDataSrc	String	O	1．選項(OPT：TA-900048)\n2．預設為『01.單筆申購』
+檢核基金清單\nChkFundList	List	V
+
+檢核基金清單ChkFundList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+基金代碼\nFundCode	String	V
+交易幣別\nTxCry	String	V
+扣款平台類別\nDebitPlatType	String	V	1．選項(OPT：TA-000167)
+扣款行代碼\nDebitBankID	String	V
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+錯誤清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+仍有未回覆資料否\nIsNotReplledData	Bool
+
+邏輯說明
+資料來源檔案
+檢核TA基金是否仍有未回覆扣款結果交易資料(TABizUtility.ChkDFundTxnDebitStatus)
+資料處理說明
+以傳入參數至【檢核TA基金是否仍有未回覆扣款結果交易資料(TABizUtility.ChkDFundTxnDebitStatus)】取得資料
+傳出欄位說明
+「仍有未回覆資料否」：若有取得資料，為『True』，反之為『False』
+十六、UTY2010016：TACKDFundTxnB2CStatus
+檢核TA基金是否仍有未回覆B2C繳款結果交易資料 Url：{root}/TAapi/Utility/Biz/TxChkData/TACKDFundTxnB2CStatus
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+申購日期\nSubsDate	Datetime	V
+檢核基金清單\nChkFundList	List	V
+
+檢核基金清單ChkFundList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+基金代碼\nFundCode	String	V
+申購繳款方式\nSubsPmtType	String	V	1．選項(OPT：TA-000163)
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+錯誤清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+仍有未回覆資料否\nIsNotReplledData	Bool
+
+邏輯說明
+資料來源檔案
+檢核TA基金是否仍有未回覆B2C繳款結果交易資料(TABizUtility.ChkDFundTxnB2CStatus)
+資料處理說明
+以傳入參數至【檢核TA基金是否仍有未回覆B2C繳款結果交易資料(TABizUtility.ChkDFundTxnB2CStatus)】取得資料
+傳出欄位說明
+「仍有未回覆資料否」：若有取得資料，為『True』，反之為『False』
+十七、UTY2010017：TACKDFundTxnB2BDeadline
+檢核TA基金集保B2B交易是否已截止收單 Url：{root}/TAapi/Utility/Biz/TxCHK/TACKDFundTxnB2BDeadline
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+收件日期\nRcvDate	Datetime	V
+檢核基金集合\nChkFundList	List	V
+
+檢核基金清單ChkFundList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+基金代碼\nFundCode	String	V
+收單截止項目\nRcvDdlItem	String	V	1．選項(OPT：TA-900039)
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+資料清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+已截止收單否\nIsRcvDeadline	Bool
+
+邏輯說明
+資料來源檔案
+檢核TA基金集保B2B交易是否已截止收單(TABizUtility.ChkDFundTxnB2BDeadline)
+資料處理說明
+以傳入參數至【檢核TA基金集保B2B交易是否已截止收單(TABizUtility.ChkDFundTxnB2BDeadline)】取得資料
+傳出欄位說明
+「已截止收單否」：若有取得資料，為『True』，反之為『False』
+十八、UTY2010018：TACKDFundTxnFHDedCfmed
+檢核TA基金投信委扣交易是否已回覆確認 Url：{root}/TAapi/Utility/Biz/TxCHK/TACKDFundTxnFHDedCfmed
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+預計扣款日期\nEstDedDate	Datetime	O	1．《申購資料來源》為『02.定額申購』時，則必須傳入
+交易日期\nTxDate	Datetime	V
+申購資料來源\nSubsDataSrc	String	O	1．選項(OPT：TA-900048)\n2．預設為『01.單筆申購』
+檢核基金集合\nChkFundList	List	V
+
+檢核基金清單ChkFundList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+扣款平台類別\nDebitPlatType	String	V	1．選項(OPT：TA-000167)
+扣款行代碼\nDebitBankID	String	V
+基金代碼\nFundCode	String	V
+交易幣別\nTxCry	String	V
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+錯誤清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+扣款平台類別\nDebitPlatType	String	1．選項(OPT：TA-000167)
+扣款行代碼\nDebitBankID	String
+基金代碼\nFundCode	String
+交易幣別\nTxCry	String
+
+邏輯說明
+資料來源檔案
+檢核TA基金投信委扣交易是否已回覆確認(TABizUtility.ChkDFundTxnFHDedCfmed)
+資料處理說明
+以傳入參數至【檢核TA基金投信委扣交易是否已回覆確認(TABizUtility.ChkDFundTxnFHDedCfmed)】取得資料
+十九、UTY2010019：TACKDFundTxnXferd
+檢核TA基金交易是否已轉入帳務中心 Url：{root}/TAapi/Utility/Biz/TxChkData/TACKDFundTxnXferd
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+檢核判斷類型\nChkType	String	V	1．選項\nXfer：已轉入帳務中心；UnXfer：尚未轉入帳務中心
+基準日期類型\nBaseDateType	String	O	1．選項\nTx：交易日期；Nav：淨值日期\n1．預設為Tx
+基準日期\nBaseDate	Datetime	V
+檢核基金清單\nChkFundList	List	V
+
+檢核基金清單ChkFundList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+基金代碼\nFundCode	String	V
+交易類別\nTxType	String	V	1．選項(OPT：TA-900042)
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+錯誤清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+基金代碼\nFundCode	String
+交易類別\nTxType	String	1．選項(OPT：TA-900042)
+
+邏輯說明
+資料來源檔案
+檢核TA基金交易是否已轉入帳務中心(TABizUtility.ChkDFundTxnXferd)
+資料處理說明
+以傳入參數至【檢核TA基金交易是否已轉入帳務中心(TABizUtility.ChkDFundTxnXferd)】取得資料

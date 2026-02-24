@@ -1,0 +1,377 @@
+User Interface Specification
+目錄
+應用程式介面說明 2
+壹、功能說明 2
+貳、變更說明 2
+叁、傳入傳出參數(Utility) 3
+一、UTY0001001：OptionCodeType 3
+二、UTY0001002：CodeTypeForFund 4
+三、UTY0001003：OptionFeeGroup 4
+四、UTY0001004：DropOption 5
+五、UTY0001005：AMLRegReviewPeriod 7
+六、UTY0001006：CRSEntityCategory 8
+七、UTY0001007：CRSCtrlCategory 9
+八、UTY0001008：FATCAEntityCategory 10
+九、UTY0001009：SysMapCode 11
+十、UTY0001010：DebitPlatMediaParamCode 12
+十一、UTY0001011：TAGetOptionForPath 13
+十二、UTY0001012：SitcaDeclarePeriodFile 14
+十三、UTY0001013：GetOptionDabitDay 16
+應用程式介面說明
+壹、功能說明
+取得選項相關API
+貳、變更說明
+[TABLE]
+變更日期	變更人員	變更說明
+2023/06/02	Joyce Lin	1．ReBuild
+2024/02/29	Meg Pan	Modify，配合多國語系 Searcher、Option 呈現方式調整\n1．UTY0001004：配合調整
+2024/06/06~06/12	Joyce Lin	Modify\n1．UTY0001006：配合BFM001 CRS調整增加API\n2．UTY0001007：配合BFM001 CRS調整增加API\n3．UTY0001008：配合BFM001 FATCA調整增加API\n4．UTY0001009：配合BFM001 MA調整增加API
+2024/07/03	Dechang Chen	Modify，配合多公司別調整\n1．UTY0001003：新增傳入參數「公司代碼」
+2024/09/18	Meg Pan	Modify\n1．UTY0001009：因BFM001 MA 調整規格，廢除此API
+2024/10/17	Joyce Lin	Modify\n1．配合CTLM003新增UTY0001009
+2024/10/29	Joyce Lin	Modify\n1．調整UTY0001004，新增傳入參數「UI使用元件」\n2．調整UTY0001009，配合UTY0001004新增參數調整
+2024/02/17	Dechang Chen	Modify\n1．UTY0001003：新增傳入參數「手續費率群組」
+2025/11/07	Joyce Lin	Modify\n1．UTY0001010：配合【扣款機構媒體檔案參數設定作業(DEBM003)】增加API
+2025/12/08	Joyce Lin	Modify\n1．UTY0001011：架構調整新增API，取代GCMMM00303API\n2．UTY0001012：配合【公會申報-TA申報產生作業(DRB001)】增加API
+2025/12/11	Meg Pan	Modify\n1．UTY0001013：配合RSPM001增加API
+2026/02/03	Dechang Chen	Modify，配合前端程式使用調整\n1‧UTY0001006：\n1.1．調整傳入參數「實體機構分類」為非必填\n1.2．新增傳出參數「實體機構分類」\n2．UTY0001007：\n2.1．調整傳入參數「具控制權人身分別」為非必填\n2.2．新增傳出參數「具控制權人身分別」\n3．UTY0001008：\n3.1．調整傳入參數「實體機構分類」為非必填\n3.2．新增傳出參數「實體機構分類」\n4．UTY0001009：\n4.1．調整傳入參數「對應來源」、「選項類別」為非必填，及相關邏輯\n4.2．新增傳出參數「對應來源」、「選項類別」\n5．UTY0001011：\n4.1．調整傳入參數「檔案平台」、「檔案種類」為非必填，及相關邏輯\n4.2．移除傳入參數「公司代碼」\n4.2．新增傳出參數「檔案平台」、「檔案種類」
+
+叁、傳入傳出參數(Utility)
+一、UTY0001001：OptionCodeType
+取得代碼種類選項(For Searcher) Url：{root}/TAapi/BaseUtility/OptionCodeType
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+代碼資料維護否\nIsMaintCode	Bool	V		CMMM003使用否
+代碼種類\nCodeType	String	O	1．資料用『，』串接
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+代碼清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+代碼種類\nCodeType	String
+代碼種類說明\nCodeTypeNM	String
+
+邏輯說明
+資料來源檔案
+取得代碼種類查詢資料(SysUtility.GetCodeType)
+二、UTY0001002：CodeTypeForFund
+取得基金基本資料使用代碼種類選項(For Searcher) Url：{root}/TAapi/Utility/CodeTypeForFund
+傳入參數
+無。
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+代碼清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+代碼種類\nCodeType	String
+代碼種類說明\nCodeTypeNM	String
+
+邏輯說明
+資料來源檔案
+取得代碼種類查詢資料(SysUtility.GetCodeType)：僅取得「自訂用途」為『F1』的資料
+三、UTY0001003：OptionFeeGroup
+取得基金基本資料使用手續費群組選項(For Searcher) Url：{root}/TAapi/Utility/OptionFeeGroup
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+手續費率類別\nFeeType	String	V	1．選項(OPT：TA-000025)
+手續費率群組\nFeeGroup	String	O	1．選項(TCCode：021)
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+手續費率群組清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+手續費率群組\nFeeGroup	String
+手續費率群組名稱\nFeeGroupNM	String	1．代碼選項查詢.代碼說明(SysUtility.GetCode.CodeNM{TCCode：021})
+
+邏輯說明
+資料來源檔案
+手續費率(公版)設定檔(TA_CMM_FundFee)
+四、UTY0001004：DropOption
+取得下拉選項資料 Url：{root}/TAapi/BaseUtility/DropOption
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+選項類別\nOptID	String[]	V
+含全部選項\nIsALL	Bool	O	1．《選項類別》為單一選項時，此參數才有作用\n2．預設為False
+排除選項代碼\nFilterItem	String[]	O	1．《選項類別》為單一選項時，此參數才有作用
+UI使用元件\nUIControlType	String	O	1．選項\nSEC：Searcher使用、OPT：下拉選項使用\n2．預設為OPT
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+選項清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+選項類別\nOptID	String
+選項代碼\nItemID	String
+代碼說明\nItemName	String
+顯示順序\nDisplayOrder	Int
+預設值否\nIsDefault	Bool
+自訂用途\nCustomUse	String
+
+邏輯說明
+資料來源檔案
+取得下拉選項查詢資料(SysUtility.GetOption)
+取得All選項查詢資料(SysUtility.GetSysAll)
+資料處理說明
+選項清單(@TAOptionsList)：依傳入參數至【取得下拉選項查詢資料(SysUtility.GetOption)】取得資料
+若《含全部選項》為『Ture』時
+全部清單(@AllList)：至【取得All選項查詢資料(SysUtility.GetSysAll)】取得「All選項Key」為『Opt』且「UI使用元件類型」為『OPT』的資料
+新增一筆全部清單(@AllList)的資料後再回傳，資料內容如下
+「選項代碼」：為全部清單(@AllList)的『All選項代碼(AllValue)』
+「代碼說明」：為全部清單(@AllList)的『All選項名稱(AllName) 』
+「顯示順序」：為『0』
+「預設值否」：為『False』
+「自訂用途」：為空白
+五、UTY0001005：AMLRegReviewPeriod
+取得AML定審年限 Url：{root}/TAapi/Utility/AMLRegReviewPeriod
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+選項代碼\nItemID	String	V
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+查詢清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+年限\nPeriod	Int	1．代碼說明(ItemName)
+
+邏輯說明
+資料來源檔案
+取得下拉選項查詢資料(SysUtility.GetOption)：僅取得「選項類別」為『800006』的資料
+六、UTY0001006：CRSEntityCategory
+取得CRS實體機構類別 Url：{root}/TAapi/Utility/CRSEntityCategory
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+實體機構分類\nCRSEntityType	String	O	1．選項(OPT：TA-000238)
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+選項清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+實體機構分類\nCRSEntityType	String
+選項代碼\nItemID	String
+代碼說明\nItemName	String
+
+邏輯說明
+資料來源檔案
+取得下拉選項查詢資料(SysUtility.GetOption)：取得「選項類別」為『000239』且依《實體機構分類》取得對應的「自訂用途」資料
+為『2.金融機構』時，取得「自訂用途」為『LGT2』的資料
+為『3.積極非金融機構實體』時，取得「自訂用途」為『LGT3』的資料
+為『4.消極非金融機構實體』時，取得「自訂用途」為『LGT4』的資料
+七、UTY0001007：CRSCtrlCategory
+取得CRS具控制權人類型 Url：{root}/TAapi/Utility/CRSCtrlCategory
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+具控制權人身分別\nCRSCtrlType	String	O	1．選項(OPT：TA-000243)
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+選項清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+具控制權人身分別\nCRSCtrlType	String
+選項代碼\nItemID	String
+代碼說明\nItemName	String
+
+邏輯說明
+資料來源檔案
+取得下拉選項查詢資料(SysUtility.GetOption)：取得「選項類別」為『000244』且依《具控制權人身分別》取得對應的「自訂用途」資料
+為『1.法人』時，取得「自訂用途」為『CTT1』的資料
+為『2.信託』時，取得「自訂用途」為『CTT2』的資料
+為『3.除信託以外其他法律安排』時，取得「自訂用途」為『CTT3』的資料
+八、UTY0001008：FATCAEntityCategory
+取得FATCA實體機構類別 Url：{root}/TAapi/Utility/FATCAEntityCategory
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+實體機構分類\nFATCAEntityType	String	O	1．選項(OPT：TA-000250)
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+選項清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+實體機構分類\nFATCAEntityType	String
+選項代碼\nItemID	String
+代碼說明\nItemName	String
+
+邏輯說明
+資料來源檔案
+取得下拉選項查詢資料(SysUtility.GetOption)：取得「選項類別」為『000251』且依《實體機構分類》取得對應的「自訂用途」資料
+為『FFI.美國境外之金融機構(FFI)』時，取得「自訂用途」為『FFI』的資料
+為『NFFI.美國境外之非金融機構(NFFI)』時，取得「自訂用途」為『NFFI』的資料
+九、UTY0001009：SysMapCode
+取得系統項目對應設定使用選項(For Searcher) Url：{root}/TAapi/BaseUtility/SysMapCode
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+對應來源\nMapSrc	String	O	1．選項(OPT：TA-900035)
+選項類別\nOptID	String	O
+對應代碼\nMapCode	String	O
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+對應清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+對應來源\nMapSrc	String
+選項類別\nOptID	String
+對應代碼\nMapCode	String
+對應代碼說明\nMapCodeNM	String
+
+邏輯說明
+資料來源檔案
+取得下拉選項查詢資料(SysUtility.GetOption)
+取得代碼選項查詢資料(SysUtility.GetCode)
+資料處理說明
+以《選項類別》及《UI使用元件》為『SEC.Searcher使用』至【取得下拉選項查詢資料(SysUtility.GetOption)】取得資料
+若《對應來源》為『2.Code』時，以《選項類別》至【取得代碼選項查詢資料(SysUtility.GetCode)】取得資料
+十、UTY0001010：DebitPlatMediaParamCode
+取得扣款機構媒體檔案適用的共同參數設定代碼 Url：{root}/TAapi/Utility/DebitPlatMediaParamCode
+扣款平台為點對點時，須特別依代理機構總行客制化調整
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+扣款平台類別\nDebitPlatType	String	V	1．選項(OPT：TA-000167)
+幣別類型\nCryKind	String	V	1．選項(OPT：TA-000148)
+銀行總行代碼\nBankHeadID	String	O	1．若「扣款平台類別」為『PTP.點對點』時，此參數值才有作用
+平台參數類型\nPlatParamType	String	O	1．選項\nC：共同參數；F：基金參數\n2．若「扣款平台類別」為『PTP.點對點』時，此參數值才有作用
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+選項清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+媒體代碼類型\nMediaCodeType	String	1．選項(TA-000188)
+媒體參數代碼\nMediaParamCode	String	1．選項(TA-910000)
+
+邏輯說明
+資料來源檔案
+取得下拉選項查詢資料(SysUtility.GetOption)：取得「選項類別」為『910000』且依傳入參數取得對應的「自訂用途」資料
+《扣款平台類別》為『FIS.FIS』，判斷《幣別類型》
+為『CCY.台幣』時，取得「自訂用途」為{『SFCC』或『DFCC』}的資料
+為『FCY.台幣』時，取得「自訂用途」為{『SFFC』或『DFFC』}的資料
+《扣款平台類別》為『ACH.ACH』，判斷《幣別類型》
+為『CCY.台幣』時，取得「自訂用途」為{『SACC』或『DACC』}的資料
+為『FCY.台幣』時，取得「自訂用途」為{『SAFC』或『DAFC』}的資料
+《扣款平台類別》為『PTP.點對點』且《幣別類型》為『CCY.台幣』且《銀行總行代碼》為『700』，判斷《平台參數類型》
+為『C.共同參數』時，取得「自訂用途」為{『SPCC』或『DPCC』}的資料
+為『F.基金參數』時，取得「自訂用途」為{『SPCF』或『DPCF』}的資料
+傳出欄位說明
+媒體代碼類型(@MediaCodeType)：判斷「自訂用途」的第一碼
+為『S』時，為『S.核印』
+為『D』時，為『D.扣款』
+媒體參數代碼(@MediaParamCode)：為「選項代碼」
+十一、UTY0001011：TAGetOptionForPath
+取得傳收預設路徑檔案編號(Searcher For CTLM002) Url：{root}/TAapi/BaseUtility/TAGetOptionForPath
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+檔案平台\nFilePlatform	String	O	1．選項(OPT：TA-900003)
+檔案種類\nFileStyle	String	O	1．選項(OPT：TA-900004)
+檔案編號\nFileID	String	O
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+代碼清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+檔案平台\nFilePlatform	String
+檔案種類\nFileStyle	String
+檔案編號\nFileID	String
+檔案編號說明\nFileIDNM	String
+
+邏輯說明
+資料來源檔案
+取得傳收預設路徑檔案編號查詢資料(SysUtility.GetOptionForPath)
+十二、UTY0001012：SitcaDeclarePeriodFile
+依申報週期取得TA公會申報檔案(For DRB001) Url：{root}/TAapi/Utility/SitcaDeclarePeriodFile
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+申報週期\nDclPeriod	String	V	1．選項(OPT：TA-930008)
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+選項清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+選項代碼\nItemID	String
+代碼說明\nItemName	String
+
+邏輯說明
+資料來源檔案
+取得系統相關對應項目(SysUtility.GetSysMapItem)：「系統對應代碼」為『SIADPD.公會申報－申報檔案週期對應』
+取得下拉選項查詢資料(SysUtility.GetOption)
+資料處理說明
+公會檔案清單(@SitcaFileList)：【取得下拉選項查詢資料(SysUtility.GetOption)】取得「選項類別」為『930002.公會申報檔案』且「自訂用途」為『U』的資料
+週期申報清單(@PeriodFileList)：【取得系統相關對應項目(SysUtility.GetSysMapItem)】取得「系統對應代碼」為『SIADPD.公會申報－申報檔案週期對應』且「查詢傳入類別」為『T.系統目標代碼』且「查詢對應集合」為《申報週期》的資料
+以公會檔案清單(@SitcaFileList)為主，排除公會檔案清單(@SitcaFileList).選項代碼(@ItemID)不存在週期申報清單(@PeriodFileList).對應選項代碼(@MapItemCode)的資料
+十三、UTY0001013：GetOptionDabitDay
+取得契約扣款日選項(For 各類契約建立) Url：{root}/TAapi/Utility/GetOptionDabitDay
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+契約種類\nContrKind	String	V	1．選項(OPT：TA-000183)
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+扣款日清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+扣款日\nDebitDay	Byte
+
+邏輯說明
+資料來源檔案
+契約扣款日設定明細檔(TA_CMM_ContrDebitDayDtl)

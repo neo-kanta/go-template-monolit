@@ -1,0 +1,624 @@
+syntax = "proto3";
+
+package fnd.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "go-transfer-agent/common/gen/fnd/v1;fndv1";
+
+// FNDService is the gRPC service for fund transfer operations and FND spec functions.
+service FNDService {
+  // Existing POC methods
+  rpc CreateTransaction(CreateTransactionRequest) returns (CreateTransactionResponse) {
+    option (google.api.http) = { post: "/api/v1/transactions" body: "*" };
+  }
+  rpc ListTransactions(ListTransactionsRequest) returns (ListTransactionsResponse) {
+    option (google.api.http) = { get: "/api/v1/transactions" };
+  }
+
+  // ─── APIFNDM001: TAFNDFundInfo ───
+
+  // APIFNDM001Get: 一般查詢 — returns list of TAFNDFundInfoDTO
+  rpc QueryFundInfo(QueryFundInfoRequest) returns (QueryFundInfoResponse) {
+    option (google.api.http) = { get: "/TAapi/Fund/TAFNDFundInfo/GetData" };
+  }
+
+  // APIFNDM001GetMaintain: Maintain查詢 — returns full AUDResponse
+  rpc QueryFundInfoByDataID(QueryFundInfoByDataIDRequest) returns (QueryFundInfoByDataIDResponse) {
+    option (google.api.http) = { get: "/TAapi/Fund/TAFNDFundInfo/GetData/{prt_fund_code}" };
+  }
+
+  // APIFNDM001Post/Put: Save (Add or Modify)
+  rpc SaveFundInfo(SaveFundInfoRequest) returns (SaveFundInfoResponse) {
+    option (google.api.http) = { post: "/TAapi/Fund/TAFNDFundInfo" body: "*" };
+  }
+
+  // ─── KFNDM: Check Functions ───
+
+  // KFNDM00101: ChkData/TACKCSDPrtFundSetlDate
+  rpc TACKCSDPrtFundSetlDate(TACKCSDPrtFundSetlDateRequest) returns (CheckResponse) {
+    option (google.api.http) = { get: "/TAapi/Fund/TAFNDFundInfo/ChkData/TACKCSDPrtFundSetlDate" };
+  }
+
+  // KFNDM00103: ChkData/TACKFundCodeExist
+  rpc TACKFundCodeExist(TACKFundCodeExistRequest) returns (CheckResponse) {
+    option (google.api.http) = { get: "/TAapi/Fund/TAFNDFundInfo/ChkData/TACKFundCodeExist" };
+  }
+
+  // ─── GFNDM: Get/Search Functions ───
+
+  // GFNDM00101: GetInfo/TAGetDPrtFundIssueCry
+  rpc TAGetDPrtFundIssueCry(TAGetDPrtFundIssueCryRequest) returns (TAGetDPrtFundIssueCryResponse) {
+    option (google.api.http) = { get: "/TAapi/Fund/TAFNDFundInfo/GetInfo/TAGetDPrtFundIssueCry" };
+  }
+
+  // GFNDM00104: GetInfo/TAGetDTxCry
+  rpc TAGetDTxCry(TAGetDTxCryRequest) returns (TAGetDTxCryResponse) {
+    option (google.api.http) = { get: "/TAapi/Fund/TAFNDFundInfo/GetInfo/TAGetDTxCry" };
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// APIFNDM001 Messages
+// ═══════════════════════════════════════════════════════════════════
+
+// ─── Query (APIFNDM001Get) ───
+
+message QueryFundInfoRequest {
+  string sys_co_id = 1 [json_name="SysCoID"];
+}
+
+message QueryFundInfoResponse {
+  repeated TAFNDFundInfoDTO result_list = 1 [json_name="ResultList"];
+}
+
+// ─── Query By DataID (APIFNDM001GetMaintain) ───
+
+message QueryFundInfoByDataIDRequest {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string prt_fund_code = 2 [json_name="PrtFundCode"];
+}
+
+message QueryFundInfoByDataIDResponse {
+  TAFNDFundInfo master = 1 [json_name="Master"];
+  DTAFNDFundInfo fund_info = 2 [json_name="FundInfo"];
+  repeated DTAFNDFundCustContact cust_contacts = 3 [json_name="CustContacts"];
+  DTAFNDFundSpecial special = 4 [json_name="Special"];
+  repeated DTAFNDFundCryGroup cry_groups = 5 [json_name="CryGroups"];
+  repeated DTAFNDFundDetail fund_details = 6 [json_name="FundDetails"];
+  repeated DTAFNDFundAccount fund_accounts = 7 [json_name="FundAccounts"];
+  repeated DTAFNDFundRelGroup fund_rel_groups = 8 [json_name="FundRelGroups"];
+  repeated DTAFNDFundDisclosureFee fund_dis_fees = 9 [json_name="FundDisFees"];
+  repeated DTAFNDFundTxCry fund_tx_crys = 10 [json_name="FundTxCrys"];
+  repeated DTAFNDFundShortInf short_infs = 11 [json_name="ShortInfs"];
+  repeated DTAFNDFundShortDtl short_dtls = 12 [json_name="ShortDtls"];
+  repeated DTAFNDFundAntiDilution anti_dils = 13 [json_name="AntiDils"];
+  repeated DTAFNDFundAntiDilMech anti_dil_mechs = 14 [json_name="AntiDilMechs"];  // output only: AntiDilSetType='1'
+  repeated DTAFNDFundAntiDilAdj anti_dil_adjs = 15 [json_name="AntiDilAdjs"];  // output only: AntiDilSetType!='1'
+  repeated DTAFNDFundMGTFeeInf mgt_fees = 16 [json_name="MgtFees"];
+  repeated DTAFNDFundMGTFeeDtl mgt_fee_dtls = 17 [json_name="MgtFeeDtls"];
+}
+
+// ─── Save (APIFNDM001Post/Put) ───
+
+message SaveFundInfoRequest {
+  TAFNDFundInfo master = 1 [json_name="Master"];
+  DTAFNDFundInfo fund_info = 2 [json_name="FundInfo"];
+  repeated DTAFNDFundCustContact cust_contacts = 3 [json_name="CustContacts"];
+  DTAFNDFundSpecial special = 4 [json_name="Special"];
+  repeated DTAFNDFundCryGroup cry_groups = 5 [json_name="CryGroups"];
+  repeated DTAFNDFundDetail fund_details = 6 [json_name="FundDetails"];
+  repeated DTAFNDFundAccount fund_accounts = 7 [json_name="FundAccounts"];
+  repeated DTAFNDFundRelGroup fund_rel_groups = 8 [json_name="FundRelGroups"];
+  repeated DTAFNDFundDisclosureFee fund_dis_fees = 9 [json_name="FundDisFees"];
+  repeated DTAFNDFundTxCry fund_tx_crys = 10 [json_name="FundTxCrys"];
+  repeated DTAFNDFundShortInf short_infs = 11 [json_name="ShortInfs"];
+  repeated DTAFNDFundShortDtl short_dtls = 12 [json_name="ShortDtls"];
+  repeated DTAFNDFundAntiDilution anti_dils = 13 [json_name="AntiDils"];
+  repeated DTAFNDFundMGTFeeInf mgt_fees = 14 [json_name="MgtFees"];
+  repeated DTAFNDFundMGTFeeDtl mgt_fee_dtls = 15 [json_name="MgtFeeDtls"];
+}
+
+message SaveFundInfoResponse {
+  bool success = 1 [json_name="Success"];
+  string message = 2 [json_name="Message"];
+  string return_code = 3 [json_name="ReturnCode"];
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// Domain Messages — names match C# spec exactly
+// ═══════════════════════════════════════════════════════════════════
+
+// ResultList DTO — TAFNDFundInfoDTO (一般查詢 list row)
+message TAFNDFundInfoDTO {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  bool is_deletable = 2 [json_name="IsDeletable"];   // output only
+  string prt_fund_code = 3 [json_name="PrtFundCode"];
+  string uni_code = 4 [json_name="UniCode"];
+  string fund_in_sh_name = 5 [json_name="FundInShName"];
+  string fund_m_name = 6 [json_name="FundMName"];
+  string fund_sh_m_name = 7 [json_name="FundShMName"];
+  string fund_s_name = 8 [json_name="FundSName"];
+  string fund_sh_s_name = 9 [json_name="FundShSName"];
+  string fund_risk_level_nm = 10 [json_name="FundRiskLevelNm"];  // output only — from GetOpt("000003")
+  string issue_base_cry = 11 [json_name="IssueBaseCry"];
+  string issue_base_cry_nm = 12 [json_name="IssueBaseCryNm"];  // output only — currency name
+  string fund_setup_date = 13 [json_name="FundSetupDate"];  // datetime RFC3339
+  string fund_status_nm = 14 [json_name="FundStatusNm"];  // output only — from GetOpt("000007")
+}
+
+// Master — TA_FND_FundInfo (TAFNDFundInfo)
+message TAFNDFundInfo {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string sys_co_id_nm = 2 [json_name="SysCoIDNm"];   // output only — company name
+  bool is_deletable = 3 [json_name="IsDeletable"];   // output only
+  string prt_fund_code = 4 [json_name="PrtFundCode"];
+  string uni_code = 5 [json_name="UniCode"];
+  string fund_in_sh_name = 6 [json_name="FundInShName"];
+  string fund_m_name = 7 [json_name="FundMName"];
+  string fund_sh_m_name = 8 [json_name="FundShMName"];
+  string fund_s_name = 9 [json_name="FundSName"];
+  string fund_sh_s_name = 10 [json_name="FundShSName"];
+  string fund_risk_level = 11 [json_name="FundRiskLevel"];
+  string fund_risk_level_nm = 12 [json_name="FundRiskLevelNm"];  // output only
+  string issue_base_cry = 13 [json_name="IssueBaseCry"];
+  string issue_base_cry_nm = 14 [json_name="IssueBaseCryNm"];  // output only — currency name
+  string fund_setup_date = 15 [json_name="FundSetupDate"];  // datetime RFC3339
+  string giin_no = 16 [json_name="GiinNo"];
+  string fund_status = 17 [json_name="FundStatus"];
+  string fund_status_nm = 18 [json_name="FundStatusNm"];  // output only
+  string fund_warning_msg = 19 [json_name="FundWarningMsg"];
+  int32 unit_dot_len = 20 [json_name="UnitDotLen"];
+  string fund_subs_way = 21 [json_name="FundSubsWay"];
+  string fund_rdm_way = 22 [json_name="FundRdmWay"];
+  int32 rdm_f_nav_day = 23 [json_name="RdmFNavDay"];
+  string rdm_f_nav_way = 24 [json_name="RdmFNavWay"];
+  double rdm_f_nav_d_rate = 25 [json_name="RdmFNavDRate"];
+  double rdm_f_nav_d_val = 26 [json_name="RdmFNavDVal"];
+  string is_short_fee = 27 [json_name="IsShortFee"];
+  string is_anti_dil_fee = 28 [json_name="IsAntiDilFee"];
+  string is_etf = 29 [json_name="IsEtf"];
+  string etf_code = 30 [json_name="EtfCode"];
+  string is_dim = 31 [json_name="IsDim"];
+  string shore_id = 32 [json_name="ShoreID"];
+  string ofd_fh_code = 33 [json_name="OfdFHCode"];
+}
+
+// 1. 境內基金資訊檔 — DTA_FND_FundInfo (DTAFNDFundInfo)
+message DTAFNDFundInfo {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string prt_fund_code = 2 [json_name="PrtFundCode"];
+  string sitca_fund_type = 3 [json_name="SitcaFundType"];
+  string sitca_fund_type_nm = 4 [json_name="SitcaFundTypeNm"];   // output only
+  string d_fund_type = 5 [json_name="DFundType"];
+  string d_inv_area = 6 [json_name="DInvArea"];
+  string offer_type = 7 [json_name="OfferType"];
+  double bc_fund_quo_up_amt = 8 [json_name="BcFundQuoUpAmt"];
+  double bc_fund_quo_min_amt = 9 [json_name="BcFundQuoMinAmt"];
+  double fund_quo_lmt_rate = 10 [json_name="FundQuoLmtRate"];
+  double trade_warning_amt = 11 [json_name="TradeWarningAmt"];
+  string exch_unit_lmt = 12 [json_name="ExchUnitLmt"];
+  double fm_net_quo_up_unit = 13 [json_name="FmNetQuoUpUnit"];
+  double exch_net_quo_up_unit = 14 [json_name="ExchNetQuoUpUnit"];
+  string fund_ipo_date = 15 [json_name="FundIpoDate"];
+  string beg_rdm_date = 16 [json_name="BegRdmDate"];
+  string fund_issue_type = 17 [json_name="FundIssueType"];
+  string fund_issue_date = 18 [json_name="FundIssueDate"];
+  string csd_online_date = 19 [json_name="CsdOnlineDate"];
+  string csd_prt_fund_setl_date = 20 [json_name="CsdPrtFundSetlDate"];
+  string approvel_date = 21 [json_name="ApprovelDate"];
+  string clear_date = 22 [json_name="ClearDate"];
+  string last_subs_date = 23 [json_name="LastSubsDate"];
+  string last_rdm_date = 24 [json_name="LastRdmDate"];
+  string biz_day_def = 25 [json_name="BizDayDef"];
+  string subs_date_type = 26 [json_name="SubsDateType"];
+  string rdm_date_type = 27 [json_name="RdmDateType"];
+  string rdm_pay_date_type = 28 [json_name="RdmPayDateType"];
+  int32 subs_nav_day = 29 [json_name="SubsNavDay"];
+  int32 rdm_nav_day = 30 [json_name="RdmNavDay"];
+  int32 rdm_pay_day = 31 [json_name="RdmPayDay"];
+  string cust_bank_head_id = 32 [json_name="CustBankHeadID"];
+  string cust_bank_head_id_nm = 33 [json_name="CustBankHeadIDNm"];  // output only — bank name
+  string swift_code = 34 [json_name="SwiftCode"];  // output only
+  string bank_s_name = 35 [json_name="BankSName"];  // output only
+  string addr = 36 [json_name="Addr"];  // output only
+  string fund_acc_m_name = 37 [json_name="FundAccMName"];
+  string fund_acc_s_name = 38 [json_name="FundAccSName"];
+  int32 check_diff_day = 39 [json_name="CheckDiffDay"];
+  int32 cash_diff_day = 40 [json_name="CashDiffDay"];
+  int32 fa_subs_in_day = 41 [json_name="FaSubsInDay"];
+  int32 fa_rdm_out_day = 42 [json_name="FaRdmOutDay"];
+  int32 fa_subs_setl_day = 43 [json_name="FaSubsSetlDay"];
+  int32 fa_rdm_setl_day = 44 [json_name="FaRdmSetlDay"];
+  string subs_fee_group = 45 [json_name="SubsFeeGroup"];
+  string subs_fee_group_nm = 46 [json_name="SubsFeeGroupNm"];  // output only
+  string cdsc_fee_group = 47 [json_name="CDSCFeeGroup"];
+  string cdsc_fee_group_nm = 48 [json_name="CDSCFeeGroupNm"];  // output only
+  string div_fund_group = 49 [json_name="DivFundGroup"];
+  string div_fund_group_nm = 50 [json_name="DivFundGroupNm"];  // output only
+  string csd_subs_deadline = 51 [json_name="CsdSubsDeadline"];
+  string csd_rdm_deadline = 52 [json_name="CsdRdmDeadline"];
+  string begin_short_date = 53 [json_name="BeginShortDate"];
+  string short_calc_memo = 54 [json_name="ShortCalcMemo"];
+  string short_tx_memo = 55 [json_name="ShortTxMemo"];
+  string short_memo = 56 [json_name="ShortMemo"];
+  string remit_charge_cd = 57 [json_name="RemitChargeCd"];
+  string is_ipo = 58 [json_name="IsIpo"];
+}
+
+// 2. 境內基金保管銀行聯絡人資料檔 — DTA_FND_FundCustContact (DTAFNDFundCustContact)
+message DTAFNDFundCustContact {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string prt_fund_code = 2 [json_name="PrtFundCode"];
+  int32 data_seq = 3 [json_name="DataSeq"];
+  string is_main_contact = 4 [json_name="IsMainContact"];
+  string contact_man = 5 [json_name="ContactMan"];
+  string contact_tel = 6 [json_name="ContactTel"];
+  string fax1 = 7 [json_name="Fax1"];
+  string fax2 = 8 [json_name="Fax2"];
+  string work_item = 9 [json_name="WorkItem"];
+}
+
+// 3. 境內基金特殊型相關資料檔 — DTA_FND_FundSpecial (DTAFNDFundSpecial)
+message DTAFNDFundSpecial {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string prt_fund_code = 2 [json_name="PrtFundCode"];
+  string is_high_risk = 3 [json_name="IsHighRisk"];
+  string is_pgf = 4 [json_name="IsPgf"];
+  string pgf_stay = 5 [json_name="PgfStay"];
+  int32 pgf_mature_year = 6 [json_name="PgfMatureYear"];
+  int32 pgf_stop_subs_day = 7 [json_name="PgfStopSubsDay"];
+  string pgf_expiry_date = 8 [json_name="PgfExpiryDate"];
+  string is_pgf_rdm_fee = 9 [json_name="IsPgfRdmFee"];
+  string is_tmf = 10 [json_name="IsTmf"];
+  string tmf_kind = 11 [json_name="TmfKind"];
+  int32 tmf_stop_subs_day = 12 [json_name="TmfStopSubsDay"];
+  string tmf_target_date = 13 [json_name="TmfTargetDate"];
+  int32 tmf_stay = 14 [json_name="TmfStay"];
+  string tmf_expiry_date = 15 [json_name="TmfExpiryDate"];
+  string tmf_return_bc = 16 [json_name="TmfReturnBc"];
+  string tmf_return_bc_nm = 17 [json_name="TmfReturnBcNm"];  // output only
+  string tmf_return_starr = 18 [json_name="TmfReturnStarr"];
+  string is_tmf_rdm_fee = 19 [json_name="IsTmfRdmFee"];
+  string is_pff = 20 [json_name="IsPff"];
+  int32 pvt_fund_limit = 21 [json_name="PvtFundLimit"];
+  string is_performance_fee = 22 [json_name="IsPerformanceFee"];
+  string is_umbrella = 23 [json_name="IsUmbrella"];
+  string umbrella_name = 24 [json_name="UmbrellaName"];
+  string fund_memo = 25 [json_name="FundMemo"];
+}
+
+// 4. 境內基金發行幣別設定檔 — DTA_FND_FundCryGroup (DTAFNDFundCryGroup)
+message DTAFNDFundCryGroup {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string prt_fund_code = 2 [json_name="PrtFundCode"];
+  string issue_cry = 3 [json_name="IssueCry"];
+  string issue_cry_nm = 4 [json_name="IssueCryNm"];   // output only
+  double fund_face_amt = 5 [json_name="FundFaceAmt"];
+  int32 nav_dot_len = 6 [json_name="NavDotLen"];
+  string is_oth_tx_cry = 7 [json_name="IsOthTxCry"];
+  string oth_tx_cry = 8 [json_name="OthTxCry"];
+  string oth_tx_cry_nm = 9 [json_name="OthTxCryNm"];   // output only
+  double fund_quo_amt_bc = 10 [json_name="FundQuoAmtBc"];
+  double unit_conv_rate = 11 [json_name="UnitConvRate"];
+  double fund_quo_unit = 12 [json_name="FundQuoUnit"];
+  string ipo_subs_fee_dis_type = 13 [json_name="IpoSubsFeeDisType"];
+  double ipo_fix_rate = 14 [json_name="IpoFixRate"];
+  double ipo_disc_rate_off = 15 [json_name="IpoDiscRateOff"];
+  string fund_m_bank_brh = 16 [json_name="FundMBankBrh"];
+  string fund_m_bank_brh_nm = 17 [json_name="FundMBankBrhNm"];  // output only
+  string swift_code = 18 [json_name="SwiftCode"];  // output only
+  string fund_m_account = 19 [json_name="FundMAccount"];
+  string c_remit_fee_id = 20 [json_name="CRemitFeeID"];
+  double c_remit_fee_fm = 21 [json_name="CRemitFeeFm"];
+  string c_remit_fee_other_id = 22 [json_name="CRemitFeeOtherID"];
+  double c_remit_fee_other_fm = 23 [json_name="CRemitFeeOtherFm"];
+  string is_rsp = 24 [json_name="IsRsp"];
+  string begin_rsp_date = 25 [json_name="BeginRspDate"];
+  double rsp_min_amt = 26 [json_name="RspMinAmt"];
+  double rsp_amt_apc = 27 [json_name="RspAmtApc"];
+  double rsp_max_amt = 28 [json_name="RspMaxAmt"];
+  double rsp_min_amt_tx_c = 29 [json_name="RspMinAmtTxC"];
+  double rsp_amt_apc_tx_c = 30 [json_name="RspAmtApcTxC"];
+  double rsp_max_amt_tx_c = 31 [json_name="RspMaxAmtTxC"];
+  int32 rsp_con_fail_cnt = 32 [json_name="RspConFailCnt"];
+  double rsp_fee_rate = 33 [json_name="RspFeeRate"];
+  string is_rsp_chg_amt = 34 [json_name="IsRspChgAmt"];
+  string is_rsp_share_set = 35 [json_name="IsRspShareSet"];
+  string is_dividend = 36 [json_name="IsDividend"];
+  string div_type = 37 [json_name="DivType"];
+  double div_min_amt = 38 [json_name="DivMinAmt"];
+  string div_cycle = 39 [json_name="DivCycle"];
+  string div_pay_platform = 40 [json_name="DivPayPlatform"];
+  string tax_format = 41 [json_name="TaxFormat"];
+  double lakh_subs_amt = 42 [json_name="LakhSubsAmt"];
+  double lakh_rdm_amt = 43 [json_name="LakhRdmAmt"];
+}
+
+// 5. 境內子基金明細檔 — DTA_FND_FundDetail (DTAFNDFundDetail)
+message DTAFNDFundDetail {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string prt_fund_code = 2 [json_name="PrtFundCode"];
+  string fund_code = 3 [json_name="FundCode"];
+  string fund_cry = 4 [json_name="FundCry"];
+  string fund_cry_nm = 5 [json_name="FundCryNm"];   // output only
+  string fund_in_sh_name = 6 [json_name="FundInShName"];
+  string fund_sh_m_name = 7 [json_name="FundShMName"];
+  string fund_sh_s_name = 8 [json_name="FundShSName"];
+  string fh_fund_share = 9 [json_name="FHFundShare"];
+  string fh_fund_share_nm = 10 [json_name="FHFundShareNm"];  // output only
+  string share_fir_sale_date = 11 [json_name="ShareFirSaleDate"];
+  string smart_fund_code = 12 [json_name="SmartFundCode"];
+  string csd_fund_code = 13 [json_name="CsdFundCode"];
+  string sitca_fund_code = 14 [json_name="SitcaFundCode"];
+  string fa_fund_code = 15 [json_name="FaFundCode"];
+  string fis_fee_code = 16 [json_name="FisFeeCode"];
+  string isin_code = 17 [json_name="IsinCode"];
+  string is_tisa = 18 [json_name="IsTisa"];
+  string is_i_share = 19 [json_name="IsIShare"];
+  string is_pi_trd = 20 [json_name="IsPiTrd"];
+  string div_calc_type = 21 [json_name="DivCalcType"];
+  string subs_fee_type = 22 [json_name="SubsFeeType"];
+  double subs_min_amt = 23 [json_name="SubsMinAmt"];
+  double subs_amt_apc = 24 [json_name="SubsAmtApc"];
+  double sw_min_amt = 25 [json_name="SwMinAmt"];
+  string is_distribution_fee = 26 [json_name="IsDistributionFee"];
+  int32 mature_year = 27 [json_name="MatureYear"];
+  string mature_fund = 28 [json_name="MatureFund"];
+  string mature_fund_nm = 29 [json_name="MatureFundNm"];  // output only
+  string csd_subs_setl_date = 30 [json_name="CsdSubsSetlDate"];
+  double rdm_min_unit_sur = 31 [json_name="RdmMinUnitSur"];
+  double rdm_min_unit = 32 [json_name="RdmMinUnit"];
+  double rdm_min_amt = 33 [json_name="RdmMinAmt"];
+  string csd_rdm_setl_date = 34 [json_name="CsdRdmSetlDate"];
+  string is_share_rsp = 35 [json_name="IsShareRsp"];
+  double rsp_min_amt = 36 [json_name="RspMinAmt"];
+  double rsp_amt_apc = 37 [json_name="RspAmtApc"];
+  double rsp_max_amt = 38 [json_name="RspMaxAmt"];
+  double subs_min_amt_tx_c = 39 [json_name="SubsMinAmtTxC"];
+  double subs_amt_apc_tx_c = 40 [json_name="SubsAmtApcTxC"];
+  double sw_min_amt_tx_c = 41 [json_name="SwMinAmtTxC"];
+  double rsp_min_amt_tx_c = 42 [json_name="RspMinAmtTxC"];
+  double rsp_amt_apc_tx_c = 43 [json_name="RspAmtApcTxC"];
+  double rsp_max_amt_tx_c = 44 [json_name="RspMaxAmtTxC"];
+  string is_additional = 45 [json_name="IsAdditional"];
+  string is_old = 46 [json_name="IsOld"];
+}
+
+// 6. 境內子基金相關帳號檔 — DTA_FND_FundAccount (DTAFNDFundAccount)
+message DTAFNDFundAccount {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string prt_fund_code = 2 [json_name="PrtFundCode"];
+  string fund_code = 3 [json_name="FundCode"];
+  int32 data_seq = 4 [json_name="DataSeq"];
+  string cus_bank_brh = 5 [json_name="CusBankBrh"];
+  string cus_bank_brh_nm = 6 [json_name="CusBankBrhNm"];  // output only
+  string fund_account = 7 [json_name="FundAccount"];
+  string s_remit_v_code = 8 [json_name="SRemitVCode"];
+  string account_use_set = 9 [json_name="AccountUseSet"];
+  string swift_code = 10 [json_name="SwiftCode"]; // output only
+  string remark = 11 [json_name="Remark"];
+}
+
+// 7. 境內子基金相關群組檔 — DTA_FND_FundRelGroup (DTAFNDFundRelGroup)
+message DTAFNDFundRelGroup {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string prt_fund_code = 2 [json_name="PrtFundCode"];
+  string fund_code = 3 [json_name="FundCode"];
+  string fund_group_no = 4 [json_name="FundGroupNo"];
+  string fund_group_no_nm = 5 [json_name="FundGroupNoNm"];  // output only
+  string group_type_no = 6 [json_name="GroupTypeNo"];
+  string group_type_no_nm = 7 [json_name="GroupTypeNoNm"];  // output only
+}
+
+// 8. 境內子基金確認單揭露費用檔 — DTA_FND_FundDisclosureFee (DTAFNDFundDisclosureFee)
+message DTAFNDFundDisclosureFee {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string prt_fund_code = 2 [json_name="PrtFundCode"];
+  string fund_code = 3 [json_name="FundCode"];
+  string eff_date = 4 [json_name="EffDate"];
+  string ann_manager_rate = 5 [json_name="AnnManagerRate"];
+  string ann_custody_rate = 6 [json_name="AnnCustodyRate"];
+  string ann_distribution_rate = 7 [json_name="AnnDistributionRate"];
+  string ann_other_fee = 8 [json_name="AnnOtherFee"];
+}
+
+// 9. 境內子基金可交易幣別檔 — DTA_FND_FundTxCry (DTAFNDFundTxCry)
+message DTAFNDFundTxCry {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string prt_fund_code = 2 [json_name="PrtFundCode"];
+  string fund_code = 3 [json_name="FundCode"];
+  string cry_id = 4 [json_name="CryID"];
+  string cry_data_src = 5 [json_name="CryDataSrc"];
+}
+
+// 10. 境內基金短線交易費率設定檔 — DTA_FND_FundShortInf (DTAFNDFundShortInf)
+message DTAFNDFundShortInf {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string prt_fund_code = 2 [json_name="PrtFundCode"];
+  string rdm_range_type = 3 [json_name="RdmRangeType"];
+  string short_date_type = 4 [json_name="ShortDateType"];
+  string rdm_base_id = 5 [json_name="RdmBaseID"];
+  string subs_base_id = 6 [json_name="SubsBaseID"];
+  string short_calc_id = 7 [json_name="ShortCalcID"];
+}
+
+// 11. 境內基金短線交易費率設定明細檔 — DTA_FND_FundShortDtl (DTAFNDFundShortDtl)
+message DTAFNDFundShortDtl {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string prt_fund_code = 2 [json_name="PrtFundCode"];
+  int32 begin_day = 3 [json_name="BeginDay"];
+  int32 end_day = 4 [json_name="EndDay"];
+  double short_fee_rate = 5 [json_name="ShortFeeRate"];
+  string is_max_amt = 6 [json_name="IsMaxAmt"];
+  double max_amt = 7 [json_name="MaxAmt"];
+  string is_min_amt = 8 [json_name="IsMinAmt"];
+  double min_amt = 9 [json_name="MinAmt"];
+}
+
+// 12. 境內基金反稀釋設定檔 — DTA_FND_FundAntiDilution (DTAFNDFundAntiDilution)
+message DTAFNDFundAntiDilution {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string prt_fund_code = 2 [json_name="PrtFundCode"];
+  string anti_dil_set_type = 3 [json_name="AntiDilSetType"];
+  string eff_date = 4 [json_name="EffDate"];
+  string term_date = 5 [json_name="TermDate"];
+  double anti_dil_trigger = 6 [json_name="AntiDilTrigger"];
+  double anti_dil_fee_rate = 7 [json_name="AntiDilFeeRate"];
+  string adj_rsn = 8 [json_name="AdjRsn"];
+  string remark = 9 [json_name="Remark"];
+}
+
+// 12a. 反稀釋機制清單 (output only — AntiDilSetType='1')
+message DTAFNDFundAntiDilMech {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string prt_fund_code = 2 [json_name="PrtFundCode"];
+  string eff_date = 3 [json_name="EffDate"];
+  double anti_dil_trigger = 4 [json_name="AntiDilTrigger"];
+  double anti_dil_fee_rate = 5 [json_name="AntiDilFeeRate"];
+  string remark = 6 [json_name="Remark"];
+}
+
+// 12b. 反稀釋調整清單 (output only — AntiDilSetType!='1')
+message DTAFNDFundAntiDilAdj {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string prt_fund_code = 2 [json_name="PrtFundCode"];
+  string anti_dil_set_type = 3 [json_name="AntiDilSetType"];
+  string eff_date = 4 [json_name="EffDate"];
+  string term_date = 5 [json_name="TermDate"];
+  double anti_dil_trigger = 6 [json_name="AntiDilTrigger"];
+  double anti_dil_fee_rate = 7 [json_name="AntiDilFeeRate"];
+  string adj_rsn = 8 [json_name="AdjRsn"];
+  string remark = 9 [json_name="Remark"];
+}
+
+// 13. 境內基金經理費率設定檔 — DTA_FND_FundMGTFeeInf (DTAFNDFundMGTFeeInf)
+message DTAFNDFundMGTFeeInf {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string prt_fund_code = 2 [json_name="PrtFundCode"];
+  string fh_fund_share = 3 [json_name="FHFundShare"];
+  string fh_fund_share_nm = 4 [json_name="FHFundShareNm"];  // output only
+  string eff_date = 5 [json_name="EffDate"];
+  string mgt_fee_calc_id = 6 [json_name="MgtFeeCalcID"];
+}
+
+// 14. 境內基金經理費率設定明細檔 — DTA_FND_FundMGTFeeDtl (DTAFNDFundMGTFeeDtl)
+message DTAFNDFundMGTFeeDtl {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string prt_fund_code = 2 [json_name="PrtFundCode"];
+  string fh_fund_share = 3 [json_name="FHFundShare"];
+  string eff_date = 4 [json_name="EffDate"];
+  double aum_min_amt = 5 [json_name="AumMinAmt"];
+  double manager_rate = 6 [json_name="ManagerRate"];
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// KFNDM / GFNDM Messages
+// ═══════════════════════════════════════════════════════════════════
+
+// ─── Shared ───
+
+message CheckResponse {
+  string return_code = 1 [json_name="ReturnCode"];
+  string message = 2 [json_name="Message"];
+}
+
+// ─── KFNDM Messages ───
+
+// KFNDM00101
+message TACKCSDPrtFundSetlDateRequest {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string csd_prt_fund_setl_date = 2 [json_name="CsdPrtFundSetlDate"];
+  optional string fund_code = 3 [json_name="FundCode"];
+}
+
+// KFNDM00103
+message TACKFundCodeExistRequest {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string fund_code = 2 [json_name="FundCode"];
+}
+
+// ─── GFNDM Messages ───
+
+// GFNDM00101
+message TAGetDPrtFundIssueCryRequest {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  bool is_all = 2 [json_name="IsAll"];
+  string prt_fund_code = 3 [json_name="PrtFundCode"];
+  string fee_charge_type = 4 [json_name="FeeChargeType"];
+  string filter_item = 5 [json_name="FilterItem"];
+  string query_type = 6 [json_name="QueryType"];
+}
+
+message TAGetDPrtFundIssueCryResponse {
+  repeated IssueCurrencyDTO master = 1 [json_name="Master"];
+}
+
+message IssueCurrencyDTO {
+  string cry_id = 1 [json_name="CryID"];
+  string cry_name = 2 [json_name="CryName"];
+  string is_rsp = 3 [json_name="IsRsp"];
+}
+
+// GFNDM00104
+message TAGetDTxCryRequest {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  bool is_all = 2 [json_name="IsAll"];
+  string prt_fund_code = 3 [json_name="PrtFundCode"];
+  string cry_id = 4 [json_name="CryID"];
+  string cry_data_src = 5 [json_name="CryDataSrc"];
+  bool is_exclude_ccy = 6 [json_name="IsExcludeCcy"];
+  string query_type = 7 [json_name="QueryType"];
+}
+
+message TAGetDTxCryResponse {
+  repeated TransactionCurrencyDTO master = 1 [json_name="Master"];
+}
+
+message TransactionCurrencyDTO {
+  string cry_id = 1 [json_name="CryID"];
+  string cry_name = 2 [json_name="CryName"];
+  int32 dec_len = 3 [json_name="DecLen"];
+  string is_mcy = 4 [json_name="IsMcy"];
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// Existing POC Messages (Kept for compatibility)
+// ═══════════════════════════════════════════════════════════════════
+
+message CreateTransactionRequest {
+  string from_account = 1 [json_name="FromAccount"];
+  string to_account = 2 [json_name="ToAccount"];
+  int64 amount_minor = 3 [json_name="AmountMinor"];
+  string currency = 4 [json_name="Currency"];
+  string memo = 5 [json_name="Memo"];
+  string created_by = 6 [json_name="CreatedBy"];
+}
+
+message CreateTransactionResponse {
+  string transaction_id = 1 [json_name="TransactionID"];
+  string status = 2 [json_name="Status"];
+  string created_at = 3 [json_name="CreatedAt"];
+}
+
+message ListTransactionsRequest {
+  int32 page_size = 1 [json_name="PageSize"];
+  string page_token = 2 [json_name="PageToken"];
+}
+
+message ListTransactionsResponse {
+  repeated Transaction transactions = 1 [json_name="Transactions"];
+  int32 total = 2 [json_name="Total"];
+}
+
+message Transaction {
+  string transaction_id = 1 [json_name="TransactionID"];
+  string from_account = 2 [json_name="FromAccount"];
+  string to_account = 3 [json_name="ToAccount"];
+  int64 amount_minor = 4 [json_name="AmountMinor"];
+  string currency = 5 [json_name="Currency"];
+  string memo = 6 [json_name="Memo"];
+  string status = 7 [json_name="Status"];
+  string created_by = 8 [json_name="CreatedBy"];
+  string created_at = 9 [json_name="CreatedAt"];
+}

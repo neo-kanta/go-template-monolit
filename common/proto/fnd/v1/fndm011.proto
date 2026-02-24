@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package fnd.v1;
+option go_package = "go-transfer-agent/common/gen/fnd/v1;fndv1";
+
+import "google/api/annotations.proto";
+
+// ═══════════════════════════════════════════════════════════════════
+// FNDM011 Service
+// ═══════════════════════════════════════════════════════════════════
+service FNDM011Service {
+  rpc TAFNDIShareFundFeeRdm(TAFNDIShareFundFeeRdmRequest) returns (TAFNDIShareFundFeeRdmResponse) {
+    option (google.api.http) = { get: "/TAapi/Fund/TAFNDIShareFundFeeRdm" };
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// FNDM011 Messages
+// ═══════════════════════════════════════════════════════════════════
+
+message TAFNDIShareFundFeeRdmRequest {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string fund_code = 2 [json_name="FundCode"];
+  string fee_name = 3 [json_name="FeeName"];
+  string rdm_range_type = 4 [json_name="RdmRangeType"];
+  string rdm_date_type = 5 [json_name="RdmDateType"];
+  string rdm_base_id = 6 [json_name="RdmBaseID"];
+  string subs_base_id = 7 [json_name="SubsBaseID"];
+  string rdm_calc_id = 8 [json_name="RdmCalcID"];
+  int32 should_hold_days = 9 [json_name="ShouldHoldDays"];
+  double fee_rate = 10 [json_name="FeeRate"];
+}
+
+message TAFNDIShareFundFeeRdmResponse {
+  repeated IShareFundFeeRdmMasterDTO result_list = 1 [json_name="ResultList"];
+}
+
+message IShareFundFeeRdmMasterDTO {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string sys_co_id_nm = 2 [json_name="SysCoIDNm"];
+  string fund_code = 3 [json_name="FundCode"];
+  string fund_code_nm = 4 [json_name="FundCodeNm"];
+  string fee_name = 5 [json_name="FeeName"];
+  string rdm_range_type = 6 [json_name="RdmRangeType"];
+  string rdm_date_type = 7 [json_name="RdmDateType"];
+  string rdm_base_id = 8 [json_name="RdmBaseID"];
+  string subs_base_id = 9 [json_name="SubsBaseID"];
+  string rdm_calc_id = 10 [json_name="RdmCalcID"];
+  int32 should_hold_days = 11 [json_name="ShouldHoldDays"];
+  double fee_rate = 12 [json_name="FeeRate"];
+}

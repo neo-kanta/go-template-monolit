@@ -1,0 +1,138 @@
+User Interface Specification
+目錄
+應用程式介面說明 2
+壹、功能說明 2
+貳、變更說明 2
+叁、傳入傳出參數(Utility) 3
+一、UTY2004001：TACKLackDocRestrict 3
+二、UTY2004002：TACKBFCtlOpenAcct 4
+三、UTY2004003：TACKBFCtlTxn 5
+四、UTY2004004：TACKBFAgreePayAcct 6
+五、UTY2004005：TACKBFAgreeDocEff 7
+應用程式介面說明
+壹、功能說明
+檢核受益人交易相關API
+貳、變更說明
+[TABLE]
+變更日期	變更人員	變更說明
+2022/01/13	Joyce Lin	1．Build
+2024/04/17	Dechang Chen	Modify\n1．UTY2004002：Rebuild
+2024/04/30~2024/05/03	Meg Pan	Modify\n1．UTY2004001：Rebuild\n2．UTY2004002、UTY2004004、UTY2004005：Add\n3．UTY2004003：Rebuild、程式代號，由UTY2004002更換為UTY2004003
+2024/06/18	Joyce Lin	Modify\n1．UTY2004002：查詢日期增加欄位說明\n2．UTY2004005：調整處理邏輯說明
+2024/07/03	Dechang Chen	Modify，配合多公司別調整\n1．UTY200401、UTY200402、UTY200403、UTY200404、UTY200405：新增傳入參數「公司代碼」
+2024/07/16	Meg Pan	Modify\n1．UTY2004001：回傳結果代碼，原「TA00013」調整為「TXN0054」\n2．UTY2004002：回傳結果代碼，原「TA00054、TA00055」調整為「TXN0055、TXN0056」
+2024/07/17	Meg Pan	Modify\n1．UTY2004001：配合錯誤訊息的調整，傳入參數「交易類別」，其選項定義增加至TA3_Option中
+2024/10/17	Meg Pan	Modify\n1．UTY2004005：配合『客戶自主申購聲明書』的調整
+2025/02/19	Ann Wu	Modify\n1．UTY2004004：調整幣別欄位長度為6
+2025/2/25	Dechang Chen	Modify，配合【檢核受益人缺件限制交易(BizUtility.ChkBFLackDocRestrict)】調整\n1．新增傳入參數「適用系統」\n2．移除傳入參數「基金代碼」
+2025/04/30	Dechang Chen	Modify\n1．UTY2004002：檢核主體移至CoreUtility
+2025/09/25	JoyceLin	Modify\n1．UTY2004002：Url位置調整\n2．UTY2004003：Url位置調整
+2026/01/26	Meg Pan	Modify，配合前端組件，「檢核失敗否」變更為Bool『True、False』\n1．UTY2004001、UTY2004005
+
+叁、傳入傳出參數(Utility)
+一、UTY2004001：TACKLackDocRestrict
+檢核受益人是否為缺件限制交易 Url：{root}/TAapi/BaseUtility/BFChkData/TACKLackDocRestrict
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+適用系統\nDocSys	String	V	1．選項(TA-900001)
+戶號\nBFNo	Int	V
+交易日期\nTxDate	DateTime	V
+交易類別\nQueryType	String	V	1．選項(OPT：TA-900026)\n1：申購；2：買回；3：轉換；4：定額
+
+邏輯說明
+資料來源檔案
+檢核受益人缺件限制交易(BizUtility.ChkBFLackDocRestrict)
+資料處理說明
+以傳入參數至【檢核受益人缺件限制交易(BizUtility.ChkBFLackDocRestrict)】取得資料
+若「檢核失敗否(IsCheckFailed)」為『True』，則回傳結果代碼{TXN0054}
+二、UTY2004002：TACKBFCtlOpenAcct
+檢核受益人及其法代、實質受益人是否為開戶限制列管戶 Url：{root}/TAapi/BaseUtility/BFChkData/TACKBFCtlOpenAcct
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+查詢日期\nQueryDate	DateTime	V	1．開戶日期
+身分證字號\nIDNo	String	V
+客戶姓名\nCusName	String	V
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+列管人統編\nCtrlPersonID	String
+列管人姓名\nCtrlPersonNM	String
+管制交易處理方式CtrlTxnHandling	String	1．選項(OPT：TA-000132)
+管制交易說明\nCtrlTxnMemo	String
+
+邏輯說明
+資料來源檔案
+取得受益人控管中的交易限制(BizUtility.GetBFCtlTxn)
+資料處理說明
+以傳入參數至【取得受益人控管中的交易限制(BizUtility.GetBFCtlTxn)】取得「查詢類別」為『11.開戶』的資料。若有資料，則判斷「管制交易處理方式」
+為『W.警示』，回傳結果代碼{TXN0055}
+為『R.禁止』，回傳結果代碼{TXN0056}
+三、UTY2004003：TACKBFCtlTxn
+檢核受益人及其法代、實質受益人是否為交易限制列管戶(For 境內交易) Url：{root}/TAapi/BaseUtility/BFChkData/TACKBFCtlTxn
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+戶號\nBFNo	Int	V
+基金代碼\nFundCode	String	O
+查詢日期\nQueryDate	DateTime	V
+查詢類別\nQueryType	String	V	1．選項(OPT：TA-000134)
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+列管人統編\nCtrlPersonID	String
+列管人姓名\nCtrlPersonNM	String
+列管基金代碼\nCtlFundCode	String	1．有ALL選項
+管制交易處理方式CtrlTxnHandling	String	1．選項(OPT：TA-000132)
+管制交易說明\nCtrlTxnMemo	String
+
+邏輯說明
+資料來源檔案
+檢核受益人境內交易列管(TABizUtility.ChkBFDFundCtlTxn)
+資料處理說明
+以傳入參數至【檢核受益人境內交易列管(TABizUtility.ChkBFDFundCtlTxn)】取得資料。若有資料，則判斷「管制交易處理方式」
+為『W.警示』，回傳結果代碼{TXN0006}
+為『R.禁止』，回傳結果代碼{TXN0007}
+四、UTY2004004：TACKBFAgreePayAcct
+檢核受益人是否有約定付款帳號 Url：{root}/TAapi/Utility/BFChkData/TACKBFAgreePayAcct
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+戶號\nBFNo	Int	V
+查詢日期\nQueryDate	Datetime	V
+查詢類別\nQueryType	String	V	1．選項\n01：投信付款-買回、02：投信付款-配息、\n21：投信付款-買回+集保付款、22：投信付款-配息+集保付款
+付款幣別\nPayCry	String	V
+基金代碼\nFundCode	String	V
+
+邏輯說明
+資料來源檔案
+取得TA受益人約定付款帳號查詢資料(TASysUtility.GetTABFAgreePayAcct)
+資料處理說明
+以傳入參數至【取得TA受益人約定付款帳號查詢資料(TASysUtility.GetTABFAgreePayAcct)】取得資料。若無資料，則判斷《查詢類別》
+為『01、21』，回傳結果代碼{TXN0049}
+為『02、22』，回傳結果代碼{TXN0011}
+五、UTY2004005：TACKBFAgreeDocEff
+檢核受益人是否有生效的同意聲明書 Url：{root}/TAapi/BaseUtility/BFChkData/TACKBFAgreeDocEff
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+戶號\nBFNo	Int	V
+查詢日期\nQueryDate	Datetime	V
+同意書類別\nAgrDocType	String	V	1．選項(OPT：TA-000071)
+
+邏輯說明
+資料來源檔案
+檢核受益人同意聲明書(BizUtility.ChkBFAgreeDocEff)
+資料處理說明
+以傳入參數至【檢核受益人同意聲明書(BizUtility.ChkBFAgreeDocEff)】取得資料
+若「檢核失敗否(IsCheckFailed)」為『True』，則判斷《同意書類別》
+為『1.非投資等級基金風險預告書』，回傳結果代碼{TXN0047}
+為『3.客戶自主申購聲明書』，回傳結果代碼{TXN0048}

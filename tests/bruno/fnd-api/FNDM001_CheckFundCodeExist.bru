@@ -1,0 +1,11 @@
+meta {
+  name: FNDM001 - Check Fund Code Exist
+  type: http
+  seq: 17
+}
+
+get {
+  url: http://localhost:8081/TAapi/Fund/TAFNDFundInfo/ChkData/TACKFundCodeExist?sys_co_id=C01&fund_code=FND001
+  body: none
+  auth: none
+}
