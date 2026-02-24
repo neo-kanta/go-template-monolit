@@ -2,6 +2,7 @@ package http
 
 import (
 	"go-transfer-agent/api-gateway/internal/config"
+	"go-transfer-agent/api-gateway/internal/grpcclient"
 	"go-transfer-agent/api-gateway/internal/http/handlers"
 	"go-transfer-agent/api-gateway/internal/http/middleware"
 
@@ -11,7 +12,7 @@ import (
 )
 
 // NewRouter creates and configures the Gin engine with all routes.
-func NewRouter(cfg *config.Config) *gin.Engine {
+func NewRouter(cfg *config.Config, fndClient *grpcclient.FNDClient) *gin.Engine {
 	gin.SetMode(cfg.GinMode)
 
 	r := gin.Default()
@@ -33,7 +34,11 @@ func NewRouter(cfg *config.Config) *gin.Engine {
 	protected.Use(middleware.JWTAuth(cfg.JWTSecret))
 	{
 		protected.GET("/auth/me", auth.Me)
-		protected.POST("/fnd/transactions", handlers.CreateTransaction)
+
+		// FND transaction endpoints — calls FND gRPC service
+		fndHandler := handlers.NewFNDHandler(fndClient)
+		protected.POST("/fnd/transactions", fndHandler.CreateTransaction)
+		protected.GET("/fnd/transactions", fndHandler.ListTransactions)
 	}
 
 	return r

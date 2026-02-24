@@ -74,6 +74,16 @@ definitions:
         example: admin
         type: string
     type: object
+  handlers.TransactionListResponse:
+    properties:
+      total:
+        example: 1
+        type: integer
+      transactions:
+        items:
+          $ref: '#/definitions/handlers.TransactionResponse'
+        type: array
+    type: object
   handlers.TransactionResponse:
     properties:
       amount:
@@ -104,7 +114,7 @@ definitions:
 host: localhost:8080
 info:
   contact: {}
-  description: POC API Gateway with JWT authentication for the Transfer Agent platform.
+  description: POC API Gateway with JWT authentication. Calls FND service via gRPC.
   title: Transfer Agent API Gateway
   version: 0.1.0
 paths:
@@ -158,10 +168,32 @@ paths:
       tags:
       - auth
   /api/v1/fnd/transactions:
+    get:
+      description: Returns a list of fund transactions from FND gRPC service.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.TransactionListResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: List fund transactions
+      tags:
+      - transactions
     post:
       consumes:
       - application/json
-      description: Submits a new fund transfer transaction. This is a POC stub.
+      description: Submits a new fund transfer transaction via FND gRPC service.
       parameters:
       - description: Transaction details
         in: body
@@ -184,9 +216,13 @@ paths:
           description: Unauthorized
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
       security:
       - BearerAuth: []
-      summary: Create fund transaction (stub)
+      summary: Create fund transaction
       tags:
       - transactions
   /api/v1/health:

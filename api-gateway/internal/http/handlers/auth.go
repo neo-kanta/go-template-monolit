@@ -44,8 +44,18 @@ var pocUsers = map[string]struct {
 	Password string
 	Role     string
 }{
-	"admin": {Password: "admin123", Role: "admin"},
-	"user":  {Password: "user123", Role: "user"},
+	"admin":    {Password: "admin123", Role: "admin"},
+	"user":     {Password: "user123", Role: "user"},
+	"manager1": {Password: "manager123", Role: "manager"},
+	"manager2": {Password: "manager234", Role: "manager"},
+	"maker1":   {Password: "maker123", Role: "maker"},
+	"maker2":   {Password: "maker234", Role: "maker"},
+	"checker1": {Password: "checker123", Role: "checker"},
+	"checker2": {Password: "checker234", Role: "checker"},
+	"viewer1":  {Password: "viewer123", Role: "viewer"},
+	"viewer2":  {Password: "viewer234", Role: "viewer"},
+	"auditor1": {Password: "auditor123", Role: "auditor"},
+	"auditor2": {Password: "auditor234", Role: "auditor"},
 }
 
 // --- handlers ---
