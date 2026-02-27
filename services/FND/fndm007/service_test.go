@@ -4,6 +4,8 @@ import (
 	"context"
 	"testing"
 
+	"github.com/stretchr/testify/require"
+
 	fndv1 "go-transfer-agent/common/gen/fnd/v1"
 	"go-transfer-agent/services/fnd/fndm007"
 	"go-transfer-agent/services/fnd/fndm007/db"
@@ -19,9 +21,7 @@ func TestService_TAFNDCustGroup_Integration(t *testing.T) {
 		&db.TAFNDCustGroup{},
 		&db.TAFNDCustGroupDtl{},
 	)
-	if err != nil {
-		t.Fatalf("Failed to migrate FNDM007 schemas: %v", err)
-	}
+	require.NoError(t, err)
 
 	// 2. Clean up
 	database.Exec(`DELETE FROM "TA_STD_TH"."TA_FND_CustGroupDtl"`)
@@ -55,9 +55,7 @@ func TestService_TAFNDCustGroup_Integration(t *testing.T) {
 	}
 
 	res, err := svc.TAFNDCustGroup(ctx, req)
-	if err != nil {
-		t.Fatalf("Service error: %v", err)
-	}
+	require.NoError(t, err)
 
 	// 5. Assertions
 	if len(res.ResultList) != 1 {

@@ -8,6 +8,7 @@ import (
 	"go-transfer-agent/services/fnd/fndm010/db"
 	"go-transfer-agent/services/fnd/shared"
 
+	"go-transfer-agent/common/platform/model"
 	"gorm.io/gorm"
 )
 
@@ -73,11 +74,116 @@ func (s *Service) TAFNDIShareFundFee(ctx context.Context, req *fndv1.TAFNDIShare
 		dto := &fndv1.IShareFundFeeListDTO{
 			SysCoId:       d.SysCoID,
 			FundCode:      d.FundCode,
-			RangeAmtAbove: d.RangeAmtAbove,
-			SubsFeeRate:   d.SubsFeeRate,
+			RangeAmtAbove: d.RangeAmtAbove.InexactFloat64(),
+			SubsFeeRate:   d.SubsFeeRate.InexactFloat64(),
 		}
 		resp.IShareFundFeeList = append(resp.IShareFundFeeList, dto)
 	}
 
 	return resp, nil
+}
+
+// SaveTAFNDIShareFundFee creates a new record in the _Edit table — POST endpoint.
+func (s *Service) SaveTAFNDIShareFundFee(ctx context.Context, req *fndv1.TAFNDIShareFundFeeRequest) (*fndv1.SaveResponse, error) {
+	s.log.Info("SaveTAFNDIShareFundFee called")
+	record := db.DTAFNDIShareFundFeeEdit{}
+	// Auth Context & 4-Eyes Principle
+	record.MakerID = shared.GetUsernameFromCtx(ctx)
+	record.Status = models.StatusPendingApproval
+
+	record.SysCoID = req.GetSysCoId()
+	record.FundCode = req.GetFundCode()
+	if err := s.db.WithContext(ctx).Create(&record).Error; err != nil {
+		s.log.Error("SaveTAFNDIShareFundFee failed", slog.Any("error", err))
+		return &fndv1.SaveResponse{Success: false, Message: err.Error(), ReturnCode: "DB_ERROR"}, nil
+	}
+	return &fndv1.SaveResponse{Success: true, Message: "Record created successfully", ReturnCode: "0000"}, nil
+}
+
+// UpdateTAFNDIShareFundFee updates an existing record in the _Edit table — PUT endpoint.
+func (s *Service) UpdateTAFNDIShareFundFee(ctx context.Context, req *fndv1.TAFNDIShareFundFeeRequest) (*fndv1.SaveResponse, error) {
+	s.log.Info("UpdateTAFNDIShareFundFee called")
+	record := db.DTAFNDIShareFundFeeEdit{}
+	record.SysCoID = req.GetSysCoId()
+	record.FundCode = req.GetFundCode()
+	result := s.db.WithContext(ctx).Model(&db.DTAFNDIShareFundFeeEdit{}).Where(`"DataID" = ?`, req.GetSysCoId()).Updates(&record)
+	if result.Error != nil {
+		s.log.Error("UpdateTAFNDIShareFundFee failed", slog.Any("error", result.Error))
+		return &fndv1.SaveResponse{Success: false, Message: result.Error.Error(), ReturnCode: "DB_ERROR"}, nil
+	}
+	if result.RowsAffected == 0 {
+		return &fndv1.SaveResponse{Success: false, Message: "No record found to update", ReturnCode: "NOT_FOUND"}, nil
+	}
+	return &fndv1.SaveResponse{Success: true, Message: "Record updated successfully", ReturnCode: "0000"}, nil
+}
+
+// DeleteTAFNDIShareFundFee removes a record from the _Edit table — DELETE endpoint.
+func (s *Service) DeleteTAFNDIShareFundFee(ctx context.Context, req *fndv1.DeleteRequest) (*fndv1.SaveResponse, error) {
+	s.log.Info("DeleteTAFNDIShareFundFee called",
+		slog.String("data_id", req.GetDataId()),
+		slog.String("data_flag", req.GetDataFlag()),
+	)
+	result := s.db.WithContext(ctx).Where(`"DataID" = ?`, req.GetDataId()).Delete(&db.DTAFNDIShareFundFeeEdit{})
+	if result.Error != nil {
+		s.log.Error("DeleteTAFNDIShareFundFee failed", slog.Any("error", result.Error))
+		return &fndv1.SaveResponse{Success: false, Message: result.Error.Error(), ReturnCode: "DB_ERROR"}, nil
+	}
+	if result.RowsAffected == 0 {
+		return &fndv1.SaveResponse{Success: false, Message: "No record found with the given DataID", ReturnCode: "NOT_FOUND"}, nil
+	}
+	return &fndv1.SaveResponse{Success: true, Message: "Record deleted successfully", ReturnCode: "0000"}, nil
+}
+
+// GetDataByDataID retrieves full data by DataID.
+func (s *Service) GetDataByDataID(ctx context.Context, req *fndv1.GetDataRequest) (*fndv1.TAFNDIShareFundFeeRequest, error) {
+	return &fndv1.TAFNDIShareFundFeeRequest{}, nil
+}
+
+// ApproveTAFNDIShareFundFee approves or rejects a pending record for the 4-Eyes Principle.
+func (s *Service) ApproveTAFNDIShareFundFee(ctx context.Context, req *fndv1.ApproveTAFNDIShareFundFeeRequest) (*fndv1.SaveResponse, error) {
+	s.log.Info("ApproveTAFNDIShareFundFee called", slog.String("data_id", req.GetDataId()))
+
+	var record db.DTAFNDIShareFundFeeEdit
+	result := s.db.WithContext(ctx).Where("\"DataID\" = ?", req.GetDataId()).First(&record)
+	
+	if result.Error != nil {
+		if result.Error == gorm.ErrRecordNotFound {
+			return &fndv1.SaveResponse{Success: false, Message: "Record not found", ReturnCode: "NOT_FOUND"}, nil
+		}
+		s.log.Error("ApproveTAFNDIShareFundFee DB error", slog.Any("error", result.Error))
+		return &fndv1.SaveResponse{Success: false, Message: result.Error.Error(), ReturnCode: "DB_ERROR"}, nil
+	}
+
+	// Only allow approval if status is PENDING_APPROVAL
+	if record.Status != models.StatusPendingApproval {
+		return &fndv1.SaveResponse{Success: false, Message: "Record is not in PENDING_APPROVAL status", ReturnCode: "INVALID_STATUS"}, nil
+	}
+
+	// 4-Eyes Principle constraint: Maker != Checker
+	checkerID := req.GetCheckerId()
+	if checkerID == "" {
+		checkerID = shared.GetUsernameFromCtx(ctx)
+	}
+
+	if record.MakerID != "" && checkerID != "" && record.MakerID == checkerID {
+		return &fndv1.SaveResponse{Success: false, Message: "4-Eyes Principle Violation: Maker cannot be the Checker", ReturnCode: "FOUR_EYES_VIOLATION"}, nil
+	}
+
+	// Process Approval/Rejection
+	if req.GetIsApproved() {
+		record.Status = models.StatusApproved
+	} else {
+		record.Status = models.StatusRejected
+	}
+	
+	record.CheckerID = &checkerID
+		remark := req.GetRemark()
+	record.Remark = &remark
+
+	if err := s.db.WithContext(ctx).Save(&record).Error; err != nil {
+		s.log.Error("Failed to update status", slog.Any("error", err))
+		return &fndv1.SaveResponse{Success: false, Message: "Failed to update record", ReturnCode: "DB_ERROR"}, nil
+	}
+
+	return &fndv1.SaveResponse{Success: true, Message: "Record reviewed successfully", ReturnCode: "0000"}, nil
 }

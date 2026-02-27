@@ -1,0 +1,15 @@
+meta {
+  name: FNDM005Service_TACKFNDCalEdit
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}/TAapi/BaseFund/TAFNDFundCalDate/ChkData/TACKFNDCalEdit?SysCoID=&CheckTimePoint=
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}

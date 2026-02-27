@@ -46,8 +46,31 @@ func NewHTTPServer(ctx context.Context, grpcAddr string, log *slog.Logger) (http
 		}),
 	)
 	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
-	if err := fndv1.RegisterFNDServiceHandlerFromEndpoint(ctx, gwMux, grpcAddr, opts); err != nil {
-		return nil, fmt.Errorf("failed to register gateway: %w", err)
+
+	// ─── Register all FND module gRPC-Gateway handlers ───
+	registrations := []struct {
+		name string
+		fn   func(context.Context, *runtime.ServeMux, string, []grpc.DialOption) error
+	}{
+		{"FNDService (FNDM001)", fndv1.RegisterFNDServiceHandlerFromEndpoint},
+		{"FNDM002Service", fndv1.RegisterFNDM002ServiceHandlerFromEndpoint},
+		{"FNDM003Service", fndv1.RegisterFNDM003ServiceHandlerFromEndpoint},
+		{"FNDM004Service", fndv1.RegisterFNDM004ServiceHandlerFromEndpoint},
+		{"FNDM005Service", fndv1.RegisterFNDM005ServiceHandlerFromEndpoint},
+		{"FNDM006Service", fndv1.RegisterFNDM006ServiceHandlerFromEndpoint},
+		{"FNDM007Service", fndv1.RegisterFNDM007ServiceHandlerFromEndpoint},
+		{"FNDM008Service", fndv1.RegisterFNDM008ServiceHandlerFromEndpoint},
+		{"FNDM009Service", fndv1.RegisterFNDM009ServiceHandlerFromEndpoint},
+		{"FNDM010Service", fndv1.RegisterFNDM010ServiceHandlerFromEndpoint},
+		{"FNDM011Service", fndv1.RegisterFNDM011ServiceHandlerFromEndpoint},
+		{"FNDM012Service", fndv1.RegisterFNDM012ServiceHandlerFromEndpoint},
+		{"FNDM013Service", fndv1.RegisterFNDM013ServiceHandlerFromEndpoint},
+	}
+
+	for _, r := range registrations {
+		if err := r.fn(ctx, gwMux, grpcAddr, opts); err != nil {
+			return nil, fmt.Errorf("failed to register gateway for %s: %w", r.name, err)
+		}
 	}
 
 	// ─── Swagger UI ───
@@ -78,7 +101,7 @@ func NewHTTPServer(ctx context.Context, grpcAddr string, log *slog.Logger) (http
 
 	// Forward API routes to gRPC-Gateway
 	mux.Handle("/TAapi/", gwMux)
-	mux.Handle("/api/", gwMux)
+	mux.Handle("/BaseFund/", gwMux)
 
 	// ─── CORS middleware (for Bruno/Postman) ───
 	handler := corsMiddleware(mux)
@@ -86,6 +109,7 @@ func NewHTTPServer(ctx context.Context, grpcAddr string, log *slog.Logger) (http
 	log.Info("HTTP gateway configured",
 		slog.String("grpc_target", grpcAddr),
 		slog.String("swagger_ui", "/swagger/"),
+		slog.Int("services", len(registrations)),
 	)
 
 	return handler, nil

@@ -4,6 +4,9 @@ import (
 	"context"
 	"testing"
 
+	"github.com/shopspring/decimal"
+	"github.com/stretchr/testify/require"
+
 	fndv1 "go-transfer-agent/common/gen/fnd/v1"
 	"go-transfer-agent/services/fnd/fndm009"
 	"go-transfer-agent/services/fnd/fndm009/db"
@@ -21,9 +24,7 @@ func TestService_TAFNDFavDisc_Integration(t *testing.T) {
 		&db.TAFNDFavDiscType{},
 		&db.TAFNDFavDiscTypeDtl{},
 	)
-	if err != nil {
-		t.Fatalf("Failed to migrate FNDM009 schemas: %v", err)
-	}
+	require.NoError(t, err)
 
 	// 2. Clean up
 	database.Exec(`DELETE FROM "TA_STD_TH"."TA_FND_FavDiscTypeDtl"`)
@@ -61,9 +62,9 @@ func TestService_TAFNDFavDisc_Integration(t *testing.T) {
 	}
 
 	dtls := []db.TAFNDFavDiscTypeDtl{
-		{SysCoID: "C01", CusIDCode: "CUST1", DiscItem: "01", TxCry: "THB", RangeFeeRate: 0.5},
-		{SysCoID: "C01", CusIDCode: "CUST1", DiscItem: "02", TxCry: "THB", RangeFeeRate: 0.6},
-		{SysCoID: "C01", CusIDCode: "CUST1", DiscItem: "03", TxCry: "THB", RangeFeeRate: 0.7},
+		{SysCoID: "C01", CusIDCode: "CUST1", DiscItem: "01", TxCry: "THB", RangeFeeRate: decimal.NewFromFloat(0.5).RoundBank(4)},
+		{SysCoID: "C01", CusIDCode: "CUST1", DiscItem: "02", TxCry: "THB", RangeFeeRate: decimal.NewFromFloat(0.6).RoundBank(4)},
+		{SysCoID: "C01", CusIDCode: "CUST1", DiscItem: "03", TxCry: "THB", RangeFeeRate: decimal.NewFromFloat(0.7).RoundBank(4)},
 	}
 	if err := database.Create(&dtls).Error; err != nil {
 		t.Fatalf("Failed to seed dtls: %v", err)
@@ -79,9 +80,7 @@ func TestService_TAFNDFavDisc_Integration(t *testing.T) {
 	}
 
 	res, err := svc.TAFNDFavDisc(ctx, req)
-	if err != nil {
-		t.Fatalf("Service error: %v", err)
-	}
+	require.NoError(t, err)
 
 	// 5. Assertions
 	if len(res.ResultList) != 1 {

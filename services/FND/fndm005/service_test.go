@@ -5,6 +5,9 @@ import (
 	"testing"
 	"time"
 
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+
 	fndv1 "go-transfer-agent/common/gen/fnd/v1"
 	"go-transfer-agent/services/fnd/fndm005"
 	"go-transfer-agent/services/fnd/fndm005/db"
@@ -21,9 +24,7 @@ func TestService_TAFNDFundCalDate_Integration(t *testing.T) {
 		&db.TAFNDFundCalMemo{},
 		&db.TAFNDFundCalDtl{},
 	)
-	if err != nil {
-		t.Fatalf("Failed to migrate FNDM005 schemas: %v", err)
-	}
+	require.NoError(t, err)
 
 	// 2. Clean up
 	database.Exec(`DELETE FROM "TA_STD_TH"."TA_FND_FundCalDtl"`)
@@ -43,7 +44,7 @@ func TestService_TAFNDFundCalDate_Integration(t *testing.T) {
 
 	calDate, _ := time.Parse("2006-01-02", "2026-12-25")
 	memos := []db.TAFNDFundCalMemo{
-		{SysCoID: "C01", CalYear: "2026", FNDCalType: "HLDY", FundCry: "THB", CalDate: calDate, Remark: "Christmas"},
+		{SysCoID: "C01", CalYear: "2026", FNDCalType: "HLDY", FundCry: "THB", CalDate: calDate},
 	}
 	if err := database.Create(&memos).Error; err != nil {
 		t.Fatalf("Failed to seed memos: %v", err)
@@ -69,33 +70,19 @@ func TestService_TAFNDFundCalDate_Integration(t *testing.T) {
 	}
 
 	res, err := svc.TAFNDFundCalDate(ctx, req)
-	if err != nil {
-		t.Fatalf("Service error: %v", err)
-	}
+	require.NoError(t, err)
 
 	// 5. Assertions
-	if len(res.ResultList) != 1 {
-		t.Fatalf("Expected 1 master result, got %d", len(res.ResultList))
-	}
-	if res.ResultList[0].CalYear != "2026" {
-		t.Errorf("Expected CalYear '2026', got '%v'", res.ResultList[0].CalYear)
-	}
+	require.Len(t, res.ResultList, 1, "Expected 1 master result")
+	assert.Equal(t, "2026", res.ResultList[0].CalYear, "Expected CalYear '2026'")
 
-	if len(res.FundClosedMemoList) != 1 {
-		t.Fatalf("Expected 1 memo, got %d", len(res.FundClosedMemoList))
-	}
-	if res.FundClosedMemoList[0].Remark != "Christmas" {
-		t.Errorf("Expected Remark 'Christmas', got '%v'", res.FundClosedMemoList[0].Remark)
-	}
+	require.Len(t, res.FundClosedMemoList, 1, "Expected 1 memo")
+	assert.Equal(t, "Christmas", res.FundClosedMemoList[0].Remark, "Expected Remark 'Christmas'")
 
-	if len(res.FundClosedDateFundList) != 2 {
-		t.Fatalf("Expected 2 fund closes, got %d", len(res.FundClosedDateFundList))
-	}
+	require.Len(t, res.FundClosedDateFundList, 2, "Expected 2 fund closes")
 	fMap := map[string]bool{}
 	for _, f := range res.FundClosedDateFundList {
 		fMap[f.PrtFundCode] = true
 	}
-	if !fMap["F1"] || !fMap["F2"] {
-		t.Errorf("Expected F1 and F2, got: %v", fMap)
-	}
+	assert.True(t, fMap["F1"] && fMap["F2"], "Expected F1 and F2")
 }

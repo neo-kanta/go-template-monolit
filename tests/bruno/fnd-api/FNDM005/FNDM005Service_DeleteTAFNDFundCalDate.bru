@@ -1,0 +1,15 @@
+meta {
+  name: FNDM005Service_DeleteTAFNDFundCalDate
+  type: http
+  seq: 1
+}
+
+delete {
+  url: {{base_url}}/TAapi/BaseFund/TAFNDFundCalDate?DataID=&DataFlag=
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}

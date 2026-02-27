@@ -1,0 +1,15 @@
+meta {
+  name: FNDM004Service_TAFNDFundAgent
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}/TAapi/BaseFund/TAFNDFundAgent?SysCoID=&PrtFundCode=
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}

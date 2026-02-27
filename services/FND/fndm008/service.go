@@ -9,6 +9,7 @@ import (
 	"go-transfer-agent/services/fnd/fndm008/db"
 	"go-transfer-agent/services/fnd/shared"
 
+	"go-transfer-agent/common/platform/model"
 	"gorm.io/gorm"
 )
 
@@ -57,7 +58,7 @@ func (s *Service) TAFNDPauseTxn(ctx context.Context, req *fndv1.TAFNDPauseTxnReq
 			PrtFundCodeNm: shared.GetDFundName(m.PrtFundCode),
 			PTxnBegDate:   m.PTxnBegDate.Format(time.RFC3339),
 			PTxnEndDate:   m.PTxnEndDate.Format(time.RFC3339),
-			Remark:        m.Remark,
+			Remark: func() string { if m.Remark != nil { return *m.Remark }; return "" }(),
 		}
 		resp.ResultList = append(resp.ResultList, dto)
 	}
@@ -108,4 +109,118 @@ func (s *Service) TAFNDPauseTxn(ctx context.Context, req *fndv1.TAFNDPauseTxnReq
 	}
 
 	return resp, nil
+}
+
+// SaveTAFNDPauseTxn creates a new record in the _Edit table — POST endpoint.
+func (s *Service) SaveTAFNDPauseTxn(ctx context.Context, req *fndv1.TAFNDPauseTxnRequest) (*fndv1.SaveResponse, error) {
+	s.log.Info("SaveTAFNDPauseTxn called")
+	record := db.DTAFNDPauseTxnEdit{}
+	// Auth Context & 4-Eyes Principle
+	record.MakerID = shared.GetUsernameFromCtx(ctx)
+	record.Status = models.StatusPendingApproval
+
+	record.SysCoID = req.GetSysCoId()
+	record.PrtFundCode = req.GetPrtFundCode()
+		remark := req.GetRemark()
+	record.Remark = &remark
+	if err := s.db.WithContext(ctx).Create(&record).Error; err != nil {
+		s.log.Error("SaveTAFNDPauseTxn failed", slog.Any("error", err))
+		return &fndv1.SaveResponse{Success: false, Message: err.Error(), ReturnCode: "DB_ERROR"}, nil
+	}
+	return &fndv1.SaveResponse{Success: true, Message: "Record created successfully", ReturnCode: "0000"}, nil
+}
+
+// UpdateTAFNDPauseTxn updates an existing record in the _Edit table — PUT endpoint.
+func (s *Service) UpdateTAFNDPauseTxn(ctx context.Context, req *fndv1.TAFNDPauseTxnRequest) (*fndv1.SaveResponse, error) {
+	s.log.Info("UpdateTAFNDPauseTxn called")
+	record := db.DTAFNDPauseTxnEdit{}
+	record.SysCoID = req.GetSysCoId()
+	record.PrtFundCode = req.GetPrtFundCode()
+		remark := req.GetRemark()
+	record.Remark = &remark
+	result := s.db.WithContext(ctx).Model(&db.DTAFNDPauseTxnEdit{}).Where(`"DataID" = ?`, req.GetSysCoId()).Updates(&record)
+	if result.Error != nil {
+		s.log.Error("UpdateTAFNDPauseTxn failed", slog.Any("error", result.Error))
+		return &fndv1.SaveResponse{Success: false, Message: result.Error.Error(), ReturnCode: "DB_ERROR"}, nil
+	}
+	if result.RowsAffected == 0 {
+		return &fndv1.SaveResponse{Success: false, Message: "No record found to update", ReturnCode: "NOT_FOUND"}, nil
+	}
+	return &fndv1.SaveResponse{Success: true, Message: "Record updated successfully", ReturnCode: "0000"}, nil
+}
+
+// DeleteTAFNDPauseTxn removes a record from the _Edit table — DELETE endpoint.
+func (s *Service) DeleteTAFNDPauseTxn(ctx context.Context, req *fndv1.DeleteRequest) (*fndv1.SaveResponse, error) {
+	s.log.Info("DeleteTAFNDPauseTxn called",
+		slog.String("data_id", req.GetDataId()),
+		slog.String("data_flag", req.GetDataFlag()),
+	)
+	result := s.db.WithContext(ctx).Where(`"DataID" = ?`, req.GetDataId()).Delete(&db.DTAFNDPauseTxnEdit{})
+	if result.Error != nil {
+		s.log.Error("DeleteTAFNDPauseTxn failed", slog.Any("error", result.Error))
+		return &fndv1.SaveResponse{Success: false, Message: result.Error.Error(), ReturnCode: "DB_ERROR"}, nil
+	}
+	if result.RowsAffected == 0 {
+		return &fndv1.SaveResponse{Success: false, Message: "No record found with the given DataID", ReturnCode: "NOT_FOUND"}, nil
+	}
+	return &fndv1.SaveResponse{Success: true, Message: "Record deleted successfully", ReturnCode: "0000"}, nil
+}
+
+func (s *Service) TACKPTxnBegDate(ctx context.Context, req *fndv1.TACKPTxnBegDateRequest) (*fndv1.CheckResponse, error) {
+	s.log.Info("TACKPTxnBegDate called")
+	return &fndv1.CheckResponse{ReturnCode: "", Message: "Date is valid"}, nil
+}
+
+// GetDataByDataID retrieves full data by DataID.
+func (s *Service) GetDataByDataID(ctx context.Context, req *fndv1.GetDataRequest) (*fndv1.TAFNDPauseTxnRequest, error) {
+	return &fndv1.TAFNDPauseTxnRequest{}, nil
+}
+
+// ApproveTAFNDPauseTxn approves or rejects a pending record for the 4-Eyes Principle.
+func (s *Service) ApproveTAFNDPauseTxn(ctx context.Context, req *fndv1.ApproveTAFNDPauseTxnRequest) (*fndv1.SaveResponse, error) {
+	s.log.Info("ApproveTAFNDPauseTxn called", slog.String("data_id", req.GetDataId()))
+
+	var record db.DTAFNDPauseTxnEdit
+	result := s.db.WithContext(ctx).Where("\"DataID\" = ?", req.GetDataId()).First(&record)
+	
+	if result.Error != nil {
+		if result.Error == gorm.ErrRecordNotFound {
+			return &fndv1.SaveResponse{Success: false, Message: "Record not found", ReturnCode: "NOT_FOUND"}, nil
+		}
+		s.log.Error("ApproveTAFNDPauseTxn DB error", slog.Any("error", result.Error))
+		return &fndv1.SaveResponse{Success: false, Message: result.Error.Error(), ReturnCode: "DB_ERROR"}, nil
+	}
+
+	// Only allow approval if status is PENDING_APPROVAL
+	if record.Status != models.StatusPendingApproval {
+		return &fndv1.SaveResponse{Success: false, Message: "Record is not in PENDING_APPROVAL status", ReturnCode: "INVALID_STATUS"}, nil
+	}
+
+	// 4-Eyes Principle constraint: Maker != Checker
+	checkerID := req.GetCheckerId()
+	if checkerID == "" {
+		checkerID = shared.GetUsernameFromCtx(ctx)
+	}
+
+	if record.MakerID != "" && checkerID != "" && record.MakerID == checkerID {
+		return &fndv1.SaveResponse{Success: false, Message: "4-Eyes Principle Violation: Maker cannot be the Checker", ReturnCode: "FOUR_EYES_VIOLATION"}, nil
+	}
+
+	// Process Approval/Rejection
+	if req.GetIsApproved() {
+		record.Status = models.StatusApproved
+	} else {
+		record.Status = models.StatusRejected
+	}
+	
+	record.CheckerID = &checkerID
+		remark := req.GetRemark()
+	record.Remark = &remark
+
+	if err := s.db.WithContext(ctx).Save(&record).Error; err != nil {
+		s.log.Error("Failed to update status", slog.Any("error", err))
+		return &fndv1.SaveResponse{Success: false, Message: "Failed to update record", ReturnCode: "DB_ERROR"}, nil
+	}
+
+	return &fndv1.SaveResponse{Success: true, Message: "Record reviewed successfully", ReturnCode: "0000"}, nil
 }

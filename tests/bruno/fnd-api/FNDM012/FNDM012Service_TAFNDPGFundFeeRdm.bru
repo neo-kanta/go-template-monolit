@@ -1,0 +1,15 @@
+meta {
+  name: FNDM012Service_TAFNDPGFundFeeRdm
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}/TAapi/Fund/TAFNDPGFundFeeRdm?SysCoID=&PrtFundCode=&RdmCalcBegDate=&FeeRate=
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}

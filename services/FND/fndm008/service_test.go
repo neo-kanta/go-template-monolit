@@ -5,6 +5,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/stretchr/testify/require"
+
 	fndv1 "go-transfer-agent/common/gen/fnd/v1"
 	"go-transfer-agent/services/fnd/fndm008"
 	"go-transfer-agent/services/fnd/fndm008/db"
@@ -21,9 +23,7 @@ func TestService_TAFNDPauseTxn_Integration(t *testing.T) {
 		&db.DTAFNDPauseTxnCry{},
 		&db.DTAFNDPauseTxnDtl{},
 	)
-	if err != nil {
-		t.Fatalf("Failed to migrate FNDM008 schemas: %v", err)
-	}
+	require.NoError(t, err)
 
 	// 2. Clean up
 	database.Exec(`DELETE FROM "TA_STD_TH"."DTA_FND_PauseTxnDtl"`)
@@ -36,7 +36,7 @@ func TestService_TAFNDPauseTxn_Integration(t *testing.T) {
 		SysCoID:     "C01",
 		PrtFundCode: "F1",
 		PTxnBegDate: begDate,
-		Remark:      "Test Pause",
+		
 	}
 	if err := database.Create(&master).Error; err != nil {
 		t.Fatalf("Failed to seed master: %v", err)
@@ -68,9 +68,7 @@ func TestService_TAFNDPauseTxn_Integration(t *testing.T) {
 	}
 
 	res, err := svc.TAFNDPauseTxn(ctx, req)
-	if err != nil {
-		t.Fatalf("Service error: %v", err)
-	}
+	require.NoError(t, err)
 
 	// 5. Assertions
 	if len(res.ResultList) != 1 {

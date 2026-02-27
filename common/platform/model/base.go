@@ -37,13 +37,18 @@ type BaseModel struct {
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at,omitempty"`
 }
 
-// MakerCheckerModel extends BaseModel with 4-eyes principle fields
+// MakerCheckerFields contains 4-eyes principle fields without an ID (for embedding in composite PK models)
+type MakerCheckerFields struct {
+	MakerID   string         `gorm:"column:MakerID;type:varchar(50);not null;default:''" json:"maker_id"`
+	CheckerID *string        `gorm:"column:CheckerID;type:varchar(50)" json:"checker_id,omitempty"`
+	Status    ApprovalStatus `gorm:"column:Status;type:varchar(20);not null;default:'DRAFT'" json:"status"`
+	Remark    *string        `gorm:"column:Remark;type:text" json:"remark,omitempty"`
+}
+
+// MakerCheckerModel extends BaseModel with MakerCheckerFields
 type MakerCheckerModel struct {
 	BaseModel
-	MakerID   string         `gorm:"type:varchar(50);not null" json:"maker_id"`
-	CheckerID *string        `gorm:"type:varchar(50)" json:"checker_id,omitempty"`
-	Status    ApprovalStatus `gorm:"type:varchar(20);default:'DRAFT'" json:"status"`
-	Remark    *string        `gorm:"type:text" json:"remark,omitempty"`
+	MakerCheckerFields
 }
 
 const THBPrecision = 4

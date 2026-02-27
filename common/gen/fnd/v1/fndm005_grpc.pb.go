@@ -19,7 +19,12 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	FNDM005Service_TAFNDFundCalDate_FullMethodName = "/fnd.v1.FNDM005Service/TAFNDFundCalDate"
+	FNDM005Service_TAFNDFundCalDate_FullMethodName       = "/fnd.v1.FNDM005Service/TAFNDFundCalDate"
+	FNDM005Service_SaveTAFNDFundCalDate_FullMethodName   = "/fnd.v1.FNDM005Service/SaveTAFNDFundCalDate"
+	FNDM005Service_UpdateTAFNDFundCalDate_FullMethodName = "/fnd.v1.FNDM005Service/UpdateTAFNDFundCalDate"
+	FNDM005Service_DeleteTAFNDFundCalDate_FullMethodName = "/fnd.v1.FNDM005Service/DeleteTAFNDFundCalDate"
+	FNDM005Service_TACKFNDCalEdit_FullMethodName         = "/fnd.v1.FNDM005Service/TACKFNDCalEdit"
+	FNDM005Service_GetDataByDataID_FullMethodName        = "/fnd.v1.FNDM005Service/GetDataByDataID"
 )
 
 // FNDM005ServiceClient is the client API for FNDM005Service service.
@@ -31,6 +36,12 @@ const (
 // ═══════════════════════════════════════════════════════════════════
 type FNDM005ServiceClient interface {
 	TAFNDFundCalDate(ctx context.Context, in *TAFNDFundCalDateRequest, opts ...grpc.CallOption) (*TAFNDFundCalDateResponse, error)
+	SaveTAFNDFundCalDate(ctx context.Context, in *TAFNDFundCalDateRequest, opts ...grpc.CallOption) (*SaveResponse, error)
+	UpdateTAFNDFundCalDate(ctx context.Context, in *TAFNDFundCalDateRequest, opts ...grpc.CallOption) (*SaveResponse, error)
+	DeleteTAFNDFundCalDate(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*SaveResponse, error)
+	TACKFNDCalEdit(ctx context.Context, in *TACKFNDCalEditRequest, opts ...grpc.CallOption) (*CheckResponse, error)
+	// GET Data by DataID (Maintain Query)
+	GetDataByDataID(ctx context.Context, in *GetDataRequest, opts ...grpc.CallOption) (*TAFNDFundCalDateRequest, error)
 }
 
 type fNDM005ServiceClient struct {
@@ -51,6 +62,56 @@ func (c *fNDM005ServiceClient) TAFNDFundCalDate(ctx context.Context, in *TAFNDFu
 	return out, nil
 }
 
+func (c *fNDM005ServiceClient) SaveTAFNDFundCalDate(ctx context.Context, in *TAFNDFundCalDateRequest, opts ...grpc.CallOption) (*SaveResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SaveResponse)
+	err := c.cc.Invoke(ctx, FNDM005Service_SaveTAFNDFundCalDate_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fNDM005ServiceClient) UpdateTAFNDFundCalDate(ctx context.Context, in *TAFNDFundCalDateRequest, opts ...grpc.CallOption) (*SaveResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SaveResponse)
+	err := c.cc.Invoke(ctx, FNDM005Service_UpdateTAFNDFundCalDate_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fNDM005ServiceClient) DeleteTAFNDFundCalDate(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*SaveResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SaveResponse)
+	err := c.cc.Invoke(ctx, FNDM005Service_DeleteTAFNDFundCalDate_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fNDM005ServiceClient) TACKFNDCalEdit(ctx context.Context, in *TACKFNDCalEditRequest, opts ...grpc.CallOption) (*CheckResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CheckResponse)
+	err := c.cc.Invoke(ctx, FNDM005Service_TACKFNDCalEdit_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fNDM005ServiceClient) GetDataByDataID(ctx context.Context, in *GetDataRequest, opts ...grpc.CallOption) (*TAFNDFundCalDateRequest, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(TAFNDFundCalDateRequest)
+	err := c.cc.Invoke(ctx, FNDM005Service_GetDataByDataID_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // FNDM005ServiceServer is the server API for FNDM005Service service.
 // All implementations must embed UnimplementedFNDM005ServiceServer
 // for forward compatibility.
@@ -60,6 +121,12 @@ func (c *fNDM005ServiceClient) TAFNDFundCalDate(ctx context.Context, in *TAFNDFu
 // ═══════════════════════════════════════════════════════════════════
 type FNDM005ServiceServer interface {
 	TAFNDFundCalDate(context.Context, *TAFNDFundCalDateRequest) (*TAFNDFundCalDateResponse, error)
+	SaveTAFNDFundCalDate(context.Context, *TAFNDFundCalDateRequest) (*SaveResponse, error)
+	UpdateTAFNDFundCalDate(context.Context, *TAFNDFundCalDateRequest) (*SaveResponse, error)
+	DeleteTAFNDFundCalDate(context.Context, *DeleteRequest) (*SaveResponse, error)
+	TACKFNDCalEdit(context.Context, *TACKFNDCalEditRequest) (*CheckResponse, error)
+	// GET Data by DataID (Maintain Query)
+	GetDataByDataID(context.Context, *GetDataRequest) (*TAFNDFundCalDateRequest, error)
 	mustEmbedUnimplementedFNDM005ServiceServer()
 }
 
@@ -72,6 +139,21 @@ type UnimplementedFNDM005ServiceServer struct{}
 
 func (UnimplementedFNDM005ServiceServer) TAFNDFundCalDate(context.Context, *TAFNDFundCalDateRequest) (*TAFNDFundCalDateResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method TAFNDFundCalDate not implemented")
+}
+func (UnimplementedFNDM005ServiceServer) SaveTAFNDFundCalDate(context.Context, *TAFNDFundCalDateRequest) (*SaveResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method SaveTAFNDFundCalDate not implemented")
+}
+func (UnimplementedFNDM005ServiceServer) UpdateTAFNDFundCalDate(context.Context, *TAFNDFundCalDateRequest) (*SaveResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateTAFNDFundCalDate not implemented")
+}
+func (UnimplementedFNDM005ServiceServer) DeleteTAFNDFundCalDate(context.Context, *DeleteRequest) (*SaveResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteTAFNDFundCalDate not implemented")
+}
+func (UnimplementedFNDM005ServiceServer) TACKFNDCalEdit(context.Context, *TACKFNDCalEditRequest) (*CheckResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method TACKFNDCalEdit not implemented")
+}
+func (UnimplementedFNDM005ServiceServer) GetDataByDataID(context.Context, *GetDataRequest) (*TAFNDFundCalDateRequest, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetDataByDataID not implemented")
 }
 func (UnimplementedFNDM005ServiceServer) mustEmbedUnimplementedFNDM005ServiceServer() {}
 func (UnimplementedFNDM005ServiceServer) testEmbeddedByValue()                        {}
@@ -112,6 +194,96 @@ func _FNDM005Service_TAFNDFundCalDate_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _FNDM005Service_SaveTAFNDFundCalDate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TAFNDFundCalDateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FNDM005ServiceServer).SaveTAFNDFundCalDate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FNDM005Service_SaveTAFNDFundCalDate_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FNDM005ServiceServer).SaveTAFNDFundCalDate(ctx, req.(*TAFNDFundCalDateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FNDM005Service_UpdateTAFNDFundCalDate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TAFNDFundCalDateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FNDM005ServiceServer).UpdateTAFNDFundCalDate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FNDM005Service_UpdateTAFNDFundCalDate_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FNDM005ServiceServer).UpdateTAFNDFundCalDate(ctx, req.(*TAFNDFundCalDateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FNDM005Service_DeleteTAFNDFundCalDate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FNDM005ServiceServer).DeleteTAFNDFundCalDate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FNDM005Service_DeleteTAFNDFundCalDate_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FNDM005ServiceServer).DeleteTAFNDFundCalDate(ctx, req.(*DeleteRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FNDM005Service_TACKFNDCalEdit_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TACKFNDCalEditRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FNDM005ServiceServer).TACKFNDCalEdit(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FNDM005Service_TACKFNDCalEdit_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FNDM005ServiceServer).TACKFNDCalEdit(ctx, req.(*TACKFNDCalEditRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FNDM005Service_GetDataByDataID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FNDM005ServiceServer).GetDataByDataID(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FNDM005Service_GetDataByDataID_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FNDM005ServiceServer).GetDataByDataID(ctx, req.(*GetDataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // FNDM005Service_ServiceDesc is the grpc.ServiceDesc for FNDM005Service service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -122,6 +294,26 @@ var FNDM005Service_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "TAFNDFundCalDate",
 			Handler:    _FNDM005Service_TAFNDFundCalDate_Handler,
+		},
+		{
+			MethodName: "SaveTAFNDFundCalDate",
+			Handler:    _FNDM005Service_SaveTAFNDFundCalDate_Handler,
+		},
+		{
+			MethodName: "UpdateTAFNDFundCalDate",
+			Handler:    _FNDM005Service_UpdateTAFNDFundCalDate_Handler,
+		},
+		{
+			MethodName: "DeleteTAFNDFundCalDate",
+			Handler:    _FNDM005Service_DeleteTAFNDFundCalDate_Handler,
+		},
+		{
+			MethodName: "TACKFNDCalEdit",
+			Handler:    _FNDM005Service_TACKFNDCalEdit_Handler,
+		},
+		{
+			MethodName: "GetDataByDataID",
+			Handler:    _FNDM005Service_GetDataByDataID_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

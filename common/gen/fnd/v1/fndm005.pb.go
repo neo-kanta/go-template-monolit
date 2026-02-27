@@ -7,6 +7,7 @@
 package fndv1
 
 import (
+	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -426,11 +427,140 @@ func (x *FundClosedDateFundListDTO) GetCalDate() string {
 	return ""
 }
 
+// KFNDM00502
+type TACKFNDCalEditRequest struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	SysCoId        string                 `protobuf:"bytes,1,opt,name=sys_co_id,json=SysCoID,proto3" json:"sys_co_id,omitempty"`
+	CheckTimePoint string                 `protobuf:"bytes,2,opt,name=check_time_point,json=CheckTimePoint,proto3" json:"check_time_point,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *TACKFNDCalEditRequest) Reset() {
+	*x = TACKFNDCalEditRequest{}
+	mi := &file_fnd_v1_fndm005_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TACKFNDCalEditRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TACKFNDCalEditRequest) ProtoMessage() {}
+
+func (x *TACKFNDCalEditRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_fnd_v1_fndm005_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TACKFNDCalEditRequest.ProtoReflect.Descriptor instead.
+func (*TACKFNDCalEditRequest) Descriptor() ([]byte, []int) {
+	return file_fnd_v1_fndm005_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *TACKFNDCalEditRequest) GetSysCoId() string {
+	if x != nil {
+		return x.SysCoId
+	}
+	return ""
+}
+
+func (x *TACKFNDCalEditRequest) GetCheckTimePoint() string {
+	if x != nil {
+		return x.CheckTimePoint
+	}
+	return ""
+}
+
+type ApproveTAFNDFundCalDateRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	SysCoId       string                 `protobuf:"bytes,1,opt,name=sys_co_id,json=SysCoID,proto3" json:"sys_co_id,omitempty"`
+	DataId        string                 `protobuf:"bytes,2,opt,name=data_id,json=DataID,proto3" json:"data_id,omitempty"`
+	CheckerId     string                 `protobuf:"bytes,3,opt,name=checker_id,json=CheckerID,proto3" json:"checker_id,omitempty"`
+	IsApproved    bool                   `protobuf:"varint,4,opt,name=is_approved,json=IsApproved,proto3" json:"is_approved,omitempty"`
+	Remark        string                 `protobuf:"bytes,5,opt,name=remark,json=Remark,proto3" json:"remark,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ApproveTAFNDFundCalDateRequest) Reset() {
+	*x = ApproveTAFNDFundCalDateRequest{}
+	mi := &file_fnd_v1_fndm005_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ApproveTAFNDFundCalDateRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ApproveTAFNDFundCalDateRequest) ProtoMessage() {}
+
+func (x *ApproveTAFNDFundCalDateRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_fnd_v1_fndm005_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ApproveTAFNDFundCalDateRequest.ProtoReflect.Descriptor instead.
+func (*ApproveTAFNDFundCalDateRequest) Descriptor() ([]byte, []int) {
+	return file_fnd_v1_fndm005_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *ApproveTAFNDFundCalDateRequest) GetSysCoId() string {
+	if x != nil {
+		return x.SysCoId
+	}
+	return ""
+}
+
+func (x *ApproveTAFNDFundCalDateRequest) GetDataId() string {
+	if x != nil {
+		return x.DataId
+	}
+	return ""
+}
+
+func (x *ApproveTAFNDFundCalDateRequest) GetCheckerId() string {
+	if x != nil {
+		return x.CheckerId
+	}
+	return ""
+}
+
+func (x *ApproveTAFNDFundCalDateRequest) GetIsApproved() bool {
+	if x != nil {
+		return x.IsApproved
+	}
+	return false
+}
+
+func (x *ApproveTAFNDFundCalDateRequest) GetRemark() string {
+	if x != nil {
+		return x.Remark
+	}
+	return ""
+}
+
 var File_fnd_v1_fndm005_proto protoreflect.FileDescriptor
 
 const file_fnd_v1_fndm005_proto_rawDesc = "" +
 	"\n" +
-	"\x14fnd/v1/fndm005.proto\x12\x06fnd.v1\x1a\x1cgoogle/api/annotations.proto\"\xc2\x02\n" +
+	"\x14fnd/v1/fndm005.proto\x12\x06fnd.v1\x1a\x1cgoogle/api/annotations.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\x1a\x13fnd/v1/common.proto\"\xc2\x02\n" +
 	"\x17TAFNDFundCalDateRequest\x12\x1a\n" +
 	"\tsys_co_id\x18\x01 \x01(\tR\aSysCoID\x12\x19\n" +
 	"\bcal_year\x18\x02 \x01(\tR\aCalYear\x12 \n" +
@@ -468,9 +598,31 @@ const file_fnd_v1_fndm005_proto_rawDesc = "" +
 	"\bfund_cry\x18\x04 \x01(\tR\aFundCry\x12\"\n" +
 	"\rprt_fund_code\x18\x05 \x01(\tR\vPrtFundCode\x12'\n" +
 	"\x10prt_fund_code_nm\x18\x06 \x01(\tR\rPrtFundCodeNm\x12\x19\n" +
-	"\bcal_date\x18\a \x01(\tR\aCalDate2\x91\x01\n" +
-	"\x0eFNDM005Service\x12\x7f\n" +
-	"\x10TAFNDFundCalDate\x12\x1f.fnd.v1.TAFNDFundCalDateRequest\x1a .fnd.v1.TAFNDFundCalDateResponse\"(\x82\xd3\xe4\x93\x02\"\x12 /TAapi/BaseFund/TAFNDFundCalDateB+Z)go-transfer-agent/common/gen/fnd/v1;fndv1b\x06proto3"
+	"\bcal_date\x18\a \x01(\tR\aCalDate\"]\n" +
+	"\x15TACKFNDCalEditRequest\x12\x1a\n" +
+	"\tsys_co_id\x18\x01 \x01(\tR\aSysCoID\x12(\n" +
+	"\x10check_time_point\x18\x02 \x01(\tR\x0eCheckTimePoint\"\xad\x01\n" +
+	"\x1eApproveTAFNDFundCalDateRequest\x12\x1a\n" +
+	"\tsys_co_id\x18\x01 \x01(\tR\aSysCoID\x12\x17\n" +
+	"\adata_id\x18\x02 \x01(\tR\x06DataID\x12\x1d\n" +
+	"\n" +
+	"checker_id\x18\x03 \x01(\tR\tCheckerID\x12\x1f\n" +
+	"\vis_approved\x18\x04 \x01(\bR\n" +
+	"IsApproved\x12\x16\n" +
+	"\x06remark\x18\x05 \x01(\tR\x06Remark2\xdf\a\n" +
+	"\x0eFNDM005Service\x12\xa1\x01\n" +
+	"\x10TAFNDFundCalDate\x12\x1f.fnd.v1.TAFNDFundCalDateRequest\x1a .fnd.v1.TAFNDFundCalDateResponse\"J\x92A\x1f\n" +
+	"\x1dAPIFNDM005：TAFNDFundCalDate\x82\xd3\xe4\x93\x02\"\x12 /TAapi/BaseFund/TAFNDFundCalDate\x12\x9c\x01\n" +
+	"\x14SaveTAFNDFundCalDate\x12\x1f.fnd.v1.TAFNDFundCalDateRequest\x1a\x14.fnd.v1.SaveResponse\"M\x92A\x1f\n" +
+	"\x1dAPIFNDM005：TAFNDFundCalDate\x82\xd3\xe4\x93\x02%:\x01*\" /TAapi/BaseFund/TAFNDFundCalDate\x12\x9e\x01\n" +
+	"\x16UpdateTAFNDFundCalDate\x12\x1f.fnd.v1.TAFNDFundCalDateRequest\x1a\x14.fnd.v1.SaveResponse\"M\x92A\x1f\n" +
+	"\x1dAPIFNDM005：TAFNDFundCalDate\x82\xd3\xe4\x93\x02%:\x01*\x1a /TAapi/BaseFund/TAFNDFundCalDate\x12\x91\x01\n" +
+	"\x16DeleteTAFNDFundCalDate\x12\x15.fnd.v1.DeleteRequest\x1a\x14.fnd.v1.SaveResponse\"J\x92A\x1f\n" +
+	"\x1dAPIFNDM005：TAFNDFundCalDate\x82\xd3\xe4\x93\x02\"* /TAapi/BaseFund/TAFNDFundCalDate\x12\xa9\x01\n" +
+	"\x0eTACKFNDCalEdit\x12\x1d.fnd.v1.TACKFNDCalEditRequest\x1a\x15.fnd.v1.CheckResponse\"a\x92A\x1f\n" +
+	"\x1dAPIFNDM005：TAFNDFundCalDate\x82\xd3\xe4\x93\x029\x127/TAapi/BaseFund/TAFNDFundCalDate/ChkData/TACKFNDCalEdit\x12\xa8\x01\n" +
+	"\x0fGetDataByDataID\x12\x16.fnd.v1.GetDataRequest\x1a\x1f.fnd.v1.TAFNDFundCalDateRequest\"\\\x92A\x1f\n" +
+	"\x1dAPIFNDM005：TAFNDFundCalDate\x82\xd3\xe4\x93\x024\x122/TAapi/BaseFund/TAFNDFundCalDate/GetData/{data_id}B+Z)go-transfer-agent/common/gen/fnd/v1;fndv1b\x06proto3"
 
 var (
 	file_fnd_v1_fndm005_proto_rawDescOnce sync.Once
@@ -484,27 +636,43 @@ func file_fnd_v1_fndm005_proto_rawDescGZIP() []byte {
 	return file_fnd_v1_fndm005_proto_rawDescData
 }
 
-var file_fnd_v1_fndm005_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_fnd_v1_fndm005_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_fnd_v1_fndm005_proto_goTypes = []any{
-	(*TAFNDFundCalDateRequest)(nil),   // 0: fnd.v1.TAFNDFundCalDateRequest
-	(*TAFNDFundCalDateResponse)(nil),  // 1: fnd.v1.TAFNDFundCalDateResponse
-	(*FundCalMasterDTO)(nil),          // 2: fnd.v1.FundCalMasterDTO
-	(*FundClosedDateMemoListDTO)(nil), // 3: fnd.v1.FundClosedDateMemoListDTO
-	(*FundClosedDateFundListDTO)(nil), // 4: fnd.v1.FundClosedDateFundListDTO
+	(*TAFNDFundCalDateRequest)(nil),        // 0: fnd.v1.TAFNDFundCalDateRequest
+	(*TAFNDFundCalDateResponse)(nil),       // 1: fnd.v1.TAFNDFundCalDateResponse
+	(*FundCalMasterDTO)(nil),               // 2: fnd.v1.FundCalMasterDTO
+	(*FundClosedDateMemoListDTO)(nil),      // 3: fnd.v1.FundClosedDateMemoListDTO
+	(*FundClosedDateFundListDTO)(nil),      // 4: fnd.v1.FundClosedDateFundListDTO
+	(*TACKFNDCalEditRequest)(nil),          // 5: fnd.v1.TACKFNDCalEditRequest
+	(*ApproveTAFNDFundCalDateRequest)(nil), // 6: fnd.v1.ApproveTAFNDFundCalDateRequest
+	(*DeleteRequest)(nil),                  // 7: fnd.v1.DeleteRequest
+	(*GetDataRequest)(nil),                 // 8: fnd.v1.GetDataRequest
+	(*SaveResponse)(nil),                   // 9: fnd.v1.SaveResponse
+	(*CheckResponse)(nil),                  // 10: fnd.v1.CheckResponse
 }
 var file_fnd_v1_fndm005_proto_depIdxs = []int32{
-	3, // 0: fnd.v1.TAFNDFundCalDateRequest.fund_closed_memo_list:type_name -> fnd.v1.FundClosedDateMemoListDTO
-	4, // 1: fnd.v1.TAFNDFundCalDateRequest.fund_closed_date_fund_list:type_name -> fnd.v1.FundClosedDateFundListDTO
-	2, // 2: fnd.v1.TAFNDFundCalDateResponse.result_list:type_name -> fnd.v1.FundCalMasterDTO
-	3, // 3: fnd.v1.TAFNDFundCalDateResponse.fund_closed_memo_list:type_name -> fnd.v1.FundClosedDateMemoListDTO
-	4, // 4: fnd.v1.TAFNDFundCalDateResponse.fund_closed_date_fund_list:type_name -> fnd.v1.FundClosedDateFundListDTO
-	0, // 5: fnd.v1.FNDM005Service.TAFNDFundCalDate:input_type -> fnd.v1.TAFNDFundCalDateRequest
-	1, // 6: fnd.v1.FNDM005Service.TAFNDFundCalDate:output_type -> fnd.v1.TAFNDFundCalDateResponse
-	6, // [6:7] is the sub-list for method output_type
-	5, // [5:6] is the sub-list for method input_type
-	5, // [5:5] is the sub-list for extension type_name
-	5, // [5:5] is the sub-list for extension extendee
-	0, // [0:5] is the sub-list for field type_name
+	3,  // 0: fnd.v1.TAFNDFundCalDateRequest.fund_closed_memo_list:type_name -> fnd.v1.FundClosedDateMemoListDTO
+	4,  // 1: fnd.v1.TAFNDFundCalDateRequest.fund_closed_date_fund_list:type_name -> fnd.v1.FundClosedDateFundListDTO
+	2,  // 2: fnd.v1.TAFNDFundCalDateResponse.result_list:type_name -> fnd.v1.FundCalMasterDTO
+	3,  // 3: fnd.v1.TAFNDFundCalDateResponse.fund_closed_memo_list:type_name -> fnd.v1.FundClosedDateMemoListDTO
+	4,  // 4: fnd.v1.TAFNDFundCalDateResponse.fund_closed_date_fund_list:type_name -> fnd.v1.FundClosedDateFundListDTO
+	0,  // 5: fnd.v1.FNDM005Service.TAFNDFundCalDate:input_type -> fnd.v1.TAFNDFundCalDateRequest
+	0,  // 6: fnd.v1.FNDM005Service.SaveTAFNDFundCalDate:input_type -> fnd.v1.TAFNDFundCalDateRequest
+	0,  // 7: fnd.v1.FNDM005Service.UpdateTAFNDFundCalDate:input_type -> fnd.v1.TAFNDFundCalDateRequest
+	7,  // 8: fnd.v1.FNDM005Service.DeleteTAFNDFundCalDate:input_type -> fnd.v1.DeleteRequest
+	5,  // 9: fnd.v1.FNDM005Service.TACKFNDCalEdit:input_type -> fnd.v1.TACKFNDCalEditRequest
+	8,  // 10: fnd.v1.FNDM005Service.GetDataByDataID:input_type -> fnd.v1.GetDataRequest
+	1,  // 11: fnd.v1.FNDM005Service.TAFNDFundCalDate:output_type -> fnd.v1.TAFNDFundCalDateResponse
+	9,  // 12: fnd.v1.FNDM005Service.SaveTAFNDFundCalDate:output_type -> fnd.v1.SaveResponse
+	9,  // 13: fnd.v1.FNDM005Service.UpdateTAFNDFundCalDate:output_type -> fnd.v1.SaveResponse
+	9,  // 14: fnd.v1.FNDM005Service.DeleteTAFNDFundCalDate:output_type -> fnd.v1.SaveResponse
+	10, // 15: fnd.v1.FNDM005Service.TACKFNDCalEdit:output_type -> fnd.v1.CheckResponse
+	0,  // 16: fnd.v1.FNDM005Service.GetDataByDataID:output_type -> fnd.v1.TAFNDFundCalDateRequest
+	11, // [11:17] is the sub-list for method output_type
+	5,  // [5:11] is the sub-list for method input_type
+	5,  // [5:5] is the sub-list for extension type_name
+	5,  // [5:5] is the sub-list for extension extendee
+	0,  // [0:5] is the sub-list for field type_name
 }
 
 func init() { file_fnd_v1_fndm005_proto_init() }
@@ -512,13 +680,14 @@ func file_fnd_v1_fndm005_proto_init() {
 	if File_fnd_v1_fndm005_proto != nil {
 		return
 	}
+	file_fnd_v1_common_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_fnd_v1_fndm005_proto_rawDesc), len(file_fnd_v1_fndm005_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   5,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

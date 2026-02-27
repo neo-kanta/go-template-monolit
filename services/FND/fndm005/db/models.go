@@ -1,6 +1,7 @@
 package db
 
 import (
+	models "go-transfer-agent/common/platform/model"
 	"time"
 )
 
@@ -29,6 +30,7 @@ type TAFNDFundCal struct {
 	UpdateDate  time.Time `gorm:"column:UpdateDate;type:timestamp with time zone;not null;default:'1900-01-01 00:00:00+08'"`
 	DataFlag    []byte    `gorm:"column:DataFlag;type:bytea"`
 	DiffColumns string    `gorm:"column:DiffColumns;type:text;not null;default:''"`
+	models.MakerCheckerFields
 }
 
 func (TAFNDFundCal) TableName() string {
@@ -52,7 +54,6 @@ type TAFNDFundCalMemo struct {
 	FNDCalType string    `gorm:"column:FNDCalType;type:varchar(6);primaryKey;not null"`
 	FundCry    string    `gorm:"column:FundCry;type:varchar(3);primaryKey;not null"`
 	CalDate    time.Time `gorm:"column:CalDate;type:timestamp with time zone;primaryKey;not null"`
-	Remark     string    `gorm:"column:Remark;type:varchar(200);not null;default:''"`
 
 	// Standard Audit Fields
 	ValidFrom   time.Time `gorm:"column:ValidFrom;type:timestamp;not null;default:CURRENT_TIMESTAMP"`
@@ -68,6 +69,7 @@ type TAFNDFundCalMemo struct {
 	UpdateDate  time.Time `gorm:"column:UpdateDate;type:timestamp with time zone;not null;default:'1900-01-01 00:00:00+08'"`
 	DataFlag    []byte    `gorm:"column:DataFlag;type:bytea"`
 	DiffColumns string    `gorm:"column:DiffColumns;type:text;not null;default:''"`
+	models.MakerCheckerFields
 }
 
 func (TAFNDFundCalMemo) TableName() string {
@@ -107,6 +109,7 @@ type TAFNDFundCalDtl struct {
 	UpdateDate  time.Time `gorm:"column:UpdateDate;type:timestamp with time zone;not null;default:'1900-01-01 00:00:00+08'"`
 	DataFlag    []byte    `gorm:"column:DataFlag;type:bytea"`
 	DiffColumns string    `gorm:"column:DiffColumns;type:text;not null;default:''"`
+	models.MakerCheckerFields
 }
 
 func (TAFNDFundCalDtl) TableName() string {

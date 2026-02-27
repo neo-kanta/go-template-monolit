@@ -7,6 +7,7 @@
 package fndv1
 
 import (
+	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -414,11 +415,140 @@ func (x *FundAgentDtlListDTO) GetTermDate() string {
 	return ""
 }
 
+// KFNDM00402
+type TACKFundAgentEditRequest struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	SysCoId        string                 `protobuf:"bytes,1,opt,name=sys_co_id,json=SysCoID,proto3" json:"sys_co_id,omitempty"`
+	CheckTimePoint string                 `protobuf:"bytes,2,opt,name=check_time_point,json=CheckTimePoint,proto3" json:"check_time_point,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *TACKFundAgentEditRequest) Reset() {
+	*x = TACKFundAgentEditRequest{}
+	mi := &file_fnd_v1_fndm004_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TACKFundAgentEditRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TACKFundAgentEditRequest) ProtoMessage() {}
+
+func (x *TACKFundAgentEditRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_fnd_v1_fndm004_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TACKFundAgentEditRequest.ProtoReflect.Descriptor instead.
+func (*TACKFundAgentEditRequest) Descriptor() ([]byte, []int) {
+	return file_fnd_v1_fndm004_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *TACKFundAgentEditRequest) GetSysCoId() string {
+	if x != nil {
+		return x.SysCoId
+	}
+	return ""
+}
+
+func (x *TACKFundAgentEditRequest) GetCheckTimePoint() string {
+	if x != nil {
+		return x.CheckTimePoint
+	}
+	return ""
+}
+
+type ApproveTAFNDFundAgentRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	SysCoId       string                 `protobuf:"bytes,1,opt,name=sys_co_id,json=SysCoID,proto3" json:"sys_co_id,omitempty"`
+	DataId        string                 `protobuf:"bytes,2,opt,name=data_id,json=DataID,proto3" json:"data_id,omitempty"`
+	CheckerId     string                 `protobuf:"bytes,3,opt,name=checker_id,json=CheckerID,proto3" json:"checker_id,omitempty"`
+	IsApproved    bool                   `protobuf:"varint,4,opt,name=is_approved,json=IsApproved,proto3" json:"is_approved,omitempty"`
+	Remark        string                 `protobuf:"bytes,5,opt,name=remark,json=Remark,proto3" json:"remark,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ApproveTAFNDFundAgentRequest) Reset() {
+	*x = ApproveTAFNDFundAgentRequest{}
+	mi := &file_fnd_v1_fndm004_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ApproveTAFNDFundAgentRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ApproveTAFNDFundAgentRequest) ProtoMessage() {}
+
+func (x *ApproveTAFNDFundAgentRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_fnd_v1_fndm004_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ApproveTAFNDFundAgentRequest.ProtoReflect.Descriptor instead.
+func (*ApproveTAFNDFundAgentRequest) Descriptor() ([]byte, []int) {
+	return file_fnd_v1_fndm004_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *ApproveTAFNDFundAgentRequest) GetSysCoId() string {
+	if x != nil {
+		return x.SysCoId
+	}
+	return ""
+}
+
+func (x *ApproveTAFNDFundAgentRequest) GetDataId() string {
+	if x != nil {
+		return x.DataId
+	}
+	return ""
+}
+
+func (x *ApproveTAFNDFundAgentRequest) GetCheckerId() string {
+	if x != nil {
+		return x.CheckerId
+	}
+	return ""
+}
+
+func (x *ApproveTAFNDFundAgentRequest) GetIsApproved() bool {
+	if x != nil {
+		return x.IsApproved
+	}
+	return false
+}
+
+func (x *ApproveTAFNDFundAgentRequest) GetRemark() string {
+	if x != nil {
+		return x.Remark
+	}
+	return ""
+}
+
 var File_fnd_v1_fndm004_proto protoreflect.FileDescriptor
 
 const file_fnd_v1_fndm004_proto_rawDesc = "" +
 	"\n" +
-	"\x14fnd/v1/fndm004.proto\x12\x06fnd.v1\x1a\x1cgoogle/api/annotations.proto\"\xa3\x01\n" +
+	"\x14fnd/v1/fndm004.proto\x12\x06fnd.v1\x1a\x1cgoogle/api/annotations.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\x1a\x13fnd/v1/common.proto\"\xa3\x01\n" +
 	"\x15TAFNDFundAgentRequest\x12\x1a\n" +
 	"\tsys_co_id\x18\x01 \x01(\tR\aSysCoID\x12\"\n" +
 	"\rprt_fund_code\x18\x02 \x01(\tR\vPrtFundCode\x12J\n" +
@@ -459,9 +589,31 @@ const file_fnd_v1_fndm004_proto_rawDesc = "" +
 	"\x11no_sale_share_set\x18\x12 \x03(\tR\x0eNoSaleShareSet\x12.\n" +
 	"\x14no_sale_share_set_nm\x18\x13 \x03(\tR\x10NoSaleShareSetNm\x12&\n" +
 	"\x10is_m_end_of_sale\x18\x14 \x01(\bR\fIsMEndOfSale\x12\x1b\n" +
-	"\tterm_date\x18\x15 \x01(\tR\bTermDate2\x89\x01\n" +
-	"\x0eFNDM004Service\x12w\n" +
-	"\x0eTAFNDFundAgent\x12\x1d.fnd.v1.TAFNDFundAgentRequest\x1a\x1e.fnd.v1.TAFNDFundAgentResponse\"&\x82\xd3\xe4\x93\x02 \x12\x1e/TAapi/BaseFund/TAFNDFundAgentB+Z)go-transfer-agent/common/gen/fnd/v1;fndv1b\x06proto3"
+	"\tterm_date\x18\x15 \x01(\tR\bTermDate\"`\n" +
+	"\x18TACKFundAgentEditRequest\x12\x1a\n" +
+	"\tsys_co_id\x18\x01 \x01(\tR\aSysCoID\x12(\n" +
+	"\x10check_time_point\x18\x02 \x01(\tR\x0eCheckTimePoint\"\xab\x01\n" +
+	"\x1cApproveTAFNDFundAgentRequest\x12\x1a\n" +
+	"\tsys_co_id\x18\x01 \x01(\tR\aSysCoID\x12\x17\n" +
+	"\adata_id\x18\x02 \x01(\tR\x06DataID\x12\x1d\n" +
+	"\n" +
+	"checker_id\x18\x03 \x01(\tR\tCheckerID\x12\x1f\n" +
+	"\vis_approved\x18\x04 \x01(\bR\n" +
+	"IsApproved\x12\x16\n" +
+	"\x06remark\x18\x05 \x01(\tR\x06Remark2\xbe\a\n" +
+	"\x0eFNDM004Service\x12\x97\x01\n" +
+	"\x0eTAFNDFundAgent\x12\x1d.fnd.v1.TAFNDFundAgentRequest\x1a\x1e.fnd.v1.TAFNDFundAgentResponse\"F\x92A\x1d\n" +
+	"\x1bAPIFNDM004：TAFNDFundAgent\x82\xd3\xe4\x93\x02 \x12\x1e/TAapi/BaseFund/TAFNDFundAgent\x12\x94\x01\n" +
+	"\x12SaveTAFNDFundAgent\x12\x1d.fnd.v1.TAFNDFundAgentRequest\x1a\x14.fnd.v1.SaveResponse\"I\x92A\x1d\n" +
+	"\x1bAPIFNDM004：TAFNDFundAgent\x82\xd3\xe4\x93\x02#:\x01*\"\x1e/TAapi/BaseFund/TAFNDFundAgent\x12\x96\x01\n" +
+	"\x14UpdateTAFNDFundAgent\x12\x1d.fnd.v1.TAFNDFundAgentRequest\x1a\x14.fnd.v1.SaveResponse\"I\x92A\x1d\n" +
+	"\x1bAPIFNDM004：TAFNDFundAgent\x82\xd3\xe4\x93\x02#:\x01*\x1a\x1e/TAapi/BaseFund/TAFNDFundAgent\x12\x8b\x01\n" +
+	"\x14DeleteTAFNDFundAgent\x12\x15.fnd.v1.DeleteRequest\x1a\x14.fnd.v1.SaveResponse\"F\x92A\x1d\n" +
+	"\x1bAPIFNDM004：TAFNDFundAgent\x82\xd3\xe4\x93\x02 *\x1e/TAapi/BaseFund/TAFNDFundAgent\x12\xae\x01\n" +
+	"\x11TACKFundAgentEdit\x12 .fnd.v1.TACKFundAgentEditRequest\x1a\x15.fnd.v1.CheckResponse\"`\x92A\x1d\n" +
+	"\x1bAPIFNDM004：TAFNDFundAgent\x82\xd3\xe4\x93\x02:\x128/TAapi/BaseFund/TAFNDFundAgent/ChkData/TACKFundAgentEdit\x12\xa2\x01\n" +
+	"\x0fGetDataByDataID\x12\x16.fnd.v1.GetDataRequest\x1a\x1d.fnd.v1.TAFNDFundAgentRequest\"X\x92A\x1d\n" +
+	"\x1bAPIFNDM004：TAFNDFundAgent\x82\xd3\xe4\x93\x022\x120/TAapi/BaseFund/TAFNDFundAgent/GetData/{data_id}B+Z)go-transfer-agent/common/gen/fnd/v1;fndv1b\x06proto3"
 
 var (
 	file_fnd_v1_fndm004_proto_rawDescOnce sync.Once
@@ -475,21 +627,37 @@ func file_fnd_v1_fndm004_proto_rawDescGZIP() []byte {
 	return file_fnd_v1_fndm004_proto_rawDescData
 }
 
-var file_fnd_v1_fndm004_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_fnd_v1_fndm004_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_fnd_v1_fndm004_proto_goTypes = []any{
-	(*TAFNDFundAgentRequest)(nil),  // 0: fnd.v1.TAFNDFundAgentRequest
-	(*TAFNDFundAgentResponse)(nil), // 1: fnd.v1.TAFNDFundAgentResponse
-	(*FundAgentMasterDTO)(nil),     // 2: fnd.v1.FundAgentMasterDTO
-	(*FundAgentDtlListDTO)(nil),    // 3: fnd.v1.FundAgentDtlListDTO
+	(*TAFNDFundAgentRequest)(nil),        // 0: fnd.v1.TAFNDFundAgentRequest
+	(*TAFNDFundAgentResponse)(nil),       // 1: fnd.v1.TAFNDFundAgentResponse
+	(*FundAgentMasterDTO)(nil),           // 2: fnd.v1.FundAgentMasterDTO
+	(*FundAgentDtlListDTO)(nil),          // 3: fnd.v1.FundAgentDtlListDTO
+	(*TACKFundAgentEditRequest)(nil),     // 4: fnd.v1.TACKFundAgentEditRequest
+	(*ApproveTAFNDFundAgentRequest)(nil), // 5: fnd.v1.ApproveTAFNDFundAgentRequest
+	(*DeleteRequest)(nil),                // 6: fnd.v1.DeleteRequest
+	(*GetDataRequest)(nil),               // 7: fnd.v1.GetDataRequest
+	(*SaveResponse)(nil),                 // 8: fnd.v1.SaveResponse
+	(*CheckResponse)(nil),                // 9: fnd.v1.CheckResponse
 }
 var file_fnd_v1_fndm004_proto_depIdxs = []int32{
 	3, // 0: fnd.v1.TAFNDFundAgentRequest.fund_agent_dtl_list:type_name -> fnd.v1.FundAgentDtlListDTO
 	2, // 1: fnd.v1.TAFNDFundAgentResponse.result_list:type_name -> fnd.v1.FundAgentMasterDTO
 	3, // 2: fnd.v1.TAFNDFundAgentResponse.fund_agent_dtl_list:type_name -> fnd.v1.FundAgentDtlListDTO
 	0, // 3: fnd.v1.FNDM004Service.TAFNDFundAgent:input_type -> fnd.v1.TAFNDFundAgentRequest
-	1, // 4: fnd.v1.FNDM004Service.TAFNDFundAgent:output_type -> fnd.v1.TAFNDFundAgentResponse
-	4, // [4:5] is the sub-list for method output_type
-	3, // [3:4] is the sub-list for method input_type
+	0, // 4: fnd.v1.FNDM004Service.SaveTAFNDFundAgent:input_type -> fnd.v1.TAFNDFundAgentRequest
+	0, // 5: fnd.v1.FNDM004Service.UpdateTAFNDFundAgent:input_type -> fnd.v1.TAFNDFundAgentRequest
+	6, // 6: fnd.v1.FNDM004Service.DeleteTAFNDFundAgent:input_type -> fnd.v1.DeleteRequest
+	4, // 7: fnd.v1.FNDM004Service.TACKFundAgentEdit:input_type -> fnd.v1.TACKFundAgentEditRequest
+	7, // 8: fnd.v1.FNDM004Service.GetDataByDataID:input_type -> fnd.v1.GetDataRequest
+	1, // 9: fnd.v1.FNDM004Service.TAFNDFundAgent:output_type -> fnd.v1.TAFNDFundAgentResponse
+	8, // 10: fnd.v1.FNDM004Service.SaveTAFNDFundAgent:output_type -> fnd.v1.SaveResponse
+	8, // 11: fnd.v1.FNDM004Service.UpdateTAFNDFundAgent:output_type -> fnd.v1.SaveResponse
+	8, // 12: fnd.v1.FNDM004Service.DeleteTAFNDFundAgent:output_type -> fnd.v1.SaveResponse
+	9, // 13: fnd.v1.FNDM004Service.TACKFundAgentEdit:output_type -> fnd.v1.CheckResponse
+	0, // 14: fnd.v1.FNDM004Service.GetDataByDataID:output_type -> fnd.v1.TAFNDFundAgentRequest
+	9, // [9:15] is the sub-list for method output_type
+	3, // [3:9] is the sub-list for method input_type
 	3, // [3:3] is the sub-list for extension type_name
 	3, // [3:3] is the sub-list for extension extendee
 	0, // [0:3] is the sub-list for field type_name
@@ -500,13 +668,14 @@ func file_fnd_v1_fndm004_proto_init() {
 	if File_fnd_v1_fndm004_proto != nil {
 		return
 	}
+	file_fnd_v1_common_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_fnd_v1_fndm004_proto_rawDesc), len(file_fnd_v1_fndm004_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

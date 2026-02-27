@@ -7,6 +7,7 @@
 package fndv1
 
 import (
+	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -494,11 +495,87 @@ func (x *SwitchCryListDTO) GetSwOFundCrySetNm() []string {
 	return nil
 }
 
+type ApproveTAFNDSwitchRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	SysCoId       string                 `protobuf:"bytes,1,opt,name=sys_co_id,json=SysCoID,proto3" json:"sys_co_id,omitempty"`
+	DataId        string                 `protobuf:"bytes,2,opt,name=data_id,json=DataID,proto3" json:"data_id,omitempty"`
+	CheckerId     string                 `protobuf:"bytes,3,opt,name=checker_id,json=CheckerID,proto3" json:"checker_id,omitempty"`
+	IsApproved    bool                   `protobuf:"varint,4,opt,name=is_approved,json=IsApproved,proto3" json:"is_approved,omitempty"`
+	Remark        string                 `protobuf:"bytes,5,opt,name=remark,json=Remark,proto3" json:"remark,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ApproveTAFNDSwitchRequest) Reset() {
+	*x = ApproveTAFNDSwitchRequest{}
+	mi := &file_fnd_v1_fndm003_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ApproveTAFNDSwitchRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ApproveTAFNDSwitchRequest) ProtoMessage() {}
+
+func (x *ApproveTAFNDSwitchRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_fnd_v1_fndm003_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ApproveTAFNDSwitchRequest.ProtoReflect.Descriptor instead.
+func (*ApproveTAFNDSwitchRequest) Descriptor() ([]byte, []int) {
+	return file_fnd_v1_fndm003_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *ApproveTAFNDSwitchRequest) GetSysCoId() string {
+	if x != nil {
+		return x.SysCoId
+	}
+	return ""
+}
+
+func (x *ApproveTAFNDSwitchRequest) GetDataId() string {
+	if x != nil {
+		return x.DataId
+	}
+	return ""
+}
+
+func (x *ApproveTAFNDSwitchRequest) GetCheckerId() string {
+	if x != nil {
+		return x.CheckerId
+	}
+	return ""
+}
+
+func (x *ApproveTAFNDSwitchRequest) GetIsApproved() bool {
+	if x != nil {
+		return x.IsApproved
+	}
+	return false
+}
+
+func (x *ApproveTAFNDSwitchRequest) GetRemark() string {
+	if x != nil {
+		return x.Remark
+	}
+	return ""
+}
+
 var File_fnd_v1_fndm003_proto protoreflect.FileDescriptor
 
 const file_fnd_v1_fndm003_proto_rawDesc = "" +
 	"\n" +
-	"\x14fnd/v1/fndm003.proto\x12\x06fnd.v1\x1a\x1cgoogle/api/annotations.proto\"\xcc\x02\n" +
+	"\x14fnd/v1/fndm003.proto\x12\x06fnd.v1\x1a\x1cgoogle/api/annotations.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\x1a\x13fnd/v1/common.proto\"\xcc\x02\n" +
 	"\x12TAFNDSwitchRequest\x12\x1a\n" +
 	"\tsys_co_id\x18\x01 \x01(\tR\aSysCoID\x12\"\n" +
 	"\rprt_fund_code\x18\x02 \x01(\tR\vPrtFundCode\x12 \n" +
@@ -544,9 +621,26 @@ const file_fnd_v1_fndm003_proto_rawDesc = "" +
 	"SwIFundCry\x12&\n" +
 	"\x10sw_i_fund_cry_nm\x18\x04 \x01(\tR\fSwIFundCryNm\x12(\n" +
 	"\x11sw_o_fund_cry_set\x18\x05 \x01(\tR\rSwOFundCrySet\x12-\n" +
-	"\x14sw_o_fund_cry_set_nm\x18\x06 \x03(\tR\x0fSwOFundCrySetNm2y\n" +
-	"\x0eFNDM003Service\x12g\n" +
-	"\vTAFNDSwitch\x12\x1a.fnd.v1.TAFNDSwitchRequest\x1a\x1b.fnd.v1.TAFNDSwitchResponse\"\x1f\x82\xd3\xe4\x93\x02\x19\x12\x17/TAapi/Fund/TAFNDSwitchB+Z)go-transfer-agent/common/gen/fnd/v1;fndv1b\x06proto3"
+	"\x14sw_o_fund_cry_set_nm\x18\x06 \x03(\tR\x0fSwOFundCrySetNm\"\xa8\x01\n" +
+	"\x19ApproveTAFNDSwitchRequest\x12\x1a\n" +
+	"\tsys_co_id\x18\x01 \x01(\tR\aSysCoID\x12\x17\n" +
+	"\adata_id\x18\x02 \x01(\tR\x06DataID\x12\x1d\n" +
+	"\n" +
+	"checker_id\x18\x03 \x01(\tR\tCheckerID\x12\x1f\n" +
+	"\vis_approved\x18\x04 \x01(\bR\n" +
+	"IsApproved\x12\x16\n" +
+	"\x06remark\x18\x05 \x01(\tR\x06Remark2\xbf\x05\n" +
+	"\x0eFNDM003Service\x12\x84\x01\n" +
+	"\vTAFNDSwitch\x12\x1a.fnd.v1.TAFNDSwitchRequest\x1a\x1b.fnd.v1.TAFNDSwitchResponse\"<\x92A\x1a\n" +
+	"\x18APIFNDM003：TAFNDSwitch\x82\xd3\xe4\x93\x02\x19\x12\x17/TAapi/Fund/TAFNDSwitch\x12\x84\x01\n" +
+	"\x0fSaveTAFNDSwitch\x12\x1a.fnd.v1.TAFNDSwitchRequest\x1a\x14.fnd.v1.SaveResponse\"?\x92A\x1a\n" +
+	"\x18APIFNDM003：TAFNDSwitch\x82\xd3\xe4\x93\x02\x1c:\x01*\"\x17/TAapi/Fund/TAFNDSwitch\x12\x86\x01\n" +
+	"\x11UpdateTAFNDSwitch\x12\x1a.fnd.v1.TAFNDSwitchRequest\x1a\x14.fnd.v1.SaveResponse\"?\x92A\x1a\n" +
+	"\x18APIFNDM003：TAFNDSwitch\x82\xd3\xe4\x93\x02\x1c:\x01*\x1a\x17/TAapi/Fund/TAFNDSwitch\x12~\n" +
+	"\x11DeleteTAFNDSwitch\x12\x15.fnd.v1.DeleteRequest\x1a\x14.fnd.v1.SaveResponse\"<\x92A\x1a\n" +
+	"\x18APIFNDM003：TAFNDSwitch\x82\xd3\xe4\x93\x02\x19*\x17/TAapi/Fund/TAFNDSwitch\x12\x95\x01\n" +
+	"\x0fGetDataByDataID\x12\x16.fnd.v1.GetDataRequest\x1a\x1a.fnd.v1.TAFNDSwitchRequest\"N\x92A\x1a\n" +
+	"\x18APIFNDM003：TAFNDSwitch\x82\xd3\xe4\x93\x02+\x12)/TAapi/Fund/TAFNDSwitch/GetData/{data_id}B+Z)go-transfer-agent/common/gen/fnd/v1;fndv1b\x06proto3"
 
 var (
 	file_fnd_v1_fndm003_proto_rawDescOnce sync.Once
@@ -560,30 +654,42 @@ func file_fnd_v1_fndm003_proto_rawDescGZIP() []byte {
 	return file_fnd_v1_fndm003_proto_rawDescData
 }
 
-var file_fnd_v1_fndm003_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_fnd_v1_fndm003_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_fnd_v1_fndm003_proto_goTypes = []any{
-	(*TAFNDSwitchRequest)(nil),   // 0: fnd.v1.TAFNDSwitchRequest
-	(*TAFNDSwitchResponse)(nil),  // 1: fnd.v1.TAFNDSwitchResponse
-	(*SwitchMasterDTO)(nil),      // 2: fnd.v1.SwitchMasterDTO
-	(*SwitchFundListDTO)(nil),    // 3: fnd.v1.SwitchFundListDTO
-	(*FundSwitchFeeListDTO)(nil), // 4: fnd.v1.FundSwitchFeeListDTO
-	(*SwitchCryListDTO)(nil),     // 5: fnd.v1.SwitchCryListDTO
+	(*TAFNDSwitchRequest)(nil),        // 0: fnd.v1.TAFNDSwitchRequest
+	(*TAFNDSwitchResponse)(nil),       // 1: fnd.v1.TAFNDSwitchResponse
+	(*SwitchMasterDTO)(nil),           // 2: fnd.v1.SwitchMasterDTO
+	(*SwitchFundListDTO)(nil),         // 3: fnd.v1.SwitchFundListDTO
+	(*FundSwitchFeeListDTO)(nil),      // 4: fnd.v1.FundSwitchFeeListDTO
+	(*SwitchCryListDTO)(nil),          // 5: fnd.v1.SwitchCryListDTO
+	(*ApproveTAFNDSwitchRequest)(nil), // 6: fnd.v1.ApproveTAFNDSwitchRequest
+	(*DeleteRequest)(nil),             // 7: fnd.v1.DeleteRequest
+	(*GetDataRequest)(nil),            // 8: fnd.v1.GetDataRequest
+	(*SaveResponse)(nil),              // 9: fnd.v1.SaveResponse
 }
 var file_fnd_v1_fndm003_proto_depIdxs = []int32{
-	3, // 0: fnd.v1.TAFNDSwitchRequest.switch_fund_list:type_name -> fnd.v1.SwitchFundListDTO
-	4, // 1: fnd.v1.TAFNDSwitchRequest.fund_switch_fee_list:type_name -> fnd.v1.FundSwitchFeeListDTO
-	5, // 2: fnd.v1.TAFNDSwitchRequest.switch_cry_list:type_name -> fnd.v1.SwitchCryListDTO
-	2, // 3: fnd.v1.TAFNDSwitchResponse.result_list:type_name -> fnd.v1.SwitchMasterDTO
-	3, // 4: fnd.v1.TAFNDSwitchResponse.switch_fund_list:type_name -> fnd.v1.SwitchFundListDTO
-	4, // 5: fnd.v1.TAFNDSwitchResponse.fund_switch_fee_list:type_name -> fnd.v1.FundSwitchFeeListDTO
-	5, // 6: fnd.v1.TAFNDSwitchResponse.switch_cry_list:type_name -> fnd.v1.SwitchCryListDTO
-	0, // 7: fnd.v1.FNDM003Service.TAFNDSwitch:input_type -> fnd.v1.TAFNDSwitchRequest
-	1, // 8: fnd.v1.FNDM003Service.TAFNDSwitch:output_type -> fnd.v1.TAFNDSwitchResponse
-	8, // [8:9] is the sub-list for method output_type
-	7, // [7:8] is the sub-list for method input_type
-	7, // [7:7] is the sub-list for extension type_name
-	7, // [7:7] is the sub-list for extension extendee
-	0, // [0:7] is the sub-list for field type_name
+	3,  // 0: fnd.v1.TAFNDSwitchRequest.switch_fund_list:type_name -> fnd.v1.SwitchFundListDTO
+	4,  // 1: fnd.v1.TAFNDSwitchRequest.fund_switch_fee_list:type_name -> fnd.v1.FundSwitchFeeListDTO
+	5,  // 2: fnd.v1.TAFNDSwitchRequest.switch_cry_list:type_name -> fnd.v1.SwitchCryListDTO
+	2,  // 3: fnd.v1.TAFNDSwitchResponse.result_list:type_name -> fnd.v1.SwitchMasterDTO
+	3,  // 4: fnd.v1.TAFNDSwitchResponse.switch_fund_list:type_name -> fnd.v1.SwitchFundListDTO
+	4,  // 5: fnd.v1.TAFNDSwitchResponse.fund_switch_fee_list:type_name -> fnd.v1.FundSwitchFeeListDTO
+	5,  // 6: fnd.v1.TAFNDSwitchResponse.switch_cry_list:type_name -> fnd.v1.SwitchCryListDTO
+	0,  // 7: fnd.v1.FNDM003Service.TAFNDSwitch:input_type -> fnd.v1.TAFNDSwitchRequest
+	0,  // 8: fnd.v1.FNDM003Service.SaveTAFNDSwitch:input_type -> fnd.v1.TAFNDSwitchRequest
+	0,  // 9: fnd.v1.FNDM003Service.UpdateTAFNDSwitch:input_type -> fnd.v1.TAFNDSwitchRequest
+	7,  // 10: fnd.v1.FNDM003Service.DeleteTAFNDSwitch:input_type -> fnd.v1.DeleteRequest
+	8,  // 11: fnd.v1.FNDM003Service.GetDataByDataID:input_type -> fnd.v1.GetDataRequest
+	1,  // 12: fnd.v1.FNDM003Service.TAFNDSwitch:output_type -> fnd.v1.TAFNDSwitchResponse
+	9,  // 13: fnd.v1.FNDM003Service.SaveTAFNDSwitch:output_type -> fnd.v1.SaveResponse
+	9,  // 14: fnd.v1.FNDM003Service.UpdateTAFNDSwitch:output_type -> fnd.v1.SaveResponse
+	9,  // 15: fnd.v1.FNDM003Service.DeleteTAFNDSwitch:output_type -> fnd.v1.SaveResponse
+	0,  // 16: fnd.v1.FNDM003Service.GetDataByDataID:output_type -> fnd.v1.TAFNDSwitchRequest
+	12, // [12:17] is the sub-list for method output_type
+	7,  // [7:12] is the sub-list for method input_type
+	7,  // [7:7] is the sub-list for extension type_name
+	7,  // [7:7] is the sub-list for extension extendee
+	0,  // [0:7] is the sub-list for field type_name
 }
 
 func init() { file_fnd_v1_fndm003_proto_init() }
@@ -591,13 +697,14 @@ func file_fnd_v1_fndm003_proto_init() {
 	if File_fnd_v1_fndm003_proto != nil {
 		return
 	}
+	file_fnd_v1_common_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_fnd_v1_fndm003_proto_rawDesc), len(file_fnd_v1_fndm003_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   6,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

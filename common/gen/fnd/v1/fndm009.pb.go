@@ -7,6 +7,7 @@
 package fndv1
 
 import (
+	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -526,11 +527,87 @@ func (x *FavDiscTypeDtlListDTO) GetRangeFeeRate() float64 {
 	return 0
 }
 
+type ApproveTAFNDFavDiscRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	SysCoId       string                 `protobuf:"bytes,1,opt,name=sys_co_id,json=SysCoID,proto3" json:"sys_co_id,omitempty"`
+	DataId        string                 `protobuf:"bytes,2,opt,name=data_id,json=DataID,proto3" json:"data_id,omitempty"`
+	CheckerId     string                 `protobuf:"bytes,3,opt,name=checker_id,json=CheckerID,proto3" json:"checker_id,omitempty"`
+	IsApproved    bool                   `protobuf:"varint,4,opt,name=is_approved,json=IsApproved,proto3" json:"is_approved,omitempty"`
+	Remark        string                 `protobuf:"bytes,5,opt,name=remark,json=Remark,proto3" json:"remark,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ApproveTAFNDFavDiscRequest) Reset() {
+	*x = ApproveTAFNDFavDiscRequest{}
+	mi := &file_fnd_v1_fndm009_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ApproveTAFNDFavDiscRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ApproveTAFNDFavDiscRequest) ProtoMessage() {}
+
+func (x *ApproveTAFNDFavDiscRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_fnd_v1_fndm009_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ApproveTAFNDFavDiscRequest.ProtoReflect.Descriptor instead.
+func (*ApproveTAFNDFavDiscRequest) Descriptor() ([]byte, []int) {
+	return file_fnd_v1_fndm009_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *ApproveTAFNDFavDiscRequest) GetSysCoId() string {
+	if x != nil {
+		return x.SysCoId
+	}
+	return ""
+}
+
+func (x *ApproveTAFNDFavDiscRequest) GetDataId() string {
+	if x != nil {
+		return x.DataId
+	}
+	return ""
+}
+
+func (x *ApproveTAFNDFavDiscRequest) GetCheckerId() string {
+	if x != nil {
+		return x.CheckerId
+	}
+	return ""
+}
+
+func (x *ApproveTAFNDFavDiscRequest) GetIsApproved() bool {
+	if x != nil {
+		return x.IsApproved
+	}
+	return false
+}
+
+func (x *ApproveTAFNDFavDiscRequest) GetRemark() string {
+	if x != nil {
+		return x.Remark
+	}
+	return ""
+}
+
 var File_fnd_v1_fndm009_proto protoreflect.FileDescriptor
 
 const file_fnd_v1_fndm009_proto_rawDesc = "" +
 	"\n" +
-	"\x14fnd/v1/fndm009.proto\x12\x06fnd.v1\x1a\x1cgoogle/api/annotations.proto\"\xec\x02\n" +
+	"\x14fnd/v1/fndm009.proto\x12\x06fnd.v1\x1a\x1cgoogle/api/annotations.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\x1a\x13fnd/v1/common.proto\"\xec\x02\n" +
 	"\x13TAFNDFavDiscRequest\x12\x1a\n" +
 	"\tsys_co_id\x18\x01 \x01(\tR\aSysCoID\x12\x1e\n" +
 	"\vcus_id_code\x18\x02 \x01(\tR\tCusIDCode\x12\"\n" +
@@ -574,9 +651,26 @@ const file_fnd_v1_fndm009_proto_rawDesc = "" +
 	"\x06tx_cry\x18\x04 \x01(\tR\x05TxCry\x12\x1a\n" +
 	"\ttx_cry_nm\x18\x05 \x01(\tR\aTxCryNm\x12&\n" +
 	"\x0frange_amt_above\x18\x06 \x01(\x01R\rRangeAmtAbove\x12$\n" +
-	"\x0erange_fee_rate\x18\a \x01(\x01R\fRangeFeeRate2}\n" +
-	"\x0eFNDM009Service\x12k\n" +
-	"\fTAFNDFavDisc\x12\x1b.fnd.v1.TAFNDFavDiscRequest\x1a\x1c.fnd.v1.TAFNDFavDiscResponse\" \x82\xd3\xe4\x93\x02\x1a\x12\x18/TAapi/Fund/TAFNDFavDiscB+Z)go-transfer-agent/common/gen/fnd/v1;fndv1b\x06proto3"
+	"\x0erange_fee_rate\x18\a \x01(\x01R\fRangeFeeRate\"\xa9\x01\n" +
+	"\x1aApproveTAFNDFavDiscRequest\x12\x1a\n" +
+	"\tsys_co_id\x18\x01 \x01(\tR\aSysCoID\x12\x17\n" +
+	"\adata_id\x18\x02 \x01(\tR\x06DataID\x12\x1d\n" +
+	"\n" +
+	"checker_id\x18\x03 \x01(\tR\tCheckerID\x12\x1f\n" +
+	"\vis_approved\x18\x04 \x01(\bR\n" +
+	"IsApproved\x12\x16\n" +
+	"\x06remark\x18\x05 \x01(\tR\x06Remark2\xd3\x05\n" +
+	"\x0eFNDM009Service\x12\x89\x01\n" +
+	"\fTAFNDFavDisc\x12\x1b.fnd.v1.TAFNDFavDiscRequest\x1a\x1c.fnd.v1.TAFNDFavDiscResponse\">\x92A\x1b\n" +
+	"\x19APIFNDM009：TAFNDFavDisc\x82\xd3\xe4\x93\x02\x1a\x12\x18/TAapi/Fund/TAFNDFavDisc\x12\x88\x01\n" +
+	"\x10SaveTAFNDFavDisc\x12\x1b.fnd.v1.TAFNDFavDiscRequest\x1a\x14.fnd.v1.SaveResponse\"A\x92A\x1b\n" +
+	"\x19APIFNDM009：TAFNDFavDisc\x82\xd3\xe4\x93\x02\x1d:\x01*\"\x18/TAapi/Fund/TAFNDFavDisc\x12\x8a\x01\n" +
+	"\x12UpdateTAFNDFavDisc\x12\x1b.fnd.v1.TAFNDFavDiscRequest\x1a\x14.fnd.v1.SaveResponse\"A\x92A\x1b\n" +
+	"\x19APIFNDM009：TAFNDFavDisc\x82\xd3\xe4\x93\x02\x1d:\x01*\x1a\x18/TAapi/Fund/TAFNDFavDisc\x12\x81\x01\n" +
+	"\x12DeleteTAFNDFavDisc\x12\x15.fnd.v1.DeleteRequest\x1a\x14.fnd.v1.SaveResponse\">\x92A\x1b\n" +
+	"\x19APIFNDM009：TAFNDFavDisc\x82\xd3\xe4\x93\x02\x1a*\x18/TAapi/Fund/TAFNDFavDisc\x12\x98\x01\n" +
+	"\x0fGetDataByDataID\x12\x16.fnd.v1.GetDataRequest\x1a\x1b.fnd.v1.TAFNDFavDiscRequest\"P\x92A\x1b\n" +
+	"\x19APIFNDM009：TAFNDFavDisc\x82\xd3\xe4\x93\x02,\x12*/TAapi/Fund/TAFNDFavDisc/GetData/{data_id}B+Z)go-transfer-agent/common/gen/fnd/v1;fndv1b\x06proto3"
 
 var (
 	file_fnd_v1_fndm009_proto_rawDescOnce sync.Once
@@ -590,31 +684,43 @@ func file_fnd_v1_fndm009_proto_rawDescGZIP() []byte {
 	return file_fnd_v1_fndm009_proto_rawDescData
 }
 
-var file_fnd_v1_fndm009_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_fnd_v1_fndm009_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_fnd_v1_fndm009_proto_goTypes = []any{
-	(*TAFNDFavDiscRequest)(nil),   // 0: fnd.v1.TAFNDFavDiscRequest
-	(*TAFNDFavDiscResponse)(nil),  // 1: fnd.v1.TAFNDFavDiscResponse
-	(*FavDiscMasterDTO)(nil),      // 2: fnd.v1.FavDiscMasterDTO
-	(*FavDiscPrtFundListDTO)(nil), // 3: fnd.v1.FavDiscPrtFundListDTO
-	(*FavDiscTypeListDTO)(nil),    // 4: fnd.v1.FavDiscTypeListDTO
-	(*FavDiscTypeDtlListDTO)(nil), // 5: fnd.v1.FavDiscTypeDtlListDTO
+	(*TAFNDFavDiscRequest)(nil),        // 0: fnd.v1.TAFNDFavDiscRequest
+	(*TAFNDFavDiscResponse)(nil),       // 1: fnd.v1.TAFNDFavDiscResponse
+	(*FavDiscMasterDTO)(nil),           // 2: fnd.v1.FavDiscMasterDTO
+	(*FavDiscPrtFundListDTO)(nil),      // 3: fnd.v1.FavDiscPrtFundListDTO
+	(*FavDiscTypeListDTO)(nil),         // 4: fnd.v1.FavDiscTypeListDTO
+	(*FavDiscTypeDtlListDTO)(nil),      // 5: fnd.v1.FavDiscTypeDtlListDTO
+	(*ApproveTAFNDFavDiscRequest)(nil), // 6: fnd.v1.ApproveTAFNDFavDiscRequest
+	(*DeleteRequest)(nil),              // 7: fnd.v1.DeleteRequest
+	(*GetDataRequest)(nil),             // 8: fnd.v1.GetDataRequest
+	(*SaveResponse)(nil),               // 9: fnd.v1.SaveResponse
 }
 var file_fnd_v1_fndm009_proto_depIdxs = []int32{
-	3, // 0: fnd.v1.TAFNDFavDiscRequest.prt_fund_list:type_name -> fnd.v1.FavDiscPrtFundListDTO
-	4, // 1: fnd.v1.TAFNDFavDiscRequest.disc_type_list:type_name -> fnd.v1.FavDiscTypeListDTO
-	5, // 2: fnd.v1.TAFNDFavDiscRequest.disc_type_dtl_list:type_name -> fnd.v1.FavDiscTypeDtlListDTO
-	2, // 3: fnd.v1.TAFNDFavDiscResponse.result_list:type_name -> fnd.v1.FavDiscMasterDTO
-	3, // 4: fnd.v1.TAFNDFavDiscResponse.prt_fund_list:type_name -> fnd.v1.FavDiscPrtFundListDTO
-	5, // 5: fnd.v1.TAFNDFavDiscResponse.allot_disc_type_dtl_list:type_name -> fnd.v1.FavDiscTypeDtlListDTO
-	5, // 6: fnd.v1.TAFNDFavDiscResponse.rsp_disc_type_dtl_list:type_name -> fnd.v1.FavDiscTypeDtlListDTO
-	5, // 7: fnd.v1.TAFNDFavDiscResponse.sw_disc_type_dtl_list:type_name -> fnd.v1.FavDiscTypeDtlListDTO
-	0, // 8: fnd.v1.FNDM009Service.TAFNDFavDisc:input_type -> fnd.v1.TAFNDFavDiscRequest
-	1, // 9: fnd.v1.FNDM009Service.TAFNDFavDisc:output_type -> fnd.v1.TAFNDFavDiscResponse
-	9, // [9:10] is the sub-list for method output_type
-	8, // [8:9] is the sub-list for method input_type
-	8, // [8:8] is the sub-list for extension type_name
-	8, // [8:8] is the sub-list for extension extendee
-	0, // [0:8] is the sub-list for field type_name
+	3,  // 0: fnd.v1.TAFNDFavDiscRequest.prt_fund_list:type_name -> fnd.v1.FavDiscPrtFundListDTO
+	4,  // 1: fnd.v1.TAFNDFavDiscRequest.disc_type_list:type_name -> fnd.v1.FavDiscTypeListDTO
+	5,  // 2: fnd.v1.TAFNDFavDiscRequest.disc_type_dtl_list:type_name -> fnd.v1.FavDiscTypeDtlListDTO
+	2,  // 3: fnd.v1.TAFNDFavDiscResponse.result_list:type_name -> fnd.v1.FavDiscMasterDTO
+	3,  // 4: fnd.v1.TAFNDFavDiscResponse.prt_fund_list:type_name -> fnd.v1.FavDiscPrtFundListDTO
+	5,  // 5: fnd.v1.TAFNDFavDiscResponse.allot_disc_type_dtl_list:type_name -> fnd.v1.FavDiscTypeDtlListDTO
+	5,  // 6: fnd.v1.TAFNDFavDiscResponse.rsp_disc_type_dtl_list:type_name -> fnd.v1.FavDiscTypeDtlListDTO
+	5,  // 7: fnd.v1.TAFNDFavDiscResponse.sw_disc_type_dtl_list:type_name -> fnd.v1.FavDiscTypeDtlListDTO
+	0,  // 8: fnd.v1.FNDM009Service.TAFNDFavDisc:input_type -> fnd.v1.TAFNDFavDiscRequest
+	0,  // 9: fnd.v1.FNDM009Service.SaveTAFNDFavDisc:input_type -> fnd.v1.TAFNDFavDiscRequest
+	0,  // 10: fnd.v1.FNDM009Service.UpdateTAFNDFavDisc:input_type -> fnd.v1.TAFNDFavDiscRequest
+	7,  // 11: fnd.v1.FNDM009Service.DeleteTAFNDFavDisc:input_type -> fnd.v1.DeleteRequest
+	8,  // 12: fnd.v1.FNDM009Service.GetDataByDataID:input_type -> fnd.v1.GetDataRequest
+	1,  // 13: fnd.v1.FNDM009Service.TAFNDFavDisc:output_type -> fnd.v1.TAFNDFavDiscResponse
+	9,  // 14: fnd.v1.FNDM009Service.SaveTAFNDFavDisc:output_type -> fnd.v1.SaveResponse
+	9,  // 15: fnd.v1.FNDM009Service.UpdateTAFNDFavDisc:output_type -> fnd.v1.SaveResponse
+	9,  // 16: fnd.v1.FNDM009Service.DeleteTAFNDFavDisc:output_type -> fnd.v1.SaveResponse
+	0,  // 17: fnd.v1.FNDM009Service.GetDataByDataID:output_type -> fnd.v1.TAFNDFavDiscRequest
+	13, // [13:18] is the sub-list for method output_type
+	8,  // [8:13] is the sub-list for method input_type
+	8,  // [8:8] is the sub-list for extension type_name
+	8,  // [8:8] is the sub-list for extension extendee
+	0,  // [0:8] is the sub-list for field type_name
 }
 
 func init() { file_fnd_v1_fndm009_proto_init() }
@@ -622,13 +728,14 @@ func file_fnd_v1_fndm009_proto_init() {
 	if File_fnd_v1_fndm009_proto != nil {
 		return
 	}
+	file_fnd_v1_common_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_fnd_v1_fndm009_proto_rawDesc), len(file_fnd_v1_fndm009_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   6,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

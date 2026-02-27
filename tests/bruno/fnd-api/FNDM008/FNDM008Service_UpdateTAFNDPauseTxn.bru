@@ -1,0 +1,19 @@
+meta {
+  name: FNDM008Service_UpdateTAFNDPauseTxn
+  type: http
+  seq: 1
+}
+
+put {
+  url: {{base_url}}/TAapi/Fund/TAFNDPauseTxn
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}
+
+body:json {
+  {}
+}

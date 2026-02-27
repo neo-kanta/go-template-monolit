@@ -1,6 +1,10 @@
 package db
 
 import (
+	"github.com/shopspring/decimal"
+
+	models "go-transfer-agent/common/platform/model"
+
 	"time"
 )
 
@@ -29,6 +33,7 @@ type TAFNDFavDisc struct {
 	UpdateDate  time.Time `gorm:"column:UpdateDate;type:timestamp with time zone;not null;default:'1900-01-01 00:00:00+08'"`
 	DataFlag    []byte    `gorm:"column:DataFlag;type:bytea"`
 	DiffColumns string    `gorm:"column:DiffColumns;type:text;not null;default:''"`
+	models.MakerCheckerFields
 }
 
 func (TAFNDFavDisc) TableName() string {
@@ -66,6 +71,7 @@ type TAFNDFavDiscFund struct {
 	UpdateDate  time.Time `gorm:"column:UpdateDate;type:timestamp with time zone;not null;default:'1900-01-01 00:00:00+08'"`
 	DataFlag    []byte    `gorm:"column:DataFlag;type:bytea"`
 	DiffColumns string    `gorm:"column:DiffColumns;type:text;not null;default:''"`
+	models.MakerCheckerFields
 }
 
 func (TAFNDFavDiscFund) TableName() string {
@@ -103,6 +109,7 @@ type TAFNDFavDiscType struct {
 	UpdateDate  time.Time `gorm:"column:UpdateDate;type:timestamp with time zone;not null;default:'1900-01-01 00:00:00+08'"`
 	DataFlag    []byte    `gorm:"column:DataFlag;type:bytea"`
 	DiffColumns string    `gorm:"column:DiffColumns;type:text;not null;default:''"`
+	models.MakerCheckerFields
 }
 
 func (TAFNDFavDiscType) TableName() string {
@@ -121,12 +128,12 @@ func (TAFNDFavDiscTypeEdit) TableName() string {
 
 // TAFNDFavDiscTypeDtl represents the TA_FND_FavDiscTypeDtl table.
 type TAFNDFavDiscTypeDtl struct {
-	SysCoID       string  `gorm:"column:SysCoID;type:varchar(20);primaryKey;not null"`
-	CusIDCode     string  `gorm:"column:CusIDCode;type:varchar(10);primaryKey;not null"`
-	DiscItem      string  `gorm:"column:DiscItem;type:varchar(6);primaryKey;not null"`
-	TxCry         string  `gorm:"column:TxCry;type:varchar(3);primaryKey;not null"`
-	RangeAmtAbove float64 `gorm:"column:RangeAmtAbove;type:numeric;primaryKey;not null;default:0"`
-	RangeFeeRate  float64 `gorm:"column:RangeFeeRate;type:numeric;not null;default:0"`
+	SysCoID       string          `gorm:"column:SysCoID;type:varchar(20);primaryKey;not null"`
+	CusIDCode     string          `gorm:"column:CusIDCode;type:varchar(10);primaryKey;not null"`
+	DiscItem      string          `gorm:"column:DiscItem;type:varchar(6);primaryKey;not null"`
+	TxCry         string          `gorm:"column:TxCry;type:varchar(3);primaryKey;not null"`
+	RangeAmtAbove decimal.Decimal `gorm:"column:RangeAmtAbove;type:numeric;primaryKey;not null;default:0"`
+	RangeFeeRate  decimal.Decimal `gorm:"column:RangeFeeRate;type:numeric;not null;default:0"`
 
 	// Standard Audit Fields
 	ValidFrom   time.Time `gorm:"column:ValidFrom;type:timestamp;not null;default:CURRENT_TIMESTAMP"`
@@ -142,6 +149,7 @@ type TAFNDFavDiscTypeDtl struct {
 	UpdateDate  time.Time `gorm:"column:UpdateDate;type:timestamp with time zone;not null;default:'1900-01-01 00:00:00+08'"`
 	DataFlag    []byte    `gorm:"column:DataFlag;type:bytea"`
 	DiffColumns string    `gorm:"column:DiffColumns;type:text;not null;default:''"`
+	models.MakerCheckerFields
 }
 
 func (TAFNDFavDiscTypeDtl) TableName() string {

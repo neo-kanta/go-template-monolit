@@ -19,7 +19,11 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	FNDM009Service_TAFNDFavDisc_FullMethodName = "/fnd.v1.FNDM009Service/TAFNDFavDisc"
+	FNDM009Service_TAFNDFavDisc_FullMethodName       = "/fnd.v1.FNDM009Service/TAFNDFavDisc"
+	FNDM009Service_SaveTAFNDFavDisc_FullMethodName   = "/fnd.v1.FNDM009Service/SaveTAFNDFavDisc"
+	FNDM009Service_UpdateTAFNDFavDisc_FullMethodName = "/fnd.v1.FNDM009Service/UpdateTAFNDFavDisc"
+	FNDM009Service_DeleteTAFNDFavDisc_FullMethodName = "/fnd.v1.FNDM009Service/DeleteTAFNDFavDisc"
+	FNDM009Service_GetDataByDataID_FullMethodName    = "/fnd.v1.FNDM009Service/GetDataByDataID"
 )
 
 // FNDM009ServiceClient is the client API for FNDM009Service service.
@@ -31,6 +35,11 @@ const (
 // ═══════════════════════════════════════════════════════════════════
 type FNDM009ServiceClient interface {
 	TAFNDFavDisc(ctx context.Context, in *TAFNDFavDiscRequest, opts ...grpc.CallOption) (*TAFNDFavDiscResponse, error)
+	SaveTAFNDFavDisc(ctx context.Context, in *TAFNDFavDiscRequest, opts ...grpc.CallOption) (*SaveResponse, error)
+	UpdateTAFNDFavDisc(ctx context.Context, in *TAFNDFavDiscRequest, opts ...grpc.CallOption) (*SaveResponse, error)
+	DeleteTAFNDFavDisc(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*SaveResponse, error)
+	// GET Data by DataID (Maintain Query)
+	GetDataByDataID(ctx context.Context, in *GetDataRequest, opts ...grpc.CallOption) (*TAFNDFavDiscRequest, error)
 }
 
 type fNDM009ServiceClient struct {
@@ -51,6 +60,46 @@ func (c *fNDM009ServiceClient) TAFNDFavDisc(ctx context.Context, in *TAFNDFavDis
 	return out, nil
 }
 
+func (c *fNDM009ServiceClient) SaveTAFNDFavDisc(ctx context.Context, in *TAFNDFavDiscRequest, opts ...grpc.CallOption) (*SaveResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SaveResponse)
+	err := c.cc.Invoke(ctx, FNDM009Service_SaveTAFNDFavDisc_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fNDM009ServiceClient) UpdateTAFNDFavDisc(ctx context.Context, in *TAFNDFavDiscRequest, opts ...grpc.CallOption) (*SaveResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SaveResponse)
+	err := c.cc.Invoke(ctx, FNDM009Service_UpdateTAFNDFavDisc_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fNDM009ServiceClient) DeleteTAFNDFavDisc(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*SaveResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SaveResponse)
+	err := c.cc.Invoke(ctx, FNDM009Service_DeleteTAFNDFavDisc_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fNDM009ServiceClient) GetDataByDataID(ctx context.Context, in *GetDataRequest, opts ...grpc.CallOption) (*TAFNDFavDiscRequest, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(TAFNDFavDiscRequest)
+	err := c.cc.Invoke(ctx, FNDM009Service_GetDataByDataID_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // FNDM009ServiceServer is the server API for FNDM009Service service.
 // All implementations must embed UnimplementedFNDM009ServiceServer
 // for forward compatibility.
@@ -60,6 +109,11 @@ func (c *fNDM009ServiceClient) TAFNDFavDisc(ctx context.Context, in *TAFNDFavDis
 // ═══════════════════════════════════════════════════════════════════
 type FNDM009ServiceServer interface {
 	TAFNDFavDisc(context.Context, *TAFNDFavDiscRequest) (*TAFNDFavDiscResponse, error)
+	SaveTAFNDFavDisc(context.Context, *TAFNDFavDiscRequest) (*SaveResponse, error)
+	UpdateTAFNDFavDisc(context.Context, *TAFNDFavDiscRequest) (*SaveResponse, error)
+	DeleteTAFNDFavDisc(context.Context, *DeleteRequest) (*SaveResponse, error)
+	// GET Data by DataID (Maintain Query)
+	GetDataByDataID(context.Context, *GetDataRequest) (*TAFNDFavDiscRequest, error)
 	mustEmbedUnimplementedFNDM009ServiceServer()
 }
 
@@ -72,6 +126,18 @@ type UnimplementedFNDM009ServiceServer struct{}
 
 func (UnimplementedFNDM009ServiceServer) TAFNDFavDisc(context.Context, *TAFNDFavDiscRequest) (*TAFNDFavDiscResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method TAFNDFavDisc not implemented")
+}
+func (UnimplementedFNDM009ServiceServer) SaveTAFNDFavDisc(context.Context, *TAFNDFavDiscRequest) (*SaveResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method SaveTAFNDFavDisc not implemented")
+}
+func (UnimplementedFNDM009ServiceServer) UpdateTAFNDFavDisc(context.Context, *TAFNDFavDiscRequest) (*SaveResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateTAFNDFavDisc not implemented")
+}
+func (UnimplementedFNDM009ServiceServer) DeleteTAFNDFavDisc(context.Context, *DeleteRequest) (*SaveResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteTAFNDFavDisc not implemented")
+}
+func (UnimplementedFNDM009ServiceServer) GetDataByDataID(context.Context, *GetDataRequest) (*TAFNDFavDiscRequest, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetDataByDataID not implemented")
 }
 func (UnimplementedFNDM009ServiceServer) mustEmbedUnimplementedFNDM009ServiceServer() {}
 func (UnimplementedFNDM009ServiceServer) testEmbeddedByValue()                        {}
@@ -112,6 +178,78 @@ func _FNDM009Service_TAFNDFavDisc_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _FNDM009Service_SaveTAFNDFavDisc_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TAFNDFavDiscRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FNDM009ServiceServer).SaveTAFNDFavDisc(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FNDM009Service_SaveTAFNDFavDisc_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FNDM009ServiceServer).SaveTAFNDFavDisc(ctx, req.(*TAFNDFavDiscRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FNDM009Service_UpdateTAFNDFavDisc_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TAFNDFavDiscRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FNDM009ServiceServer).UpdateTAFNDFavDisc(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FNDM009Service_UpdateTAFNDFavDisc_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FNDM009ServiceServer).UpdateTAFNDFavDisc(ctx, req.(*TAFNDFavDiscRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FNDM009Service_DeleteTAFNDFavDisc_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FNDM009ServiceServer).DeleteTAFNDFavDisc(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FNDM009Service_DeleteTAFNDFavDisc_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FNDM009ServiceServer).DeleteTAFNDFavDisc(ctx, req.(*DeleteRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FNDM009Service_GetDataByDataID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FNDM009ServiceServer).GetDataByDataID(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FNDM009Service_GetDataByDataID_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FNDM009ServiceServer).GetDataByDataID(ctx, req.(*GetDataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // FNDM009Service_ServiceDesc is the grpc.ServiceDesc for FNDM009Service service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -122,6 +260,22 @@ var FNDM009Service_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "TAFNDFavDisc",
 			Handler:    _FNDM009Service_TAFNDFavDisc_Handler,
+		},
+		{
+			MethodName: "SaveTAFNDFavDisc",
+			Handler:    _FNDM009Service_SaveTAFNDFavDisc_Handler,
+		},
+		{
+			MethodName: "UpdateTAFNDFavDisc",
+			Handler:    _FNDM009Service_UpdateTAFNDFavDisc_Handler,
+		},
+		{
+			MethodName: "DeleteTAFNDFavDisc",
+			Handler:    _FNDM009Service_DeleteTAFNDFavDisc_Handler,
+		},
+		{
+			MethodName: "GetDataByDataID",
+			Handler:    _FNDM009Service_GetDataByDataID_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

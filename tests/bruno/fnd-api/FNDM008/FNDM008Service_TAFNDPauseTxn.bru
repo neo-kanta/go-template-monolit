@@ -1,0 +1,15 @@
+meta {
+  name: FNDM008Service_TAFNDPauseTxn
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}/TAapi/Fund/TAFNDPauseTxn?SysCoID=&PrtFundCode=&PTxnBegDate=&PTxnEndDate=&Remark=
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}

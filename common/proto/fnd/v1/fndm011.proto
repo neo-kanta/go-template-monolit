@@ -4,6 +4,8 @@ package fnd.v1;
 option go_package = "go-transfer-agent/common/gen/fnd/v1;fndv1";
 
 import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "fnd/v1/common.proto";
 
 // ═══════════════════════════════════════════════════════════════════
 // FNDM011 Service
@@ -11,9 +13,42 @@ import "google/api/annotations.proto";
 service FNDM011Service {
   rpc TAFNDIShareFundFeeRdm(TAFNDIShareFundFeeRdmRequest) returns (TAFNDIShareFundFeeRdmResponse) {
     option (google.api.http) = { get: "/TAapi/Fund/TAFNDIShareFundFeeRdm" };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["APIFNDM011：TAFNDIShareFundFeeRdm"]
+    };
   }
-}
 
+  rpc SaveTAFNDIShareFundFeeRdm(TAFNDIShareFundFeeRdmRequest) returns (SaveResponse) {
+    option (google.api.http) = { post: "/TAapi/Fund/TAFNDIShareFundFeeRdm" body: "*" };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["APIFNDM011：TAFNDIShareFundFeeRdm"]
+    };
+  }
+
+  rpc UpdateTAFNDIShareFundFeeRdm(TAFNDIShareFundFeeRdmRequest) returns (SaveResponse) {
+    option (google.api.http) = { put: "/TAapi/Fund/TAFNDIShareFundFeeRdm" body: "*" };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["APIFNDM011：TAFNDIShareFundFeeRdm"]
+    };
+  }
+
+  rpc DeleteTAFNDIShareFundFeeRdm(DeleteRequest) returns (SaveResponse) {
+    option (google.api.http) = { delete: "/TAapi/Fund/TAFNDIShareFundFeeRdm" };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["APIFNDM011：TAFNDIShareFundFeeRdm"]
+    };
+  }
+
+
+  // GET Data by DataID (Maintain Query)
+  rpc GetDataByDataID(GetDataRequest) returns (TAFNDIShareFundFeeRdmRequest) {
+    option (google.api.http) = { get: "/TAapi/Fund/TAFNDIShareFundFeeRdm/GetData/{data_id}" };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["APIFNDM011：TAFNDIShareFundFeeRdm"]
+    };
+  }
+
+}
 // ═══════════════════════════════════════════════════════════════════
 // FNDM011 Messages
 // ═══════════════════════════════════════════════════════════════════
@@ -48,4 +83,12 @@ message IShareFundFeeRdmMasterDTO {
   string rdm_calc_id = 10 [json_name="RdmCalcID"];
   int32 should_hold_days = 11 [json_name="ShouldHoldDays"];
   double fee_rate = 12 [json_name="FeeRate"];
+}
+
+message ApproveTAFNDIShareFundFeeRdmRequest {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string data_id = 2 [json_name="DataID"];
+  string checker_id = 3 [json_name="CheckerID"];
+  bool is_approved = 4 [json_name="IsApproved"];
+  string remark = 5 [json_name="Remark"];
 }

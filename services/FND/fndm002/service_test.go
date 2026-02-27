@@ -4,6 +4,9 @@ import (
 	"context"
 	"testing"
 
+	"github.com/shopspring/decimal"
+	"github.com/stretchr/testify/require"
+
 	fndv1 "go-transfer-agent/common/gen/fnd/v1"
 	"go-transfer-agent/services/fnd/fndm002"
 	"go-transfer-agent/services/fnd/fndm002/db"
@@ -24,9 +27,7 @@ func TestService_TAFNDFundFee_Integration(t *testing.T) {
 		&db.DTAFNDFundFeeBack{},
 		&db.DTAFNDFundFeeBackDtl{},
 	)
-	if err != nil {
-		t.Fatalf("Failed to migrate FNDM002 schemas: %v", err)
-	}
+	require.NoError(t, err)
 
 	// 2. Clean up
 	database.Exec(`DELETE FROM "TA_STD_TH"."DTA_FND_FundFeeBackDtl"`)
@@ -54,7 +55,7 @@ func TestService_TAFNDFundFee_Integration(t *testing.T) {
 	}
 
 	subDtls := []db.DTAFNDFundFeeSubDtl{
-		{SysCoID: "C01", PrtFundCode: "F1", FundCode: "F2", CryID: "THB", SubsFeeRate: 1.5},
+		{SysCoID: "C01", PrtFundCode: "F1", FundCode: "F2", CryID: "THB", SubsFeeRate: decimal.NewFromFloat(1.5).RoundBank(4)},
 	}
 	if err := database.Create(&subDtls).Error; err != nil {
 		t.Fatalf("Failed to seed sub dtls: %v", err)
@@ -84,9 +85,7 @@ func TestService_TAFNDFundFee_Integration(t *testing.T) {
 	}
 
 	res, err := svc.TAFNDFundFee(ctx, req)
-	if err != nil {
-		t.Fatalf("Service error: %v", err)
-	}
+	require.NoError(t, err)
 
 	// 5. Assertions
 	if len(res.ResultList) != 1 {

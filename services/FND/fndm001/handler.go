@@ -42,12 +42,9 @@ func (h *Handler) QueryFundInfo(ctx context.Context, req *fndv1.QueryFundInfoReq
 	return h.svc.QueryFundInfo(req.GetSysCoId()), nil
 }
 
-func (h *Handler) QueryFundInfoByDataID(ctx context.Context, req *fndv1.QueryFundInfoByDataIDRequest) (*fndv1.QueryFundInfoByDataIDResponse, error) {
-	h.log.Info("QueryFundInfoByDataID",
-		slog.String("sys_co_id", req.GetSysCoId()),
-		slog.String("prt_fund_code", req.GetPrtFundCode()),
-	)
-	return h.svc.QueryFundInfoByDataID(req.GetSysCoId(), req.GetPrtFundCode())
+func (h *Handler) GetDataByDataID(ctx context.Context, req *fndv1.GetDataRequest) (*fndv1.QueryFundInfoByDataIDResponse, error) {
+	h.log.Info("GetDataByDataID", slog.String("data_id", req.GetDataId()))
+	return h.svc.GetDataByDataID(ctx, req)
 }
 
 func (h *Handler) SaveFundInfo(ctx context.Context, req *fndv1.SaveFundInfoRequest) (*fndv1.SaveFundInfoResponse, error) {
@@ -55,7 +52,32 @@ func (h *Handler) SaveFundInfo(ctx context.Context, req *fndv1.SaveFundInfoReque
 		slog.String("sys_co_id", req.GetMaster().GetSysCoId()),
 		slog.String("prt_fund_code", req.GetMaster().GetPrtFundCode()),
 	)
-	return h.svc.SaveFundInfo(req), nil
+	return h.svc.SaveFundInfo(ctx, req), nil
+}
+
+func (h *Handler) UpdateFundInfo(ctx context.Context, req *fndv1.SaveFundInfoRequest) (*fndv1.SaveFundInfoResponse, error) {
+	h.log.Info("UpdateFundInfo",
+		slog.String("sys_co_id", req.GetMaster().GetSysCoId()),
+		slog.String("prt_fund_code", req.GetMaster().GetPrtFundCode()),
+	)
+	return h.svc.UpdateFundInfo(req), nil
+}
+
+func (h *Handler) ApproveFundInfo(ctx context.Context, req *fndv1.ApproveFundInfoRequest) (*fndv1.SaveFundInfoResponse, error) {
+	h.log.Info("ApproveFundInfo",
+		slog.String("sys_co_id", req.GetSysCoId()),
+		slog.String("prt_fund_code", req.GetPrtFundCode()),
+		slog.String("checker_id", req.GetCheckerId()),
+	)
+	return h.svc.ApproveFundInfo(ctx, req), nil
+}
+
+func (h *Handler) DeleteTAFNDFundInfo(ctx context.Context, req *fndv1.DeleteRequest) (*fndv1.SaveResponse, error) {
+	h.log.Info("DeleteTAFNDFundInfo",
+		slog.String("data_id", req.GetDataId()),
+		slog.String("data_flag", req.GetDataFlag()),
+	)
+	return h.svc.DeleteTAFNDFundInfo(ctx, req)
 }
 
 // ─── KFNDM: Check Functions ───

@@ -19,7 +19,11 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	FNDM003Service_TAFNDSwitch_FullMethodName = "/fnd.v1.FNDM003Service/TAFNDSwitch"
+	FNDM003Service_TAFNDSwitch_FullMethodName       = "/fnd.v1.FNDM003Service/TAFNDSwitch"
+	FNDM003Service_SaveTAFNDSwitch_FullMethodName   = "/fnd.v1.FNDM003Service/SaveTAFNDSwitch"
+	FNDM003Service_UpdateTAFNDSwitch_FullMethodName = "/fnd.v1.FNDM003Service/UpdateTAFNDSwitch"
+	FNDM003Service_DeleteTAFNDSwitch_FullMethodName = "/fnd.v1.FNDM003Service/DeleteTAFNDSwitch"
+	FNDM003Service_GetDataByDataID_FullMethodName   = "/fnd.v1.FNDM003Service/GetDataByDataID"
 )
 
 // FNDM003ServiceClient is the client API for FNDM003Service service.
@@ -31,6 +35,11 @@ const (
 // ═══════════════════════════════════════════════════════════════════
 type FNDM003ServiceClient interface {
 	TAFNDSwitch(ctx context.Context, in *TAFNDSwitchRequest, opts ...grpc.CallOption) (*TAFNDSwitchResponse, error)
+	SaveTAFNDSwitch(ctx context.Context, in *TAFNDSwitchRequest, opts ...grpc.CallOption) (*SaveResponse, error)
+	UpdateTAFNDSwitch(ctx context.Context, in *TAFNDSwitchRequest, opts ...grpc.CallOption) (*SaveResponse, error)
+	DeleteTAFNDSwitch(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*SaveResponse, error)
+	// GET Data by DataID (Maintain Query)
+	GetDataByDataID(ctx context.Context, in *GetDataRequest, opts ...grpc.CallOption) (*TAFNDSwitchRequest, error)
 }
 
 type fNDM003ServiceClient struct {
@@ -51,6 +60,46 @@ func (c *fNDM003ServiceClient) TAFNDSwitch(ctx context.Context, in *TAFNDSwitchR
 	return out, nil
 }
 
+func (c *fNDM003ServiceClient) SaveTAFNDSwitch(ctx context.Context, in *TAFNDSwitchRequest, opts ...grpc.CallOption) (*SaveResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SaveResponse)
+	err := c.cc.Invoke(ctx, FNDM003Service_SaveTAFNDSwitch_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fNDM003ServiceClient) UpdateTAFNDSwitch(ctx context.Context, in *TAFNDSwitchRequest, opts ...grpc.CallOption) (*SaveResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SaveResponse)
+	err := c.cc.Invoke(ctx, FNDM003Service_UpdateTAFNDSwitch_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fNDM003ServiceClient) DeleteTAFNDSwitch(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*SaveResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SaveResponse)
+	err := c.cc.Invoke(ctx, FNDM003Service_DeleteTAFNDSwitch_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fNDM003ServiceClient) GetDataByDataID(ctx context.Context, in *GetDataRequest, opts ...grpc.CallOption) (*TAFNDSwitchRequest, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(TAFNDSwitchRequest)
+	err := c.cc.Invoke(ctx, FNDM003Service_GetDataByDataID_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // FNDM003ServiceServer is the server API for FNDM003Service service.
 // All implementations must embed UnimplementedFNDM003ServiceServer
 // for forward compatibility.
@@ -60,6 +109,11 @@ func (c *fNDM003ServiceClient) TAFNDSwitch(ctx context.Context, in *TAFNDSwitchR
 // ═══════════════════════════════════════════════════════════════════
 type FNDM003ServiceServer interface {
 	TAFNDSwitch(context.Context, *TAFNDSwitchRequest) (*TAFNDSwitchResponse, error)
+	SaveTAFNDSwitch(context.Context, *TAFNDSwitchRequest) (*SaveResponse, error)
+	UpdateTAFNDSwitch(context.Context, *TAFNDSwitchRequest) (*SaveResponse, error)
+	DeleteTAFNDSwitch(context.Context, *DeleteRequest) (*SaveResponse, error)
+	// GET Data by DataID (Maintain Query)
+	GetDataByDataID(context.Context, *GetDataRequest) (*TAFNDSwitchRequest, error)
 	mustEmbedUnimplementedFNDM003ServiceServer()
 }
 
@@ -72,6 +126,18 @@ type UnimplementedFNDM003ServiceServer struct{}
 
 func (UnimplementedFNDM003ServiceServer) TAFNDSwitch(context.Context, *TAFNDSwitchRequest) (*TAFNDSwitchResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method TAFNDSwitch not implemented")
+}
+func (UnimplementedFNDM003ServiceServer) SaveTAFNDSwitch(context.Context, *TAFNDSwitchRequest) (*SaveResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method SaveTAFNDSwitch not implemented")
+}
+func (UnimplementedFNDM003ServiceServer) UpdateTAFNDSwitch(context.Context, *TAFNDSwitchRequest) (*SaveResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateTAFNDSwitch not implemented")
+}
+func (UnimplementedFNDM003ServiceServer) DeleteTAFNDSwitch(context.Context, *DeleteRequest) (*SaveResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteTAFNDSwitch not implemented")
+}
+func (UnimplementedFNDM003ServiceServer) GetDataByDataID(context.Context, *GetDataRequest) (*TAFNDSwitchRequest, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetDataByDataID not implemented")
 }
 func (UnimplementedFNDM003ServiceServer) mustEmbedUnimplementedFNDM003ServiceServer() {}
 func (UnimplementedFNDM003ServiceServer) testEmbeddedByValue()                        {}
@@ -112,6 +178,78 @@ func _FNDM003Service_TAFNDSwitch_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _FNDM003Service_SaveTAFNDSwitch_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TAFNDSwitchRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FNDM003ServiceServer).SaveTAFNDSwitch(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FNDM003Service_SaveTAFNDSwitch_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FNDM003ServiceServer).SaveTAFNDSwitch(ctx, req.(*TAFNDSwitchRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FNDM003Service_UpdateTAFNDSwitch_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TAFNDSwitchRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FNDM003ServiceServer).UpdateTAFNDSwitch(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FNDM003Service_UpdateTAFNDSwitch_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FNDM003ServiceServer).UpdateTAFNDSwitch(ctx, req.(*TAFNDSwitchRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FNDM003Service_DeleteTAFNDSwitch_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FNDM003ServiceServer).DeleteTAFNDSwitch(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FNDM003Service_DeleteTAFNDSwitch_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FNDM003ServiceServer).DeleteTAFNDSwitch(ctx, req.(*DeleteRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FNDM003Service_GetDataByDataID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FNDM003ServiceServer).GetDataByDataID(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FNDM003Service_GetDataByDataID_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FNDM003ServiceServer).GetDataByDataID(ctx, req.(*GetDataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // FNDM003Service_ServiceDesc is the grpc.ServiceDesc for FNDM003Service service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -122,6 +260,22 @@ var FNDM003Service_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "TAFNDSwitch",
 			Handler:    _FNDM003Service_TAFNDSwitch_Handler,
+		},
+		{
+			MethodName: "SaveTAFNDSwitch",
+			Handler:    _FNDM003Service_SaveTAFNDSwitch_Handler,
+		},
+		{
+			MethodName: "UpdateTAFNDSwitch",
+			Handler:    _FNDM003Service_UpdateTAFNDSwitch_Handler,
+		},
+		{
+			MethodName: "DeleteTAFNDSwitch",
+			Handler:    _FNDM003Service_DeleteTAFNDSwitch_Handler,
+		},
+		{
+			MethodName: "GetDataByDataID",
+			Handler:    _FNDM003Service_GetDataByDataID_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

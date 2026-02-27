@@ -4,6 +4,8 @@ package fnd.v1;
 option go_package = "go-transfer-agent/common/gen/fnd/v1;fndv1";
 
 import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "fnd/v1/common.proto";
 
 // ═══════════════════════════════════════════════════════════════════
 // FNDM005 Service
@@ -11,9 +13,49 @@ import "google/api/annotations.proto";
 service FNDM005Service {
   rpc TAFNDFundCalDate(TAFNDFundCalDateRequest) returns (TAFNDFundCalDateResponse) {
     option (google.api.http) = { get: "/TAapi/BaseFund/TAFNDFundCalDate" };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["APIFNDM005：TAFNDFundCalDate"]
+    };
   }
-}
 
+  rpc SaveTAFNDFundCalDate(TAFNDFundCalDateRequest) returns (SaveResponse) {
+    option (google.api.http) = { post: "/TAapi/BaseFund/TAFNDFundCalDate" body: "*" };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["APIFNDM005：TAFNDFundCalDate"]
+    };
+  }
+
+  rpc UpdateTAFNDFundCalDate(TAFNDFundCalDateRequest) returns (SaveResponse) {
+    option (google.api.http) = { put: "/TAapi/BaseFund/TAFNDFundCalDate" body: "*" };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["APIFNDM005：TAFNDFundCalDate"]
+    };
+  }
+
+  rpc DeleteTAFNDFundCalDate(DeleteRequest) returns (SaveResponse) {
+    option (google.api.http) = { delete: "/TAapi/BaseFund/TAFNDFundCalDate" };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["APIFNDM005：TAFNDFundCalDate"]
+    };
+  }
+
+  rpc TACKFNDCalEdit(TACKFNDCalEditRequest) returns (CheckResponse) {
+    option (google.api.http) = { get: "/TAapi/BaseFund/TAFNDFundCalDate/ChkData/TACKFNDCalEdit" };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["APIFNDM005：TAFNDFundCalDate"]
+    };
+  }
+
+
+  // GET Data by DataID (Maintain Query)
+  rpc GetDataByDataID(GetDataRequest) returns (TAFNDFundCalDateRequest) {
+    option (google.api.http) = { get: "/TAapi/BaseFund/TAFNDFundCalDate/GetData/{data_id}" };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["APIFNDM005：TAFNDFundCalDate"]
+    };
+  }
+
+}
 // ═══════════════════════════════════════════════════════════════════
 // FNDM005 Messages
 // ═══════════════════════════════════════════════════════════════════
@@ -59,4 +101,18 @@ message FundClosedDateFundListDTO {
   string prt_fund_code = 5 [json_name="PrtFundCode"];
   string prt_fund_code_nm = 6 [json_name="PrtFundCodeNm"];
   string cal_date = 7 [json_name="CalDate"];
+}
+
+// KFNDM00502
+message TACKFNDCalEditRequest {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string check_time_point = 2 [json_name="CheckTimePoint"];
+}
+
+message ApproveTAFNDFundCalDateRequest {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string data_id = 2 [json_name="DataID"];
+  string checker_id = 3 [json_name="CheckerID"];
+  bool is_approved = 4 [json_name="IsApproved"];
+  string remark = 5 [json_name="Remark"];
 }

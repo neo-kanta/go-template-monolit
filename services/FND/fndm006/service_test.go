@@ -4,6 +4,8 @@ import (
 	"context"
 	"testing"
 
+	"github.com/stretchr/testify/require"
+
 	fndv1 "go-transfer-agent/common/gen/fnd/v1"
 	"go-transfer-agent/services/fnd/fndm006"
 	"go-transfer-agent/services/fnd/fndm006/db"
@@ -19,9 +21,7 @@ func TestService_TAFNDRPFeeChgType_Integration(t *testing.T) {
 		&db.DTAFNDRPFeeChgType{},
 		&db.DTAFNDRPFeeChgTypeDtl{},
 	)
-	if err != nil {
-		t.Fatalf("Failed to migrate FNDM006 schemas: %v", err)
-	}
+	require.NoError(t, err)
 
 	// 2. Clean up
 	database.Exec(`DELETE FROM "TA_STD_TH"."DTA_FND_RPFeeChgTypeDtl"`)
@@ -55,9 +55,7 @@ func TestService_TAFNDRPFeeChgType_Integration(t *testing.T) {
 	}
 
 	res, err := svc.TAFNDRPFeeChgType(ctx, req)
-	if err != nil {
-		t.Fatalf("Service error: %v", err)
-	}
+	require.NoError(t, err)
 
 	// 5. Assertions
 	if len(res.ResultList) != 1 {

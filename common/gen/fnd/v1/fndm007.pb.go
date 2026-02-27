@@ -7,6 +7,7 @@
 package fndv1
 
 import (
+	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -294,11 +295,236 @@ func (x *CustFundGroupListDTO) GetPrtFundCodeNm() string {
 	return ""
 }
 
+// GFNDM00701
+type TAGetCustGroupRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	SysCoId       string                 `protobuf:"bytes,1,opt,name=sys_co_id,json=SysCoID,proto3" json:"sys_co_id,omitempty"`
+	CustGrpCode   string                 `protobuf:"bytes,2,opt,name=cust_grp_code,json=CustGrpCode,proto3" json:"cust_grp_code,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *TAGetCustGroupRequest) Reset() {
+	*x = TAGetCustGroupRequest{}
+	mi := &file_fnd_v1_fndm007_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TAGetCustGroupRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TAGetCustGroupRequest) ProtoMessage() {}
+
+func (x *TAGetCustGroupRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_fnd_v1_fndm007_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TAGetCustGroupRequest.ProtoReflect.Descriptor instead.
+func (*TAGetCustGroupRequest) Descriptor() ([]byte, []int) {
+	return file_fnd_v1_fndm007_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *TAGetCustGroupRequest) GetSysCoId() string {
+	if x != nil {
+		return x.SysCoId
+	}
+	return ""
+}
+
+func (x *TAGetCustGroupRequest) GetCustGrpCode() string {
+	if x != nil {
+		return x.CustGrpCode
+	}
+	return ""
+}
+
+type TAGetCustGroupResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Master        []*CustGroupLookupDTO  `protobuf:"bytes,1,rep,name=master,json=Master,proto3" json:"master,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *TAGetCustGroupResponse) Reset() {
+	*x = TAGetCustGroupResponse{}
+	mi := &file_fnd_v1_fndm007_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TAGetCustGroupResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TAGetCustGroupResponse) ProtoMessage() {}
+
+func (x *TAGetCustGroupResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_fnd_v1_fndm007_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TAGetCustGroupResponse.ProtoReflect.Descriptor instead.
+func (*TAGetCustGroupResponse) Descriptor() ([]byte, []int) {
+	return file_fnd_v1_fndm007_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *TAGetCustGroupResponse) GetMaster() []*CustGroupLookupDTO {
+	if x != nil {
+		return x.Master
+	}
+	return nil
+}
+
+type CustGroupLookupDTO struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	CustGrpCode   string                 `protobuf:"bytes,1,opt,name=cust_grp_code,json=CustGrpCode,proto3" json:"cust_grp_code,omitempty"`
+	CustGrpCodeNm string                 `protobuf:"bytes,2,opt,name=cust_grp_code_nm,json=CustGrpCodeNM,proto3" json:"cust_grp_code_nm,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CustGroupLookupDTO) Reset() {
+	*x = CustGroupLookupDTO{}
+	mi := &file_fnd_v1_fndm007_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CustGroupLookupDTO) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CustGroupLookupDTO) ProtoMessage() {}
+
+func (x *CustGroupLookupDTO) ProtoReflect() protoreflect.Message {
+	mi := &file_fnd_v1_fndm007_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CustGroupLookupDTO.ProtoReflect.Descriptor instead.
+func (*CustGroupLookupDTO) Descriptor() ([]byte, []int) {
+	return file_fnd_v1_fndm007_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *CustGroupLookupDTO) GetCustGrpCode() string {
+	if x != nil {
+		return x.CustGrpCode
+	}
+	return ""
+}
+
+func (x *CustGroupLookupDTO) GetCustGrpCodeNm() string {
+	if x != nil {
+		return x.CustGrpCodeNm
+	}
+	return ""
+}
+
+type ApproveTAFNDCustGroupRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	SysCoId       string                 `protobuf:"bytes,1,opt,name=sys_co_id,json=SysCoID,proto3" json:"sys_co_id,omitempty"`
+	DataId        string                 `protobuf:"bytes,2,opt,name=data_id,json=DataID,proto3" json:"data_id,omitempty"`
+	CheckerId     string                 `protobuf:"bytes,3,opt,name=checker_id,json=CheckerID,proto3" json:"checker_id,omitempty"`
+	IsApproved    bool                   `protobuf:"varint,4,opt,name=is_approved,json=IsApproved,proto3" json:"is_approved,omitempty"`
+	Remark        string                 `protobuf:"bytes,5,opt,name=remark,json=Remark,proto3" json:"remark,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ApproveTAFNDCustGroupRequest) Reset() {
+	*x = ApproveTAFNDCustGroupRequest{}
+	mi := &file_fnd_v1_fndm007_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ApproveTAFNDCustGroupRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ApproveTAFNDCustGroupRequest) ProtoMessage() {}
+
+func (x *ApproveTAFNDCustGroupRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_fnd_v1_fndm007_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ApproveTAFNDCustGroupRequest.ProtoReflect.Descriptor instead.
+func (*ApproveTAFNDCustGroupRequest) Descriptor() ([]byte, []int) {
+	return file_fnd_v1_fndm007_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *ApproveTAFNDCustGroupRequest) GetSysCoId() string {
+	if x != nil {
+		return x.SysCoId
+	}
+	return ""
+}
+
+func (x *ApproveTAFNDCustGroupRequest) GetDataId() string {
+	if x != nil {
+		return x.DataId
+	}
+	return ""
+}
+
+func (x *ApproveTAFNDCustGroupRequest) GetCheckerId() string {
+	if x != nil {
+		return x.CheckerId
+	}
+	return ""
+}
+
+func (x *ApproveTAFNDCustGroupRequest) GetIsApproved() bool {
+	if x != nil {
+		return x.IsApproved
+	}
+	return false
+}
+
+func (x *ApproveTAFNDCustGroupRequest) GetRemark() string {
+	if x != nil {
+		return x.Remark
+	}
+	return ""
+}
+
 var File_fnd_v1_fndm007_proto protoreflect.FileDescriptor
 
 const file_fnd_v1_fndm007_proto_rawDesc = "" +
 	"\n" +
-	"\x14fnd/v1/fndm007.proto\x12\x06fnd.v1\x1a\x1cgoogle/api/annotations.proto\"\xf4\x01\n" +
+	"\x14fnd/v1/fndm007.proto\x12\x06fnd.v1\x1a\x1cgoogle/api/annotations.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\x1a\x13fnd/v1/common.proto\"\xf4\x01\n" +
 	"\x15TAFNDCustGroupRequest\x12\x1a\n" +
 	"\tsys_co_id\x18\x01 \x01(\tR\aSysCoID\x12\"\n" +
 	"\rcust_grp_code\x18\x02 \x01(\tR\vCustGrpCode\x12%\n" +
@@ -319,9 +545,36 @@ const file_fnd_v1_fndm007_proto_rawDesc = "" +
 	"\tsys_co_id\x18\x01 \x01(\tR\aSysCoID\x12\"\n" +
 	"\rcust_grp_code\x18\x02 \x01(\tR\vCustGrpCode\x12\"\n" +
 	"\rprt_fund_code\x18\x03 \x01(\tR\vPrtFundCode\x12'\n" +
-	"\x10prt_fund_code_nm\x18\x04 \x01(\tR\rPrtFundCodeNm2\x85\x01\n" +
-	"\x0eFNDM007Service\x12s\n" +
-	"\x0eTAFNDCustGroup\x12\x1d.fnd.v1.TAFNDCustGroupRequest\x1a\x1e.fnd.v1.TAFNDCustGroupResponse\"\"\x82\xd3\xe4\x93\x02\x1c\x12\x1a/TAapi/Fund/TAFNDCustGroupB+Z)go-transfer-agent/common/gen/fnd/v1;fndv1b\x06proto3"
+	"\x10prt_fund_code_nm\x18\x04 \x01(\tR\rPrtFundCodeNm\"W\n" +
+	"\x15TAGetCustGroupRequest\x12\x1a\n" +
+	"\tsys_co_id\x18\x01 \x01(\tR\aSysCoID\x12\"\n" +
+	"\rcust_grp_code\x18\x02 \x01(\tR\vCustGrpCode\"L\n" +
+	"\x16TAGetCustGroupResponse\x122\n" +
+	"\x06master\x18\x01 \x03(\v2\x1a.fnd.v1.CustGroupLookupDTOR\x06Master\"a\n" +
+	"\x12CustGroupLookupDTO\x12\"\n" +
+	"\rcust_grp_code\x18\x01 \x01(\tR\vCustGrpCode\x12'\n" +
+	"\x10cust_grp_code_nm\x18\x02 \x01(\tR\rCustGrpCodeNM\"\xab\x01\n" +
+	"\x1cApproveTAFNDCustGroupRequest\x12\x1a\n" +
+	"\tsys_co_id\x18\x01 \x01(\tR\aSysCoID\x12\x17\n" +
+	"\adata_id\x18\x02 \x01(\tR\x06DataID\x12\x1d\n" +
+	"\n" +
+	"checker_id\x18\x03 \x01(\tR\tCheckerID\x12\x1f\n" +
+	"\vis_approved\x18\x04 \x01(\bR\n" +
+	"IsApproved\x12\x16\n" +
+	"\x06remark\x18\x05 \x01(\tR\x06Remark2\xae\a\n" +
+	"\x0eFNDM007Service\x12\x93\x01\n" +
+	"\x0eTAFNDCustGroup\x12\x1d.fnd.v1.TAFNDCustGroupRequest\x1a\x1e.fnd.v1.TAFNDCustGroupResponse\"B\x92A\x1d\n" +
+	"\x1bAPIFNDM007：TAFNDFundGroup\x82\xd3\xe4\x93\x02\x1c\x12\x1a/TAapi/Fund/TAFNDCustGroup\x12\x90\x01\n" +
+	"\x12SaveTAFNDCustGroup\x12\x1d.fnd.v1.TAFNDCustGroupRequest\x1a\x14.fnd.v1.SaveResponse\"E\x92A\x1d\n" +
+	"\x1bAPIFNDM007：TAFNDFundGroup\x82\xd3\xe4\x93\x02\x1f:\x01*\"\x1a/TAapi/Fund/TAFNDCustGroup\x12\x92\x01\n" +
+	"\x14UpdateTAFNDCustGroup\x12\x1d.fnd.v1.TAFNDCustGroupRequest\x1a\x14.fnd.v1.SaveResponse\"E\x92A\x1d\n" +
+	"\x1bAPIFNDM007：TAFNDFundGroup\x82\xd3\xe4\x93\x02\x1f:\x01*\x1a\x1a/TAapi/Fund/TAFNDCustGroup\x12\x87\x01\n" +
+	"\x14DeleteTAFNDCustGroup\x12\x15.fnd.v1.DeleteRequest\x1a\x14.fnd.v1.SaveResponse\"B\x92A\x1d\n" +
+	"\x1bAPIFNDM007：TAFNDFundGroup\x82\xd3\xe4\x93\x02\x1c*\x1a/TAapi/Fund/TAFNDCustGroup\x12\xae\x01\n" +
+	"\x0eTAGetCustGroup\x12\x1d.fnd.v1.TAGetCustGroupRequest\x1a\x1e.fnd.v1.TAGetCustGroupResponse\"]\x92A\x1d\n" +
+	"\x1bAPIFNDM007：TAFNDFundGroup\x82\xd3\xe4\x93\x027\x125/TAapi/BaseFund/TAFNDCustGroup/GetInfo/TAGetCustGroup\x12\xa2\x01\n" +
+	"\x0fGetDataByDataID\x12\x16.fnd.v1.GetDataRequest\x1a\x1d.fnd.v1.TAFNDCustGroupRequest\"X\x92A\x1d\n" +
+	"\x1bAPIFNDM007：TAFNDFundGroup\x82\xd3\xe4\x93\x022\x120/TAapi/BaseFund/TAFNDCustGroup/GetData/{data_id}B+Z)go-transfer-agent/common/gen/fnd/v1;fndv1b\x06proto3"
 
 var (
 	file_fnd_v1_fndm007_proto_rawDescOnce sync.Once
@@ -335,24 +588,42 @@ func file_fnd_v1_fndm007_proto_rawDescGZIP() []byte {
 	return file_fnd_v1_fndm007_proto_rawDescData
 }
 
-var file_fnd_v1_fndm007_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_fnd_v1_fndm007_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_fnd_v1_fndm007_proto_goTypes = []any{
-	(*TAFNDCustGroupRequest)(nil),  // 0: fnd.v1.TAFNDCustGroupRequest
-	(*TAFNDCustGroupResponse)(nil), // 1: fnd.v1.TAFNDCustGroupResponse
-	(*CustGroupMasterDTO)(nil),     // 2: fnd.v1.CustGroupMasterDTO
-	(*CustFundGroupListDTO)(nil),   // 3: fnd.v1.CustFundGroupListDTO
+	(*TAFNDCustGroupRequest)(nil),        // 0: fnd.v1.TAFNDCustGroupRequest
+	(*TAFNDCustGroupResponse)(nil),       // 1: fnd.v1.TAFNDCustGroupResponse
+	(*CustGroupMasterDTO)(nil),           // 2: fnd.v1.CustGroupMasterDTO
+	(*CustFundGroupListDTO)(nil),         // 3: fnd.v1.CustFundGroupListDTO
+	(*TAGetCustGroupRequest)(nil),        // 4: fnd.v1.TAGetCustGroupRequest
+	(*TAGetCustGroupResponse)(nil),       // 5: fnd.v1.TAGetCustGroupResponse
+	(*CustGroupLookupDTO)(nil),           // 6: fnd.v1.CustGroupLookupDTO
+	(*ApproveTAFNDCustGroupRequest)(nil), // 7: fnd.v1.ApproveTAFNDCustGroupRequest
+	(*DeleteRequest)(nil),                // 8: fnd.v1.DeleteRequest
+	(*GetDataRequest)(nil),               // 9: fnd.v1.GetDataRequest
+	(*SaveResponse)(nil),                 // 10: fnd.v1.SaveResponse
 }
 var file_fnd_v1_fndm007_proto_depIdxs = []int32{
-	3, // 0: fnd.v1.TAFNDCustGroupRequest.cust_fund_group_list:type_name -> fnd.v1.CustFundGroupListDTO
-	2, // 1: fnd.v1.TAFNDCustGroupResponse.result_list:type_name -> fnd.v1.CustGroupMasterDTO
-	3, // 2: fnd.v1.TAFNDCustGroupResponse.cust_fund_group_list:type_name -> fnd.v1.CustFundGroupListDTO
-	0, // 3: fnd.v1.FNDM007Service.TAFNDCustGroup:input_type -> fnd.v1.TAFNDCustGroupRequest
-	1, // 4: fnd.v1.FNDM007Service.TAFNDCustGroup:output_type -> fnd.v1.TAFNDCustGroupResponse
-	4, // [4:5] is the sub-list for method output_type
-	3, // [3:4] is the sub-list for method input_type
-	3, // [3:3] is the sub-list for extension type_name
-	3, // [3:3] is the sub-list for extension extendee
-	0, // [0:3] is the sub-list for field type_name
+	3,  // 0: fnd.v1.TAFNDCustGroupRequest.cust_fund_group_list:type_name -> fnd.v1.CustFundGroupListDTO
+	2,  // 1: fnd.v1.TAFNDCustGroupResponse.result_list:type_name -> fnd.v1.CustGroupMasterDTO
+	3,  // 2: fnd.v1.TAFNDCustGroupResponse.cust_fund_group_list:type_name -> fnd.v1.CustFundGroupListDTO
+	6,  // 3: fnd.v1.TAGetCustGroupResponse.master:type_name -> fnd.v1.CustGroupLookupDTO
+	0,  // 4: fnd.v1.FNDM007Service.TAFNDCustGroup:input_type -> fnd.v1.TAFNDCustGroupRequest
+	0,  // 5: fnd.v1.FNDM007Service.SaveTAFNDCustGroup:input_type -> fnd.v1.TAFNDCustGroupRequest
+	0,  // 6: fnd.v1.FNDM007Service.UpdateTAFNDCustGroup:input_type -> fnd.v1.TAFNDCustGroupRequest
+	8,  // 7: fnd.v1.FNDM007Service.DeleteTAFNDCustGroup:input_type -> fnd.v1.DeleteRequest
+	4,  // 8: fnd.v1.FNDM007Service.TAGetCustGroup:input_type -> fnd.v1.TAGetCustGroupRequest
+	9,  // 9: fnd.v1.FNDM007Service.GetDataByDataID:input_type -> fnd.v1.GetDataRequest
+	1,  // 10: fnd.v1.FNDM007Service.TAFNDCustGroup:output_type -> fnd.v1.TAFNDCustGroupResponse
+	10, // 11: fnd.v1.FNDM007Service.SaveTAFNDCustGroup:output_type -> fnd.v1.SaveResponse
+	10, // 12: fnd.v1.FNDM007Service.UpdateTAFNDCustGroup:output_type -> fnd.v1.SaveResponse
+	10, // 13: fnd.v1.FNDM007Service.DeleteTAFNDCustGroup:output_type -> fnd.v1.SaveResponse
+	5,  // 14: fnd.v1.FNDM007Service.TAGetCustGroup:output_type -> fnd.v1.TAGetCustGroupResponse
+	0,  // 15: fnd.v1.FNDM007Service.GetDataByDataID:output_type -> fnd.v1.TAFNDCustGroupRequest
+	10, // [10:16] is the sub-list for method output_type
+	4,  // [4:10] is the sub-list for method input_type
+	4,  // [4:4] is the sub-list for extension type_name
+	4,  // [4:4] is the sub-list for extension extendee
+	0,  // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_fnd_v1_fndm007_proto_init() }
@@ -360,13 +631,14 @@ func file_fnd_v1_fndm007_proto_init() {
 	if File_fnd_v1_fndm007_proto != nil {
 		return
 	}
+	file_fnd_v1_common_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_fnd_v1_fndm007_proto_rawDesc), len(file_fnd_v1_fndm007_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

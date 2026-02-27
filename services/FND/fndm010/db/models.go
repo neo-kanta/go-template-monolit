@@ -1,6 +1,10 @@
 package db
 
 import (
+	"github.com/shopspring/decimal"
+
+	models "go-transfer-agent/common/platform/model"
+
 	"time"
 )
 
@@ -27,6 +31,7 @@ type DTAFNDIShareFundFee struct {
 	UpdateDate  time.Time `gorm:"column:UpdateDate;type:timestamp with time zone;not null;default:'1900-01-01 00:00:00+08'"`
 	DataFlag    []byte    `gorm:"column:DataFlag;type:bytea"`
 	DiffColumns string    `gorm:"column:DiffColumns;type:text;not null;default:''"`
+	models.MakerCheckerFields
 }
 
 // TableName overrides the table name used by GORM.
@@ -48,10 +53,10 @@ func (DTAFNDIShareFundFeeEdit) TableName() string {
 
 // DTAFNDIShareFundFeeSub represents the DTA_FND_IShareFundFeeSub table.
 type DTAFNDIShareFundFeeSub struct {
-	SysCoID       string  `gorm:"column:SysCoID;type:varchar(20);primaryKey;not null"`
-	FundCode      string  `gorm:"column:FundCode;type:varchar(10);primaryKey;not null"`
-	RangeAmtAbove float64 `gorm:"column:RangeAmtAbove;type:numeric;primaryKey;not null;default:0"`
-	SubsFeeRate   float64 `gorm:"column:SubsFeeRate;type:numeric;not null;default:0"`
+	SysCoID       string          `gorm:"column:SysCoID;type:varchar(20);primaryKey;not null"`
+	FundCode      string          `gorm:"column:FundCode;type:varchar(10);primaryKey;not null"`
+	RangeAmtAbove decimal.Decimal `gorm:"column:RangeAmtAbove;type:numeric;primaryKey;not null;default:0"`
+	SubsFeeRate   decimal.Decimal `gorm:"column:SubsFeeRate;type:numeric;not null;default:0"`
 
 	// Standard Audit Fields
 	ValidFrom   time.Time `gorm:"column:ValidFrom;type:timestamp;not null;default:CURRENT_TIMESTAMP"`
@@ -67,6 +72,7 @@ type DTAFNDIShareFundFeeSub struct {
 	UpdateDate  time.Time `gorm:"column:UpdateDate;type:timestamp with time zone;not null;default:'1900-01-01 00:00:00+08'"`
 	DataFlag    []byte    `gorm:"column:DataFlag;type:bytea"`
 	DiffColumns string    `gorm:"column:DiffColumns;type:text;not null;default:''"`
+	models.MakerCheckerFields
 }
 
 // TableName overrides the table name used by GORM.

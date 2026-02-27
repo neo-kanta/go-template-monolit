@@ -1,0 +1,15 @@
+meta {
+  name: FNDM002Service_TAFNDFundFee
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}/TAapi/Fund/TAFNDFundFee?SysCoID=&PrtFundCode=
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}

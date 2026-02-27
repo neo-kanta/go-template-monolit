@@ -1,0 +1,19 @@
+meta {
+  name: FNDM003Service_SaveTAFNDSwitch
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{base_url}}/TAapi/Fund/TAFNDSwitch
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}
+
+body:json {
+  {}
+}

@@ -5,6 +5,11 @@ import (
 	"testing"
 	"time"
 
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+
+	"github.com/shopspring/decimal"
+
 	fndv1 "go-transfer-agent/common/gen/fnd/v1"
 	"go-transfer-agent/services/fnd/fndm004"
 	"go-transfer-agent/services/fnd/fndm004/db"
@@ -20,9 +25,7 @@ func TestService_TAFNDFundAgent_Integration(t *testing.T) {
 		&db.DTAFNDFundAgent{},
 		&db.DTAFNDFundAgentDtl{},
 	)
-	if err != nil {
-		t.Fatalf("Failed to migrate FNDM004 schemas: %v", err)
-	}
+	require.NoError(t, err)
 
 	// 2. Clean up
 	database.Exec(`DELETE FROM "TA_STD_TH"."DTA_FND_FundAgentDtl"`)
@@ -40,12 +43,12 @@ func TestService_TAFNDFundAgent_Integration(t *testing.T) {
 	termDate, _ := time.Parse("2006-01-02", "2030-12-31")
 	dtls := []db.DTAFNDFundAgentDtl{
 		{
-			SysCoID:        "C01",
+			SysCoID:        "SWSTD",
 			PrtFundCode:    "F1",
 			AgentType:      "TYPE1",
 			AgentCode:      "AGT1",
-			SubsFeePctAG:   0.5,
-			SubsFeePctFH:   0.5,
+			SubsFeePctAG:   decimal.NewFromFloat(0.5).RoundBank(2),
+			SubsFeePctFH:   decimal.NewFromFloat(0.5).RoundBank(2),
 			FundCrySet:     "THB,USD",
 			NoSaleShareSet: "S1,S2",
 			TermDate:       termDate,
@@ -65,9 +68,7 @@ func TestService_TAFNDFundAgent_Integration(t *testing.T) {
 	}
 
 	res, err := svc.TAFNDFundAgent(ctx, req)
-	if err != nil {
-		t.Fatalf("Service error: %v", err)
-	}
+	require.NoError(t, err)
 
 	// 5. Assertions
 	if len(res.ResultList) != 1 {
@@ -81,12 +82,8 @@ func TestService_TAFNDFundAgent_Integration(t *testing.T) {
 		t.Fatalf("Expected 1 dtl, got %d", len(res.FundAgentDtlList))
 	}
 	dtl := res.FundAgentDtlList[0]
-	if dtl.AgentCode != "AGT1" {
-		t.Errorf("Expected AgentCode 'AGT1', got '%v'", dtl.AgentCode)
-	}
-	if dtl.SubsFeePctAg != 0.5 {
-		t.Errorf("Expected SubsFeePctAG 0.5, got '%v'", dtl.SubsFeePctAg)
-	}
+	assert.Equal(t, "AGT1", dtl.AgentCode)
+	assert.Equal(t, 0.5, dtl.SubsFeePctAg)
 
 	// Check split sets
 	if len(dtl.FundCrySet) != 2 || dtl.FundCrySet[0] != "THB" || dtl.FundCrySet[1] != "USD" {

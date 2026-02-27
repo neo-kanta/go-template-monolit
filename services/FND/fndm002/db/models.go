@@ -1,6 +1,10 @@
 package db
 
 import (
+	"github.com/shopspring/decimal"
+
+	models "go-transfer-agent/common/platform/model"
+
 	"time"
 )
 
@@ -27,6 +31,7 @@ type DTAFNDFundFee struct {
 	UpdateDate  time.Time `gorm:"column:UpdateDate;type:timestamp with time zone;not null;default:'1900-01-01 00:00:00+08'"`
 	DataFlag    []byte    `gorm:"column:DataFlag;type:bytea"`
 	DiffColumns string    `gorm:"column:DiffColumns;type:text;not null;default:''"`
+	models.MakerCheckerFields
 }
 
 func (DTAFNDFundFee) TableName() string {
@@ -64,6 +69,7 @@ type DTAFNDFundFeeSub struct {
 	UpdateDate  time.Time `gorm:"column:UpdateDate;type:timestamp with time zone;not null;default:'1900-01-01 00:00:00+08'"`
 	DataFlag    []byte    `gorm:"column:DataFlag;type:bytea"`
 	DiffColumns string    `gorm:"column:DiffColumns;type:text;not null;default:''"`
+	models.MakerCheckerFields
 }
 
 func (DTAFNDFundFeeSub) TableName() string {
@@ -82,12 +88,12 @@ func (DTAFNDFundFeeSubEdit) TableName() string {
 
 // DTAFNDFundFeeSubDtl represents the DTA_FND_FundFeeSubDtl table.
 type DTAFNDFundFeeSubDtl struct {
-	SysCoID       string  `gorm:"column:SysCoID;type:varchar(20);primaryKey;not null"`
-	PrtFundCode   string  `gorm:"column:PrtFundCode;type:varchar(10);primaryKey;not null"`
-	FundCode      string  `gorm:"column:FundCode;type:varchar(10);primaryKey;not null"`
-	CryID         string  `gorm:"column:CryID;type:varchar(6);primaryKey;not null"`
-	RangeAmtAbove float64 `gorm:"column:RangeAmtAbove;type:numeric;primaryKey;not null;default:0"`
-	SubsFeeRate   float64 `gorm:"column:SubsFeeRate;type:numeric;not null;default:0"`
+	SysCoID       string          `gorm:"column:SysCoID;type:varchar(20);primaryKey;not null"`
+	PrtFundCode   string          `gorm:"column:PrtFundCode;type:varchar(10);primaryKey;not null"`
+	FundCode      string          `gorm:"column:FundCode;type:varchar(10);primaryKey;not null"`
+	CryID         string          `gorm:"column:CryID;type:varchar(6);primaryKey;not null"`
+	RangeAmtAbove decimal.Decimal `gorm:"column:RangeAmtAbove;type:numeric;primaryKey;not null;default:0"`
+	SubsFeeRate   decimal.Decimal `gorm:"column:SubsFeeRate;type:numeric;not null;default:0"`
 
 	// Standard Audit Fields
 	ValidFrom   time.Time `gorm:"column:ValidFrom;type:timestamp;not null;default:CURRENT_TIMESTAMP"`
@@ -103,6 +109,7 @@ type DTAFNDFundFeeSubDtl struct {
 	UpdateDate  time.Time `gorm:"column:UpdateDate;type:timestamp with time zone;not null;default:'1900-01-01 00:00:00+08'"`
 	DataFlag    []byte    `gorm:"column:DataFlag;type:bytea"`
 	DiffColumns string    `gorm:"column:DiffColumns;type:text;not null;default:''"`
+	models.MakerCheckerFields
 }
 
 func (DTAFNDFundFeeSubDtl) TableName() string {
@@ -141,6 +148,7 @@ type DTAFNDFundFeeCDSC struct {
 	UpdateDate  time.Time `gorm:"column:UpdateDate;type:timestamp with time zone;not null;default:'1900-01-01 00:00:00+08'"`
 	DataFlag    []byte    `gorm:"column:DataFlag;type:bytea"`
 	DiffColumns string    `gorm:"column:DiffColumns;type:text;not null;default:''"`
+	models.MakerCheckerFields
 }
 
 func (DTAFNDFundFeeCDSC) TableName() string {
@@ -159,12 +167,12 @@ func (DTAFNDFundFeeCDSCEdit) TableName() string {
 
 // DTAFNDFundFeeCDSCDtl represents the DTA_FND_FundFeeCDSCDtl table.
 type DTAFNDFundFeeCDSCDtl struct {
-	SysCoID     string  `gorm:"column:SysCoID;type:varchar(20);primaryKey;not null"`
-	PrtFundCode string  `gorm:"column:PrtFundCode;type:varchar(10);primaryKey;not null"`
-	FundCode    string  `gorm:"column:FundCode;type:varchar(10);primaryKey;not null"`
-	MatureYear  string  `gorm:"column:MatureYear;type:varchar(6);primaryKey;not null"`
-	HoldBegDay  int16   `gorm:"column:HoldBegDay;type:smallint;primaryKey;not null;default:0"`
-	CDSCFeeRate float64 `gorm:"column:CDSCFeeRate;type:numeric;not null;default:0"`
+	SysCoID     string          `gorm:"column:SysCoID;type:varchar(20);primaryKey;not null"`
+	PrtFundCode string          `gorm:"column:PrtFundCode;type:varchar(10);primaryKey;not null"`
+	FundCode    string          `gorm:"column:FundCode;type:varchar(10);primaryKey;not null"`
+	MatureYear  string          `gorm:"column:MatureYear;type:varchar(6);primaryKey;not null"`
+	HoldBegDay  int16           `gorm:"column:HoldBegDay;type:smallint;primaryKey;not null;default:0"`
+	CDSCFeeRate decimal.Decimal `gorm:"column:CDSCFeeRate;type:numeric;not null;default:0"`
 
 	// Standard Audit Fields
 	ValidFrom   time.Time `gorm:"column:ValidFrom;type:timestamp;not null;default:CURRENT_TIMESTAMP"`
@@ -180,6 +188,7 @@ type DTAFNDFundFeeCDSCDtl struct {
 	UpdateDate  time.Time `gorm:"column:UpdateDate;type:timestamp with time zone;not null;default:'1900-01-01 00:00:00+08'"`
 	DataFlag    []byte    `gorm:"column:DataFlag;type:bytea"`
 	DiffColumns string    `gorm:"column:DiffColumns;type:text;not null;default:''"`
+	models.MakerCheckerFields
 }
 
 func (DTAFNDFundFeeCDSCDtl) TableName() string {
@@ -218,6 +227,7 @@ type DTAFNDFundFeeBack struct {
 	UpdateDate  time.Time `gorm:"column:UpdateDate;type:timestamp with time zone;not null;default:'1900-01-01 00:00:00+08'"`
 	DataFlag    []byte    `gorm:"column:DataFlag;type:bytea"`
 	DiffColumns string    `gorm:"column:DiffColumns;type:text;not null;default:''"`
+	models.MakerCheckerFields
 }
 
 func (DTAFNDFundFeeBack) TableName() string {
@@ -236,12 +246,12 @@ func (DTAFNDFundFeeBackEdit) TableName() string {
 
 // DTAFNDFundFeeBackDtl represents the DTA_FND_FundFeeBackDtl table.
 type DTAFNDFundFeeBackDtl struct {
-	SysCoID        string  `gorm:"column:SysCoID;type:varchar(20);primaryKey;not null"`
-	PrtFundCode    string  `gorm:"column:PrtFundCode;type:varchar(10);primaryKey;not null"`
-	FundCode       string  `gorm:"column:FundCode;type:varchar(10);primaryKey;not null"`
-	HoldPeriodYear string  `gorm:"column:HoldPeriodYear;type:varchar(6);primaryKey;not null"`
-	HoldBegDay     int16   `gorm:"column:HoldBegDay;type:smallint;primaryKey;not null;default:0"`
-	BackFeeRate    float64 `gorm:"column:BackFeeRate;type:numeric;not null;default:0"`
+	SysCoID        string          `gorm:"column:SysCoID;type:varchar(20);primaryKey;not null"`
+	PrtFundCode    string          `gorm:"column:PrtFundCode;type:varchar(10);primaryKey;not null"`
+	FundCode       string          `gorm:"column:FundCode;type:varchar(10);primaryKey;not null"`
+	HoldPeriodYear string          `gorm:"column:HoldPeriodYear;type:varchar(6);primaryKey;not null"`
+	HoldBegDay     int16           `gorm:"column:HoldBegDay;type:smallint;primaryKey;not null;default:0"`
+	BackFeeRate    decimal.Decimal `gorm:"column:BackFeeRate;type:numeric;not null;default:0"`
 
 	// Standard Audit Fields
 	ValidFrom   time.Time `gorm:"column:ValidFrom;type:timestamp;not null;default:CURRENT_TIMESTAMP"`
@@ -257,6 +267,7 @@ type DTAFNDFundFeeBackDtl struct {
 	UpdateDate  time.Time `gorm:"column:UpdateDate;type:timestamp with time zone;not null;default:'1900-01-01 00:00:00+08'"`
 	DataFlag    []byte    `gorm:"column:DataFlag;type:bytea"`
 	DiffColumns string    `gorm:"column:DiffColumns;type:text;not null;default:''"`
+	models.MakerCheckerFields
 }
 
 func (DTAFNDFundFeeBackDtl) TableName() string {

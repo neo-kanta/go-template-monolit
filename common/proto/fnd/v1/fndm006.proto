@@ -4,6 +4,8 @@ package fnd.v1;
 option go_package = "go-transfer-agent/common/gen/fnd/v1;fndv1";
 
 import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "fnd/v1/common.proto";
 
 // ═══════════════════════════════════════════════════════════════════
 // FNDM006 Service
@@ -11,9 +13,42 @@ import "google/api/annotations.proto";
 service FNDM006Service {
   rpc TAFNDRPFeeChgType(TAFNDRPFeeChgTypeRequest) returns (TAFNDRPFeeChgTypeResponse) {
     option (google.api.http) = { get: "/TAapi/Fund/TAFNDRPFeeChgType" };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["APIFNDM006：TAFNDRPFeeChgType"]
+    };
   }
-}
 
+  rpc SaveTAFNDRPFeeChgType(TAFNDRPFeeChgTypeRequest) returns (SaveResponse) {
+    option (google.api.http) = { post: "/TAapi/Fund/TAFNDRPFeeChgType" body: "*" };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["APIFNDM006：TAFNDRPFeeChgType"]
+    };
+  }
+
+  rpc UpdateTAFNDRPFeeChgType(TAFNDRPFeeChgTypeRequest) returns (SaveResponse) {
+    option (google.api.http) = { put: "/TAapi/Fund/TAFNDRPFeeChgType" body: "*" };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["APIFNDM006：TAFNDRPFeeChgType"]
+    };
+  }
+
+  rpc DeleteTAFNDRPFeeChgType(DeleteRequest) returns (SaveResponse) {
+    option (google.api.http) = { delete: "/TAapi/Fund/TAFNDRPFeeChgType" };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["APIFNDM006：TAFNDRPFeeChgType"]
+    };
+  }
+
+
+  // GET Data by DataID (Maintain Query)
+  rpc GetDataByDataID(GetDataRequest) returns (TAFNDRPFeeChgTypeRequest) {
+    option (google.api.http) = { get: "/TAapi/BaseFund/TAFNDRPFeeChgType/GetData/{data_id}" };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["APIFNDM006：TAFNDRPFeeChgType"]
+    };
+  }
+
+}
 // ═══════════════════════════════════════════════════════════════════
 // FNDM006 Messages
 // ═══════════════════════════════════════════════════════════════════
@@ -46,4 +81,12 @@ message ChgTypeListDTO {
   string remit_fee_obj = 5 [json_name="RemitFeeObj"];
   string remit_fee_chg_type = 6 [json_name="RemitFeeChgType"];
   string post_fee_obj = 7 [json_name="PostFeeObj"];
+}
+
+message ApproveTAFNDRPFeeChgTypeRequest {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string data_id = 2 [json_name="DataID"];
+  string checker_id = 3 [json_name="CheckerID"];
+  bool is_approved = 4 [json_name="IsApproved"];
+  string remark = 5 [json_name="Remark"];
 }

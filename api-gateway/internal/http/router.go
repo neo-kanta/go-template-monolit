@@ -35,10 +35,6 @@ func NewRouter(cfg *config.Config, fndClient *grpcclient.FNDClient) *gin.Engine 
 	{
 		protected.GET("/auth/me", auth.Me)
 
-		// FND transaction endpoints — calls FND gRPC service
-		fndHandler := handlers.NewFNDHandler(fndClient)
-		protected.POST("/fnd/transactions", fndHandler.CreateTransaction)
-		protected.GET("/fnd/transactions", fndHandler.ListTransactions)
 	}
 
 	return r

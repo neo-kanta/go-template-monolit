@@ -70,6 +70,134 @@ func local_request_FNDM011Service_TAFNDIShareFundFeeRdm_0(ctx context.Context, m
 	return msg, metadata, err
 }
 
+func request_FNDM011Service_SaveTAFNDIShareFundFeeRdm_0(ctx context.Context, marshaler runtime.Marshaler, client FNDM011ServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq TAFNDIShareFundFeeRdmRequest
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if req.Body != nil {
+		_, _ = io.Copy(io.Discard, req.Body)
+	}
+	msg, err := client.SaveTAFNDIShareFundFeeRdm(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+}
+
+func local_request_FNDM011Service_SaveTAFNDIShareFundFeeRdm_0(ctx context.Context, marshaler runtime.Marshaler, server FNDM011ServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq TAFNDIShareFundFeeRdmRequest
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := server.SaveTAFNDIShareFundFeeRdm(ctx, &protoReq)
+	return msg, metadata, err
+}
+
+func request_FNDM011Service_UpdateTAFNDIShareFundFeeRdm_0(ctx context.Context, marshaler runtime.Marshaler, client FNDM011ServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq TAFNDIShareFundFeeRdmRequest
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if req.Body != nil {
+		_, _ = io.Copy(io.Discard, req.Body)
+	}
+	msg, err := client.UpdateTAFNDIShareFundFeeRdm(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+}
+
+func local_request_FNDM011Service_UpdateTAFNDIShareFundFeeRdm_0(ctx context.Context, marshaler runtime.Marshaler, server FNDM011ServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq TAFNDIShareFundFeeRdmRequest
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := server.UpdateTAFNDIShareFundFeeRdm(ctx, &protoReq)
+	return msg, metadata, err
+}
+
+var filter_FNDM011Service_DeleteTAFNDIShareFundFeeRdm_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
+
+func request_FNDM011Service_DeleteTAFNDIShareFundFeeRdm_0(ctx context.Context, marshaler runtime.Marshaler, client FNDM011ServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq DeleteRequest
+		metadata runtime.ServerMetadata
+	)
+	if req.Body != nil {
+		_, _ = io.Copy(io.Discard, req.Body)
+	}
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_FNDM011Service_DeleteTAFNDIShareFundFeeRdm_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := client.DeleteTAFNDIShareFundFeeRdm(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+}
+
+func local_request_FNDM011Service_DeleteTAFNDIShareFundFeeRdm_0(ctx context.Context, marshaler runtime.Marshaler, server FNDM011ServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq DeleteRequest
+		metadata runtime.ServerMetadata
+	)
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_FNDM011Service_DeleteTAFNDIShareFundFeeRdm_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := server.DeleteTAFNDIShareFundFeeRdm(ctx, &protoReq)
+	return msg, metadata, err
+}
+
+func request_FNDM011Service_GetDataByDataID_0(ctx context.Context, marshaler runtime.Marshaler, client FNDM011ServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq GetDataRequest
+		metadata runtime.ServerMetadata
+		err      error
+	)
+	if req.Body != nil {
+		_, _ = io.Copy(io.Discard, req.Body)
+	}
+	val, ok := pathParams["data_id"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "data_id")
+	}
+	protoReq.DataId, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "data_id", err)
+	}
+	msg, err := client.GetDataByDataID(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+}
+
+func local_request_FNDM011Service_GetDataByDataID_0(ctx context.Context, marshaler runtime.Marshaler, server FNDM011ServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq GetDataRequest
+		metadata runtime.ServerMetadata
+		err      error
+	)
+	val, ok := pathParams["data_id"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "data_id")
+	}
+	protoReq.DataId, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "data_id", err)
+	}
+	msg, err := server.GetDataByDataID(ctx, &protoReq)
+	return msg, metadata, err
+}
+
 // RegisterFNDM011ServiceHandlerServer registers the http handlers for service FNDM011Service to "mux".
 // UnaryRPC     :call FNDM011ServiceServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
@@ -95,6 +223,86 @@ func RegisterFNDM011ServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 			return
 		}
 		forward_FNDM011Service_TAFNDIShareFundFeeRdm_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodPost, pattern_FNDM011Service_SaveTAFNDIShareFundFeeRdm_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/fnd.v1.FNDM011Service/SaveTAFNDIShareFundFeeRdm", runtime.WithHTTPPathPattern("/TAapi/Fund/TAFNDIShareFundFeeRdm"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_FNDM011Service_SaveTAFNDIShareFundFeeRdm_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_FNDM011Service_SaveTAFNDIShareFundFeeRdm_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodPut, pattern_FNDM011Service_UpdateTAFNDIShareFundFeeRdm_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/fnd.v1.FNDM011Service/UpdateTAFNDIShareFundFeeRdm", runtime.WithHTTPPathPattern("/TAapi/Fund/TAFNDIShareFundFeeRdm"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_FNDM011Service_UpdateTAFNDIShareFundFeeRdm_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_FNDM011Service_UpdateTAFNDIShareFundFeeRdm_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodDelete, pattern_FNDM011Service_DeleteTAFNDIShareFundFeeRdm_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/fnd.v1.FNDM011Service/DeleteTAFNDIShareFundFeeRdm", runtime.WithHTTPPathPattern("/TAapi/Fund/TAFNDIShareFundFeeRdm"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_FNDM011Service_DeleteTAFNDIShareFundFeeRdm_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_FNDM011Service_DeleteTAFNDIShareFundFeeRdm_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodGet, pattern_FNDM011Service_GetDataByDataID_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/fnd.v1.FNDM011Service/GetDataByDataID", runtime.WithHTTPPathPattern("/TAapi/Fund/TAFNDIShareFundFeeRdm/GetData/{data_id}"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_FNDM011Service_GetDataByDataID_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_FNDM011Service_GetDataByDataID_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 
 	return nil
@@ -153,13 +361,89 @@ func RegisterFNDM011ServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		}
 		forward_FNDM011Service_TAFNDIShareFundFeeRdm_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
+	mux.Handle(http.MethodPost, pattern_FNDM011Service_SaveTAFNDIShareFundFeeRdm_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/fnd.v1.FNDM011Service/SaveTAFNDIShareFundFeeRdm", runtime.WithHTTPPathPattern("/TAapi/Fund/TAFNDIShareFundFeeRdm"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_FNDM011Service_SaveTAFNDIShareFundFeeRdm_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_FNDM011Service_SaveTAFNDIShareFundFeeRdm_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodPut, pattern_FNDM011Service_UpdateTAFNDIShareFundFeeRdm_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/fnd.v1.FNDM011Service/UpdateTAFNDIShareFundFeeRdm", runtime.WithHTTPPathPattern("/TAapi/Fund/TAFNDIShareFundFeeRdm"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_FNDM011Service_UpdateTAFNDIShareFundFeeRdm_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_FNDM011Service_UpdateTAFNDIShareFundFeeRdm_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodDelete, pattern_FNDM011Service_DeleteTAFNDIShareFundFeeRdm_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/fnd.v1.FNDM011Service/DeleteTAFNDIShareFundFeeRdm", runtime.WithHTTPPathPattern("/TAapi/Fund/TAFNDIShareFundFeeRdm"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_FNDM011Service_DeleteTAFNDIShareFundFeeRdm_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_FNDM011Service_DeleteTAFNDIShareFundFeeRdm_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodGet, pattern_FNDM011Service_GetDataByDataID_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/fnd.v1.FNDM011Service/GetDataByDataID", runtime.WithHTTPPathPattern("/TAapi/Fund/TAFNDIShareFundFeeRdm/GetData/{data_id}"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_FNDM011Service_GetDataByDataID_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_FNDM011Service_GetDataByDataID_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
 	return nil
 }
 
 var (
-	pattern_FNDM011Service_TAFNDIShareFundFeeRdm_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"TAapi", "Fund", "TAFNDIShareFundFeeRdm"}, ""))
+	pattern_FNDM011Service_TAFNDIShareFundFeeRdm_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"TAapi", "Fund", "TAFNDIShareFundFeeRdm"}, ""))
+	pattern_FNDM011Service_SaveTAFNDIShareFundFeeRdm_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"TAapi", "Fund", "TAFNDIShareFundFeeRdm"}, ""))
+	pattern_FNDM011Service_UpdateTAFNDIShareFundFeeRdm_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"TAapi", "Fund", "TAFNDIShareFundFeeRdm"}, ""))
+	pattern_FNDM011Service_DeleteTAFNDIShareFundFeeRdm_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"TAapi", "Fund", "TAFNDIShareFundFeeRdm"}, ""))
+	pattern_FNDM011Service_GetDataByDataID_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"TAapi", "Fund", "TAFNDIShareFundFeeRdm", "GetData", "data_id"}, ""))
 )
 
 var (
-	forward_FNDM011Service_TAFNDIShareFundFeeRdm_0 = runtime.ForwardResponseMessage
+	forward_FNDM011Service_TAFNDIShareFundFeeRdm_0       = runtime.ForwardResponseMessage
+	forward_FNDM011Service_SaveTAFNDIShareFundFeeRdm_0   = runtime.ForwardResponseMessage
+	forward_FNDM011Service_UpdateTAFNDIShareFundFeeRdm_0 = runtime.ForwardResponseMessage
+	forward_FNDM011Service_DeleteTAFNDIShareFundFeeRdm_0 = runtime.ForwardResponseMessage
+	forward_FNDM011Service_GetDataByDataID_0             = runtime.ForwardResponseMessage
 )

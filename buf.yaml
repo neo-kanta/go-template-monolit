@@ -3,3 +3,4 @@ modules:
   - path: common/proto
 deps:
   - buf.build/googleapis/googleapis
+  - buf.build/grpc-ecosystem/grpc-gateway

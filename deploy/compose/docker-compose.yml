@@ -2,7 +2,7 @@ services:
   postgres:
     image: postgres:16-alpine
     environment:
-      POSTGRES_DB: taplatform
+      POSTGRES_DB: taplatformw
       POSTGRES_USER: taplatform
       POSTGRES_PASSWORD: taplatform
     ports:
@@ -26,6 +26,7 @@ services:
         condition: service_healthy
     ports:
       - "50051:50051"
+      - "8081:8081"
 
   gateway:
     build:

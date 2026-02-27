@@ -19,7 +19,12 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	FNDM007Service_TAFNDCustGroup_FullMethodName = "/fnd.v1.FNDM007Service/TAFNDCustGroup"
+	FNDM007Service_TAFNDCustGroup_FullMethodName       = "/fnd.v1.FNDM007Service/TAFNDCustGroup"
+	FNDM007Service_SaveTAFNDCustGroup_FullMethodName   = "/fnd.v1.FNDM007Service/SaveTAFNDCustGroup"
+	FNDM007Service_UpdateTAFNDCustGroup_FullMethodName = "/fnd.v1.FNDM007Service/UpdateTAFNDCustGroup"
+	FNDM007Service_DeleteTAFNDCustGroup_FullMethodName = "/fnd.v1.FNDM007Service/DeleteTAFNDCustGroup"
+	FNDM007Service_TAGetCustGroup_FullMethodName       = "/fnd.v1.FNDM007Service/TAGetCustGroup"
+	FNDM007Service_GetDataByDataID_FullMethodName      = "/fnd.v1.FNDM007Service/GetDataByDataID"
 )
 
 // FNDM007ServiceClient is the client API for FNDM007Service service.
@@ -31,6 +36,12 @@ const (
 // ═══════════════════════════════════════════════════════════════════
 type FNDM007ServiceClient interface {
 	TAFNDCustGroup(ctx context.Context, in *TAFNDCustGroupRequest, opts ...grpc.CallOption) (*TAFNDCustGroupResponse, error)
+	SaveTAFNDCustGroup(ctx context.Context, in *TAFNDCustGroupRequest, opts ...grpc.CallOption) (*SaveResponse, error)
+	UpdateTAFNDCustGroup(ctx context.Context, in *TAFNDCustGroupRequest, opts ...grpc.CallOption) (*SaveResponse, error)
+	DeleteTAFNDCustGroup(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*SaveResponse, error)
+	TAGetCustGroup(ctx context.Context, in *TAGetCustGroupRequest, opts ...grpc.CallOption) (*TAGetCustGroupResponse, error)
+	// GET Data by DataID (Maintain Query)
+	GetDataByDataID(ctx context.Context, in *GetDataRequest, opts ...grpc.CallOption) (*TAFNDCustGroupRequest, error)
 }
 
 type fNDM007ServiceClient struct {
@@ -51,6 +62,56 @@ func (c *fNDM007ServiceClient) TAFNDCustGroup(ctx context.Context, in *TAFNDCust
 	return out, nil
 }
 
+func (c *fNDM007ServiceClient) SaveTAFNDCustGroup(ctx context.Context, in *TAFNDCustGroupRequest, opts ...grpc.CallOption) (*SaveResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SaveResponse)
+	err := c.cc.Invoke(ctx, FNDM007Service_SaveTAFNDCustGroup_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fNDM007ServiceClient) UpdateTAFNDCustGroup(ctx context.Context, in *TAFNDCustGroupRequest, opts ...grpc.CallOption) (*SaveResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SaveResponse)
+	err := c.cc.Invoke(ctx, FNDM007Service_UpdateTAFNDCustGroup_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fNDM007ServiceClient) DeleteTAFNDCustGroup(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*SaveResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SaveResponse)
+	err := c.cc.Invoke(ctx, FNDM007Service_DeleteTAFNDCustGroup_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fNDM007ServiceClient) TAGetCustGroup(ctx context.Context, in *TAGetCustGroupRequest, opts ...grpc.CallOption) (*TAGetCustGroupResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(TAGetCustGroupResponse)
+	err := c.cc.Invoke(ctx, FNDM007Service_TAGetCustGroup_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fNDM007ServiceClient) GetDataByDataID(ctx context.Context, in *GetDataRequest, opts ...grpc.CallOption) (*TAFNDCustGroupRequest, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(TAFNDCustGroupRequest)
+	err := c.cc.Invoke(ctx, FNDM007Service_GetDataByDataID_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // FNDM007ServiceServer is the server API for FNDM007Service service.
 // All implementations must embed UnimplementedFNDM007ServiceServer
 // for forward compatibility.
@@ -60,6 +121,12 @@ func (c *fNDM007ServiceClient) TAFNDCustGroup(ctx context.Context, in *TAFNDCust
 // ═══════════════════════════════════════════════════════════════════
 type FNDM007ServiceServer interface {
 	TAFNDCustGroup(context.Context, *TAFNDCustGroupRequest) (*TAFNDCustGroupResponse, error)
+	SaveTAFNDCustGroup(context.Context, *TAFNDCustGroupRequest) (*SaveResponse, error)
+	UpdateTAFNDCustGroup(context.Context, *TAFNDCustGroupRequest) (*SaveResponse, error)
+	DeleteTAFNDCustGroup(context.Context, *DeleteRequest) (*SaveResponse, error)
+	TAGetCustGroup(context.Context, *TAGetCustGroupRequest) (*TAGetCustGroupResponse, error)
+	// GET Data by DataID (Maintain Query)
+	GetDataByDataID(context.Context, *GetDataRequest) (*TAFNDCustGroupRequest, error)
 	mustEmbedUnimplementedFNDM007ServiceServer()
 }
 
@@ -72,6 +139,21 @@ type UnimplementedFNDM007ServiceServer struct{}
 
 func (UnimplementedFNDM007ServiceServer) TAFNDCustGroup(context.Context, *TAFNDCustGroupRequest) (*TAFNDCustGroupResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method TAFNDCustGroup not implemented")
+}
+func (UnimplementedFNDM007ServiceServer) SaveTAFNDCustGroup(context.Context, *TAFNDCustGroupRequest) (*SaveResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method SaveTAFNDCustGroup not implemented")
+}
+func (UnimplementedFNDM007ServiceServer) UpdateTAFNDCustGroup(context.Context, *TAFNDCustGroupRequest) (*SaveResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateTAFNDCustGroup not implemented")
+}
+func (UnimplementedFNDM007ServiceServer) DeleteTAFNDCustGroup(context.Context, *DeleteRequest) (*SaveResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteTAFNDCustGroup not implemented")
+}
+func (UnimplementedFNDM007ServiceServer) TAGetCustGroup(context.Context, *TAGetCustGroupRequest) (*TAGetCustGroupResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method TAGetCustGroup not implemented")
+}
+func (UnimplementedFNDM007ServiceServer) GetDataByDataID(context.Context, *GetDataRequest) (*TAFNDCustGroupRequest, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetDataByDataID not implemented")
 }
 func (UnimplementedFNDM007ServiceServer) mustEmbedUnimplementedFNDM007ServiceServer() {}
 func (UnimplementedFNDM007ServiceServer) testEmbeddedByValue()                        {}
@@ -112,6 +194,96 @@ func _FNDM007Service_TAFNDCustGroup_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _FNDM007Service_SaveTAFNDCustGroup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TAFNDCustGroupRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FNDM007ServiceServer).SaveTAFNDCustGroup(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FNDM007Service_SaveTAFNDCustGroup_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FNDM007ServiceServer).SaveTAFNDCustGroup(ctx, req.(*TAFNDCustGroupRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FNDM007Service_UpdateTAFNDCustGroup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TAFNDCustGroupRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FNDM007ServiceServer).UpdateTAFNDCustGroup(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FNDM007Service_UpdateTAFNDCustGroup_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FNDM007ServiceServer).UpdateTAFNDCustGroup(ctx, req.(*TAFNDCustGroupRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FNDM007Service_DeleteTAFNDCustGroup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FNDM007ServiceServer).DeleteTAFNDCustGroup(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FNDM007Service_DeleteTAFNDCustGroup_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FNDM007ServiceServer).DeleteTAFNDCustGroup(ctx, req.(*DeleteRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FNDM007Service_TAGetCustGroup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TAGetCustGroupRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FNDM007ServiceServer).TAGetCustGroup(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FNDM007Service_TAGetCustGroup_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FNDM007ServiceServer).TAGetCustGroup(ctx, req.(*TAGetCustGroupRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FNDM007Service_GetDataByDataID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FNDM007ServiceServer).GetDataByDataID(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FNDM007Service_GetDataByDataID_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FNDM007ServiceServer).GetDataByDataID(ctx, req.(*GetDataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // FNDM007Service_ServiceDesc is the grpc.ServiceDesc for FNDM007Service service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -122,6 +294,26 @@ var FNDM007Service_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "TAFNDCustGroup",
 			Handler:    _FNDM007Service_TAFNDCustGroup_Handler,
+		},
+		{
+			MethodName: "SaveTAFNDCustGroup",
+			Handler:    _FNDM007Service_SaveTAFNDCustGroup_Handler,
+		},
+		{
+			MethodName: "UpdateTAFNDCustGroup",
+			Handler:    _FNDM007Service_UpdateTAFNDCustGroup_Handler,
+		},
+		{
+			MethodName: "DeleteTAFNDCustGroup",
+			Handler:    _FNDM007Service_DeleteTAFNDCustGroup_Handler,
+		},
+		{
+			MethodName: "TAGetCustGroup",
+			Handler:    _FNDM007Service_TAGetCustGroup_Handler,
+		},
+		{
+			MethodName: "GetDataByDataID",
+			Handler:    _FNDM007Service_GetDataByDataID_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

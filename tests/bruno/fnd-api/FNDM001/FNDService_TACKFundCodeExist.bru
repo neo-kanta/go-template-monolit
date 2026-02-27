@@ -1,0 +1,15 @@
+meta {
+  name: FNDService_TACKFundCodeExist
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}/TAapi/Fund/TAFNDFundInfo/ChkData/TACKFundCodeExist?SysCoID=&FundCode=
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}

@@ -1,0 +1,15 @@
+meta {
+  name: FNDService_TAGetDTxCry
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}/TAapi/Fund/TAFNDFundInfo/GetInfo/TAGetDTxCry?SysCoID=&IsAll=&PrtFundCode=&CryID=&CryDataSrc=&IsExcludeCcy=&QueryType=
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}

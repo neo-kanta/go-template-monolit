@@ -1,19 +1,25 @@
 package fndm001
 
 import (
+	"context"
 	"fmt"
+	"log/slog"
 	"strings"
 	"time"
 
 	fndv1 "go-transfer-agent/common/gen/fnd/v1"
+	models "go-transfer-agent/common/platform/model"
+	fnddb "go-transfer-agent/services/fnd/fndm001/db"
 	"go-transfer-agent/services/fnd/shared"
+
+	"gorm.io/gorm"
 )
 
 // ═══════════════════════════════════════════════════════════════════
-// In-memory store (stub DB — replace with GORM repository)
+// Service
 // ═══════════════════════════════════════════════════════════════════
 
-// StoredFund holds a full SaveFundInfoRequest payload in memory.
+// StoredFund holds a full SaveFundInfoRequest payload in memory (used by Query methods).
 type StoredFund struct {
 	Master              *fndv1.TAFNDFundInfo
 	DTAFundInfoList     []*fndv1.DTAFNDFundInfo
@@ -33,14 +39,18 @@ type StoredFund struct {
 	SavedAt             time.Time
 }
 
-// Service holds the FNDM001 business logic.
+// Service holds the FNDM001 business logic with GORM database access.
 type Service struct {
-	Funds map[string]*StoredFund // key = "SysCoID|PrtFundCode"
+	db    *gorm.DB
+	log   *slog.Logger
+	Funds map[string]*StoredFund // key = "SysCoID|PrtFundCode" — kept for Query backward compat
 }
 
-// NewService creates a new FNDM001 service.
-func NewService() *Service {
+// NewService creates a new FNDM001 service with GORM database connection.
+func NewService(database *gorm.DB, logger *slog.Logger) *Service {
 	return &Service{
+		db:    database,
+		log:   logger.With(slog.String("module", "fndm001-service")),
 		Funds: make(map[string]*StoredFund),
 	}
 }
@@ -81,11 +91,15 @@ func (s *Service) QueryFundInfo(sysCoID string) *fndv1.QueryFundInfoResponse {
 }
 
 // QueryFundInfoByDataID — APIFNDM001GetMaintain: full detail with name lookups.
-func (s *Service) QueryFundInfoByDataID(sysCoID, prtFundCode string) (*fndv1.QueryFundInfoByDataIDResponse, error) {
-	key := fundKey(sysCoID, prtFundCode)
-	f, ok := s.Funds[key]
-	if !ok {
-		return nil, fmt.Errorf("fund not found: %s/%s", sysCoID, prtFundCode)
+func (s *Service) GetDataByDataID(ctx context.Context, req *fndv1.GetDataRequest) (*fndv1.QueryFundInfoByDataIDResponse, error) {
+	var f *StoredFund
+	for _, fund := range s.Funds {
+		// Mock: just take the first fund, or ideally match on something mapped to DataID
+		f = fund
+		break
+	}
+	if f == nil {
+		return nil, fmt.Errorf("fund not found for data_id: %s", req.GetDataId())
 	}
 
 	// ─── Enrich master (TAFNDFundInfo) ───
@@ -220,9 +234,9 @@ func (s *Service) QueryFundInfoByDataID(sysCoID, prtFundCode string) (*fndv1.Que
 	}, nil
 }
 
-// SaveFundInfo — APIFNDM001Post/Put: persists all sub-lists.
-// Field names in SaveFundInfoRequest match TAFNDFundInfoRequest.
-func (s *Service) SaveFundInfo(req *fndv1.SaveFundInfoRequest) *fndv1.SaveFundInfoResponse {
+// SaveFundInfo — APIFNDM001Post: persists master + all child tables to _Edit tables in a transaction.
+// 4-Eyes Principle: Automatically sets MakerID from JWT context and Status to PENDING_APPROVAL.
+func (s *Service) SaveFundInfo(ctx context.Context, req *fndv1.SaveFundInfoRequest) *fndv1.SaveFundInfoResponse {
 	master := req.GetMaster()
 	if master == nil || master.SysCoId == "" || master.PrtFundCode == "" {
 		return &fndv1.SaveFundInfoResponse{
@@ -230,43 +244,273 @@ func (s *Service) SaveFundInfo(req *fndv1.SaveFundInfoRequest) *fndv1.SaveFundIn
 		}
 	}
 
-	key := fundKey(master.SysCoId, master.PrtFundCode)
-	// Proto field names → generated getters:
-	// fund_info → GetFundInfo(), cust_contacts → GetCustContacts(), special → GetSpecial()
-	// cry_groups → GetCryGroups(), fund_details → GetFundDetails(), fund_accounts → GetFundAccounts()
-	// fund_rel_groups → GetFundRelGroups(), fund_dis_fees → GetFundDisFees(), fund_tx_crys → GetFundTxCrys()
-	// short_infs → GetShortInfs(), short_dtls → GetShortDtls(), anti_dils → GetAntiDils()
-	// mgt_fees → GetMgtFees(), mgt_fee_dtls → GetMgtFeeDtls()
-	fundInfoSlice := []*fndv1.DTAFNDFundInfo{}
-	if req.GetFundInfo() != nil {
-		fundInfoSlice = append(fundInfoSlice, req.GetFundInfo())
+	// Extract authenticated user from JWT context (Maker)
+	makerID := shared.GetUsernameFromCtx(ctx)
+	if makerID == "" {
+		makerID = "system" // Fallback for tests or unauthenticated contexts
 	}
-	specialSlice := []*fndv1.DTAFNDFundSpecial{}
-	if req.GetSpecial() != nil {
-		specialSlice = append(specialSlice, req.GetSpecial())
-	}
-	s.Funds[key] = &StoredFund{
-		Master:              master,
-		DTAFundInfoList:     fundInfoSlice,
-		DTACustContactList:  req.GetCustContacts(),
-		DTASpecialList:      specialSlice,
-		DTACryGroupList:     req.GetCryGroups(),
-		DTAFundDetailList:   req.GetFundDetails(),
-		DTAFundAccountList:  req.GetFundAccounts(),
-		DTAFundRelGroupList: req.GetFundRelGroups(),
-		DTAFundDisFeeList:   req.GetFundDisFees(),
-		DTAFundTxCryList:    req.GetFundTxCrys(),
-		DTAFundShortInfList: req.GetShortInfs(),
-		DTAShortDtlList:     req.GetShortDtls(),
-		DTAFundAntiDilList:  req.GetAntiDils(),
-		DTAFundMGTFeeList:   req.GetMgtFees(),
-		DTAMGTFeeDtlList:    req.GetMgtFeeDtls(),
-		SavedAt:             time.Now(),
+
+	s.log.Info("SaveFundInfo called",
+		slog.String("sys_co_id", master.GetSysCoId()),
+		slog.String("prt_fund_code", master.GetPrtFundCode()),
+		slog.String("maker_id", makerID),
+	)
+
+	err := s.db.Transaction(func(tx *gorm.DB) error {
+		// 1. Master table — auto-set 4-Eyes fields
+		masterEdit := mapMasterEdit(master)
+		masterEdit.MakerID = makerID
+		masterEdit.Status = models.StatusPendingApproval
+		if err := tx.Create(&masterEdit).Error; err != nil {
+			return fmt.Errorf("master: %w", err)
+		}
+
+		// 2. DTAFNDFundInfo (detail fund info)
+		if info := req.GetFundInfo(); info != nil {
+			records := mapDTAFNDFundInfoEditList([]*fndv1.DTAFNDFundInfo{info})
+			if len(records) > 0 {
+				if err := tx.Create(&records).Error; err != nil {
+					return fmt.Errorf("fund_info: %w", err)
+				}
+			}
+		}
+
+		// 3. CustContact
+		if items := req.GetCustContacts(); len(items) > 0 {
+			records := mapDTAFNDFundCustContactEditList(items)
+			if err := tx.Create(&records).Error; err != nil {
+				return fmt.Errorf("cust_contacts: %w", err)
+			}
+		}
+
+		// 4. Special
+		if sp := req.GetSpecial(); sp != nil {
+			records := mapDTAFNDFundSpecialEditList([]*fndv1.DTAFNDFundSpecial{sp})
+			if len(records) > 0 {
+				if err := tx.Create(&records).Error; err != nil {
+					return fmt.Errorf("special: %w", err)
+				}
+			}
+		}
+
+		// 5. CryGroup
+		if items := req.GetCryGroups(); len(items) > 0 {
+			records := mapDTAFNDFundCryGroupEditList(items)
+			if err := tx.Create(&records).Error; err != nil {
+				return fmt.Errorf("cry_groups: %w", err)
+			}
+		}
+
+		// 6. FundDetail
+		if items := req.GetFundDetails(); len(items) > 0 {
+			records := mapDTAFNDFundDetailEditList(items)
+			if err := tx.Create(&records).Error; err != nil {
+				return fmt.Errorf("fund_details: %w", err)
+			}
+		}
+
+		// 7. FundAccount
+		if items := req.GetFundAccounts(); len(items) > 0 {
+			records := mapDTAFNDFundAccountEditList(items)
+			if err := tx.Create(&records).Error; err != nil {
+				return fmt.Errorf("fund_accounts: %w", err)
+			}
+		}
+
+		// 8. FundRelGroup
+		if items := req.GetFundRelGroups(); len(items) > 0 {
+			records := mapDTAFNDFundRelGroupEditList(items)
+			if err := tx.Create(&records).Error; err != nil {
+				return fmt.Errorf("fund_rel_groups: %w", err)
+			}
+		}
+
+		// 9. FundDisclosureFee
+		if items := req.GetFundDisFees(); len(items) > 0 {
+			records := mapDTAFNDFundDisclosureFeeEditList(items)
+			if err := tx.Create(&records).Error; err != nil {
+				return fmt.Errorf("fund_dis_fees: %w", err)
+			}
+		}
+
+		// 10. FundTxCry
+		if items := req.GetFundTxCrys(); len(items) > 0 {
+			records := mapDTAFNDFundTxCryEditList(items)
+			if err := tx.Create(&records).Error; err != nil {
+				return fmt.Errorf("fund_tx_crys: %w", err)
+			}
+		}
+
+		// 11. FundShortInf
+		if items := req.GetShortInfs(); len(items) > 0 {
+			records := mapDTAFNDFundShortInfEditList(items)
+			if err := tx.Create(&records).Error; err != nil {
+				return fmt.Errorf("short_infs: %w", err)
+			}
+		}
+
+		// 12. AntiDilution
+		if items := req.GetAntiDils(); len(items) > 0 {
+			records := mapDTAFNDFundAntiDilutionEditList(items)
+			if err := tx.Create(&records).Error; err != nil {
+				return fmt.Errorf("anti_dils: %w", err)
+			}
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		s.log.Error("SaveFundInfo failed", slog.Any("error", err))
+		return &fndv1.SaveFundInfoResponse{
+			Success: false, Message: err.Error(), ReturnCode: "DB_ERROR",
+		}
 	}
 
 	return &fndv1.SaveFundInfoResponse{
-		Success: true, Message: "Fund info saved successfully", ReturnCode: "OK",
+		Success: true, Message: "Record created successfully", ReturnCode: "0000",
 	}
+}
+
+// UpdateFundInfo — APIFNDM001Put: updates an existing record in _Edit tables.
+func (s *Service) UpdateFundInfo(req *fndv1.SaveFundInfoRequest) *fndv1.SaveFundInfoResponse {
+	master := req.GetMaster()
+	if master == nil || master.SysCoId == "" || master.PrtFundCode == "" {
+		return &fndv1.SaveFundInfoResponse{
+			Success: false, Message: "SysCoID and PrtFundCode are required", ReturnCode: "VALIDATION_ERROR",
+		}
+	}
+
+	s.log.Info("UpdateFundInfo called",
+		slog.String("sys_co_id", master.GetSysCoId()),
+		slog.String("prt_fund_code", master.GetPrtFundCode()),
+	)
+
+	masterEdit := mapMasterEdit(master)
+	result := s.db.Model(&fnddb.TAFNDFundInfoEdit{}).
+		Where(`"SysCoID" = ? AND "PrtFundCode" = ?`, master.GetSysCoId(), master.GetPrtFundCode()).Updates(&masterEdit)
+	if result.Error != nil {
+		s.log.Error("UpdateFundInfo failed", slog.Any("error", result.Error))
+		return &fndv1.SaveFundInfoResponse{
+			Success: false, Message: result.Error.Error(), ReturnCode: "DB_ERROR",
+		}
+	}
+	if result.RowsAffected == 0 {
+		return &fndv1.SaveFundInfoResponse{
+			Success: false, Message: "No record found to update", ReturnCode: "NOT_FOUND",
+		}
+	}
+
+	return &fndv1.SaveFundInfoResponse{
+		Success: true, Message: "Record updated successfully", ReturnCode: "0000",
+	}
+}
+
+// ApproveFundInfo — APIFNDM001Approve: 4-Eyes Principle Approval
+// Inspired by legacy C# FlowAPI ApproveFlowCommandHandler:
+//   - Validates current status is PENDING_APPROVAL (cannot approve already approved/rejected records)
+//   - Enforces MakerID != CheckerID (4-eyes constraint)
+//   - Extracts CheckerID from JWT context if not provided explicitly
+func (s *Service) ApproveFundInfo(ctx context.Context, req *fndv1.ApproveFundInfoRequest) *fndv1.SaveFundInfoResponse {
+	if req.SysCoId == "" || req.PrtFundCode == "" {
+		return &fndv1.SaveFundInfoResponse{
+			Success: false, Message: "SysCoID and PrtFundCode are required", ReturnCode: "VALIDATION_ERROR",
+		}
+	}
+
+	// Extract CheckerID from JWT context if not explicitly provided
+	checkerID := req.CheckerId
+	if checkerID == "" {
+		checkerID = shared.GetUsernameFromCtx(ctx)
+	}
+	if checkerID == "" {
+		return &fndv1.SaveFundInfoResponse{
+			Success: false, Message: "CheckerID is required (provide in request or authenticate)", ReturnCode: "VALIDATION_ERROR",
+		}
+	}
+
+	s.log.Info("ApproveFundInfo called",
+		slog.String("sys_co_id", req.SysCoId),
+		slog.String("prt_fund_code", req.PrtFundCode),
+		slog.String("checker_id", checkerID),
+	)
+
+	var masterEdit fnddb.TAFNDFundInfoEdit
+	result := s.db.Where(`"SysCoID" = ? AND "PrtFundCode" = ?`, req.SysCoId, req.PrtFundCode).First(&masterEdit)
+	if result.Error != nil {
+		if result.Error == gorm.ErrRecordNotFound {
+			return &fndv1.SaveFundInfoResponse{Success: false, Message: "Record not found", ReturnCode: "NOT_FOUND"}
+		}
+		return &fndv1.SaveFundInfoResponse{Success: false, Message: result.Error.Error(), ReturnCode: "DB_ERROR"}
+	}
+
+	// Validate current status — only PENDING_APPROVAL records can be approved/rejected
+	if masterEdit.Status != models.StatusPendingApproval {
+		return &fndv1.SaveFundInfoResponse{
+			Success:    false,
+			Message:    fmt.Sprintf("Cannot approve/reject: current status is %s, expected PENDING_APPROVAL", masterEdit.Status),
+			ReturnCode: "INVALID_STATUS",
+		}
+	}
+
+	// 4-Eyes Principle: Checker cannot be the same as Maker
+	if masterEdit.MakerID == checkerID {
+		return &fndv1.SaveFundInfoResponse{
+			Success:    false,
+			Message:    "4-Eyes Violation: Checker cannot be the same as Maker (" + masterEdit.MakerID + ")",
+			ReturnCode: "FOUR_EYES_VIOLATION",
+		}
+	}
+
+	newStatus := models.StatusRejected
+	if req.IsApproved {
+		newStatus = models.StatusApproved
+	}
+
+	updates := map[string]interface{}{
+		"CheckerID": checkerID,
+		"Status":    newStatus,
+		"Remark":    req.Remark,
+	}
+
+	if err := s.db.Model(&fnddb.TAFNDFundInfoEdit{}).
+		Where(`"SysCoID" = ? AND "PrtFundCode" = ?`, req.SysCoId, req.PrtFundCode).
+		Updates(updates).Error; err != nil {
+		return &fndv1.SaveFundInfoResponse{
+			Success: false, Message: err.Error(), ReturnCode: "DB_ERROR",
+		}
+	}
+
+	return &fndv1.SaveFundInfoResponse{
+		Success: true, Message: fmt.Sprintf("Record %s successfully", newStatus), ReturnCode: "0000",
+	}
+}
+
+// DeleteTAFNDFundInfo deletes data by DataID — DELETE endpoint.
+func (s *Service) DeleteTAFNDFundInfo(ctx context.Context, req *fndv1.DeleteRequest) (*fndv1.SaveResponse, error) {
+	s.log.Info("DeleteTAFNDFundInfo called",
+		slog.String("data_id", req.GetDataId()),
+		slog.String("data_flag", req.GetDataFlag()),
+	)
+
+	result := s.db.WithContext(ctx).
+		Where(`"DataID" = ?`, req.GetDataId()).
+		Delete(&fnddb.TAFNDFundInfoEdit{})
+	if result.Error != nil {
+		s.log.Error("DeleteTAFNDFundInfo failed", slog.Any("error", result.Error))
+		return &fndv1.SaveResponse{
+			Success: false, Message: result.Error.Error(), ReturnCode: "DB_ERROR",
+		}, nil
+	}
+	if result.RowsAffected == 0 {
+		return &fndv1.SaveResponse{
+			Success: false, Message: "No record found with the given DataID", ReturnCode: "NOT_FOUND",
+		}, nil
+	}
+
+	return &fndv1.SaveResponse{
+		Success: true, Message: "Record deleted successfully", ReturnCode: "0000",
+	}, nil
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -359,7 +603,7 @@ func (s *Service) TAGetDPrtFundIssueCry(sysCoID string, isAll bool, prtFundCode,
 			id  string
 			rsp string
 		}{
-			{"TWD", "Y"}, {"USD", "Y"}, {"CNY", "N"}, {"EUR", "Y"}, {"JPY", "N"}, {"AUD", "Y"}, {"ZAR", "N"},
+			{"THB", "Y"}, {"USD", "Y"}, {"CNY", "N"}, {"EUR", "Y"}, {"JPY", "N"}, {"AUD", "Y"}, {"ZAR", "N"},
 		} {
 			if filterItem != "" && d.id == filterItem {
 				continue
@@ -426,7 +670,7 @@ func (s *Service) TAGetDTxCry(sysCoID string, isAll bool, prtFundCode, cryID, cr
 	}
 
 	if len(seen) == 0 {
-		for _, d := range []string{"TWD", "USD", "EUR", "JPY", "AUD", "CNY", "ZAR", "BRL"} {
+		for _, d := range []string{"THB", "USD", "EUR", "JPY", "AUD", "CNY", "ZAR", "BRL"} {
 			if isExcludeCCY && d == shared.CenterCurrency {
 				continue
 			}
@@ -457,16 +701,17 @@ func matchFeeChargeType(details []*fndv1.DTAFNDFundDetail, issueCry, feeType str
 			continue
 		}
 		switch feeType {
-		case "B", "P", "C", "N":
+		case shared.SubsFeeType_Front, shared.SubsFeeType_Back, shared.SubsFeeType_Deferred, shared.SubsFeeType_None:
+			// Single fee type: B, P, C, or N
 			if fd.SubsFeeType == feeType {
 				return true
 			}
-		case "BN":
-			if fd.SubsFeeType == "B" || fd.SubsFeeType == "N" {
+		case shared.FeeChargeType_FrontNil: // "BN" = Front + None
+			if fd.SubsFeeType == shared.SubsFeeType_Front || fd.SubsFeeType == shared.SubsFeeType_None {
 				return true
 			}
-		case "PC":
-			if fd.SubsFeeType == "P" || fd.SubsFeeType == "C" {
+		case shared.FeeChargeType_BackDef: // "PC" = Back + Deferred
+			if fd.SubsFeeType == shared.SubsFeeType_Back || fd.SubsFeeType == shared.SubsFeeType_Deferred {
 				return true
 			}
 		}

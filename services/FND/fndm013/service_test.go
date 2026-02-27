@@ -5,6 +5,10 @@ import (
 	"testing"
 	"time"
 
+	"github.com/shopspring/decimal"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+
 	fndv1 "go-transfer-agent/common/gen/fnd/v1"
 	"go-transfer-agent/services/fnd/fndm013"
 	"go-transfer-agent/services/fnd/fndm013/db"
@@ -20,9 +24,7 @@ func TestService_TAFNDTMFundFeeRdm_Integration(t *testing.T) {
 		&db.DTAFNDTMFundFeeRdm{},
 		&db.DTAFNDTMFundFeeRdmDtl{},
 	)
-	if err != nil {
-		t.Fatalf("Failed to migrate FNDM013 schemas: %v", err)
-	}
+	require.NoError(t, err)
 
 	// 2. Clean up before test (in case of dirty DB)
 	database.Exec(`DELETE FROM "TA_STD_TH"."DTA_FND_TMFundFeeRdmDtl"`)
@@ -47,14 +49,14 @@ func TestService_TAFNDTMFundFeeRdm_Integration(t *testing.T) {
 		PrtFundCode:    "F1",
 		RdmCalcBegDate: begDate1,
 		RdmCalcEndDate: endDate1,
-		FeeRate:        1.25,
+		FeeRate:        decimal.NewFromFloat(1.25).RoundBank(4),
 	}
 	dtl2 := db.DTAFNDTMFundFeeRdmDtl{
 		SysCoID:        "C01",
 		PrtFundCode:    "F1",
 		RdmCalcBegDate: begDate1,
 		RdmCalcEndDate: now.AddDate(2, 0, 0),
-		FeeRate:        1.50,
+		FeeRate:        decimal.NewFromFloat(1.50).RoundBank(4),
 	}
 	if err := database.Create(&[]db.DTAFNDTMFundFeeRdmDtl{dtl1, dtl2}).Error; err != nil {
 		t.Fatalf("Failed to seed dtls: %v", err)
@@ -70,21 +72,15 @@ func TestService_TAFNDTMFundFeeRdm_Integration(t *testing.T) {
 	}
 
 	res, err := svc.TAFNDTMFundFeeRdm(ctx, req)
-	if err != nil {
-		t.Fatalf("Service error: %v", err)
-	}
+	require.NoError(t, err)
 
 	// 5. Assertions
 	if len(res.ResultList) != 1 {
 		t.Fatalf("Expected 1 master result, got %d", len(res.ResultList))
 	}
 	masterRes := res.ResultList[0]
-	if masterRes.SysCoId != "C01" {
-		t.Errorf("Expected SysCoID 'C01', got '%v'", masterRes.SysCoId)
-	}
-	if masterRes.PrtFundCode != "F1" {
-		t.Errorf("Expected PrtFundCode 'F1', got '%v'", masterRes.PrtFundCode)
-	}
+	assert.Equal(t, "C01", masterRes.SysCoId)
+	assert.Equal(t, "F1", masterRes.PrtFundCode)
 
 	// Check details
 	if len(res.FundFeeDtlList) != 2 {

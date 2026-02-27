@@ -1,6 +1,10 @@
 package db
 
 import (
+	"github.com/shopspring/decimal"
+
+	models "go-transfer-agent/common/platform/model"
+
 	"time"
 )
 
@@ -10,16 +14,16 @@ import (
 
 // DTAFNDIShareFundFeeRdm represents the DTA_FND_IShareFundFeeRdm table.
 type DTAFNDIShareFundFeeRdm struct {
-	SysCoID        string  `gorm:"column:SysCoID;type:varchar(20);primaryKey;not null"`
-	FundCode       string  `gorm:"column:FundCode;type:varchar(10);primaryKey;not null"`
-	FeeName        string  `gorm:"column:FeeName;type:varchar(50);primaryKey;not null"`
-	RdmRangeType   string  `gorm:"column:RdmRangeType;type:varchar(6);not null;default:''"`
-	RdmDateType    string  `gorm:"column:RdmDateType;type:varchar(6);not null;default:''"`
-	RdmBaseID      string  `gorm:"column:RdmBaseID;type:varchar(6);not null;default:''"`
-	SubsBaseID     string  `gorm:"column:SubsBaseID;type:varchar(6);not null;default:''"`
-	RdmCalcID      string  `gorm:"column:RdmCalcID;type:varchar(6);not null;default:''"`
-	ShouldHoldDays int16   `gorm:"column:ShouldHoldDays;type:smallint;not null;default:0"`
-	FeeRate        float64 `gorm:"column:FeeRate;type:numeric;not null;default:0"`
+	SysCoID        string          `gorm:"column:SysCoID;type:varchar(20);primaryKey;not null"`
+	FundCode       string          `gorm:"column:FundCode;type:varchar(10);primaryKey;not null"`
+	FeeName        string          `gorm:"column:FeeName;type:varchar(50);primaryKey;not null"`
+	RdmRangeType   string          `gorm:"column:RdmRangeType;type:varchar(6);not null;default:''"`
+	RdmDateType    string          `gorm:"column:RdmDateType;type:varchar(6);not null;default:''"`
+	RdmBaseID      string          `gorm:"column:RdmBaseID;type:varchar(6);not null;default:''"`
+	SubsBaseID     string          `gorm:"column:SubsBaseID;type:varchar(6);not null;default:''"`
+	RdmCalcID      string          `gorm:"column:RdmCalcID;type:varchar(6);not null;default:''"`
+	ShouldHoldDays int16           `gorm:"column:ShouldHoldDays;type:smallint;not null;default:0"`
+	FeeRate        decimal.Decimal `gorm:"column:FeeRate;type:numeric;not null;default:0"`
 
 	// Standard Audit Fields
 	ValidFrom   time.Time `gorm:"column:ValidFrom;type:timestamp;not null;default:CURRENT_TIMESTAMP"`
@@ -35,6 +39,7 @@ type DTAFNDIShareFundFeeRdm struct {
 	UpdateDate  time.Time `gorm:"column:UpdateDate;type:timestamp with time zone;not null;default:'1900-01-01 00:00:00+08'"`
 	DataFlag    []byte    `gorm:"column:DataFlag;type:bytea"`
 	DiffColumns string    `gorm:"column:DiffColumns;type:text;not null;default:''"`
+	models.MakerCheckerFields
 }
 
 // TableName overrides the table name used by GORM.

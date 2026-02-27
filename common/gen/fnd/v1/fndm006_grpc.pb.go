@@ -19,7 +19,11 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	FNDM006Service_TAFNDRPFeeChgType_FullMethodName = "/fnd.v1.FNDM006Service/TAFNDRPFeeChgType"
+	FNDM006Service_TAFNDRPFeeChgType_FullMethodName       = "/fnd.v1.FNDM006Service/TAFNDRPFeeChgType"
+	FNDM006Service_SaveTAFNDRPFeeChgType_FullMethodName   = "/fnd.v1.FNDM006Service/SaveTAFNDRPFeeChgType"
+	FNDM006Service_UpdateTAFNDRPFeeChgType_FullMethodName = "/fnd.v1.FNDM006Service/UpdateTAFNDRPFeeChgType"
+	FNDM006Service_DeleteTAFNDRPFeeChgType_FullMethodName = "/fnd.v1.FNDM006Service/DeleteTAFNDRPFeeChgType"
+	FNDM006Service_GetDataByDataID_FullMethodName         = "/fnd.v1.FNDM006Service/GetDataByDataID"
 )
 
 // FNDM006ServiceClient is the client API for FNDM006Service service.
@@ -31,6 +35,11 @@ const (
 // ═══════════════════════════════════════════════════════════════════
 type FNDM006ServiceClient interface {
 	TAFNDRPFeeChgType(ctx context.Context, in *TAFNDRPFeeChgTypeRequest, opts ...grpc.CallOption) (*TAFNDRPFeeChgTypeResponse, error)
+	SaveTAFNDRPFeeChgType(ctx context.Context, in *TAFNDRPFeeChgTypeRequest, opts ...grpc.CallOption) (*SaveResponse, error)
+	UpdateTAFNDRPFeeChgType(ctx context.Context, in *TAFNDRPFeeChgTypeRequest, opts ...grpc.CallOption) (*SaveResponse, error)
+	DeleteTAFNDRPFeeChgType(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*SaveResponse, error)
+	// GET Data by DataID (Maintain Query)
+	GetDataByDataID(ctx context.Context, in *GetDataRequest, opts ...grpc.CallOption) (*TAFNDRPFeeChgTypeRequest, error)
 }
 
 type fNDM006ServiceClient struct {
@@ -51,6 +60,46 @@ func (c *fNDM006ServiceClient) TAFNDRPFeeChgType(ctx context.Context, in *TAFNDR
 	return out, nil
 }
 
+func (c *fNDM006ServiceClient) SaveTAFNDRPFeeChgType(ctx context.Context, in *TAFNDRPFeeChgTypeRequest, opts ...grpc.CallOption) (*SaveResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SaveResponse)
+	err := c.cc.Invoke(ctx, FNDM006Service_SaveTAFNDRPFeeChgType_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fNDM006ServiceClient) UpdateTAFNDRPFeeChgType(ctx context.Context, in *TAFNDRPFeeChgTypeRequest, opts ...grpc.CallOption) (*SaveResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SaveResponse)
+	err := c.cc.Invoke(ctx, FNDM006Service_UpdateTAFNDRPFeeChgType_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fNDM006ServiceClient) DeleteTAFNDRPFeeChgType(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*SaveResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SaveResponse)
+	err := c.cc.Invoke(ctx, FNDM006Service_DeleteTAFNDRPFeeChgType_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fNDM006ServiceClient) GetDataByDataID(ctx context.Context, in *GetDataRequest, opts ...grpc.CallOption) (*TAFNDRPFeeChgTypeRequest, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(TAFNDRPFeeChgTypeRequest)
+	err := c.cc.Invoke(ctx, FNDM006Service_GetDataByDataID_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // FNDM006ServiceServer is the server API for FNDM006Service service.
 // All implementations must embed UnimplementedFNDM006ServiceServer
 // for forward compatibility.
@@ -60,6 +109,11 @@ func (c *fNDM006ServiceClient) TAFNDRPFeeChgType(ctx context.Context, in *TAFNDR
 // ═══════════════════════════════════════════════════════════════════
 type FNDM006ServiceServer interface {
 	TAFNDRPFeeChgType(context.Context, *TAFNDRPFeeChgTypeRequest) (*TAFNDRPFeeChgTypeResponse, error)
+	SaveTAFNDRPFeeChgType(context.Context, *TAFNDRPFeeChgTypeRequest) (*SaveResponse, error)
+	UpdateTAFNDRPFeeChgType(context.Context, *TAFNDRPFeeChgTypeRequest) (*SaveResponse, error)
+	DeleteTAFNDRPFeeChgType(context.Context, *DeleteRequest) (*SaveResponse, error)
+	// GET Data by DataID (Maintain Query)
+	GetDataByDataID(context.Context, *GetDataRequest) (*TAFNDRPFeeChgTypeRequest, error)
 	mustEmbedUnimplementedFNDM006ServiceServer()
 }
 
@@ -72,6 +126,18 @@ type UnimplementedFNDM006ServiceServer struct{}
 
 func (UnimplementedFNDM006ServiceServer) TAFNDRPFeeChgType(context.Context, *TAFNDRPFeeChgTypeRequest) (*TAFNDRPFeeChgTypeResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method TAFNDRPFeeChgType not implemented")
+}
+func (UnimplementedFNDM006ServiceServer) SaveTAFNDRPFeeChgType(context.Context, *TAFNDRPFeeChgTypeRequest) (*SaveResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method SaveTAFNDRPFeeChgType not implemented")
+}
+func (UnimplementedFNDM006ServiceServer) UpdateTAFNDRPFeeChgType(context.Context, *TAFNDRPFeeChgTypeRequest) (*SaveResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateTAFNDRPFeeChgType not implemented")
+}
+func (UnimplementedFNDM006ServiceServer) DeleteTAFNDRPFeeChgType(context.Context, *DeleteRequest) (*SaveResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteTAFNDRPFeeChgType not implemented")
+}
+func (UnimplementedFNDM006ServiceServer) GetDataByDataID(context.Context, *GetDataRequest) (*TAFNDRPFeeChgTypeRequest, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetDataByDataID not implemented")
 }
 func (UnimplementedFNDM006ServiceServer) mustEmbedUnimplementedFNDM006ServiceServer() {}
 func (UnimplementedFNDM006ServiceServer) testEmbeddedByValue()                        {}
@@ -112,6 +178,78 @@ func _FNDM006Service_TAFNDRPFeeChgType_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _FNDM006Service_SaveTAFNDRPFeeChgType_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TAFNDRPFeeChgTypeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FNDM006ServiceServer).SaveTAFNDRPFeeChgType(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FNDM006Service_SaveTAFNDRPFeeChgType_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FNDM006ServiceServer).SaveTAFNDRPFeeChgType(ctx, req.(*TAFNDRPFeeChgTypeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FNDM006Service_UpdateTAFNDRPFeeChgType_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TAFNDRPFeeChgTypeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FNDM006ServiceServer).UpdateTAFNDRPFeeChgType(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FNDM006Service_UpdateTAFNDRPFeeChgType_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FNDM006ServiceServer).UpdateTAFNDRPFeeChgType(ctx, req.(*TAFNDRPFeeChgTypeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FNDM006Service_DeleteTAFNDRPFeeChgType_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FNDM006ServiceServer).DeleteTAFNDRPFeeChgType(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FNDM006Service_DeleteTAFNDRPFeeChgType_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FNDM006ServiceServer).DeleteTAFNDRPFeeChgType(ctx, req.(*DeleteRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FNDM006Service_GetDataByDataID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FNDM006ServiceServer).GetDataByDataID(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FNDM006Service_GetDataByDataID_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FNDM006ServiceServer).GetDataByDataID(ctx, req.(*GetDataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // FNDM006Service_ServiceDesc is the grpc.ServiceDesc for FNDM006Service service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -122,6 +260,22 @@ var FNDM006Service_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "TAFNDRPFeeChgType",
 			Handler:    _FNDM006Service_TAFNDRPFeeChgType_Handler,
+		},
+		{
+			MethodName: "SaveTAFNDRPFeeChgType",
+			Handler:    _FNDM006Service_SaveTAFNDRPFeeChgType_Handler,
+		},
+		{
+			MethodName: "UpdateTAFNDRPFeeChgType",
+			Handler:    _FNDM006Service_UpdateTAFNDRPFeeChgType_Handler,
+		},
+		{
+			MethodName: "DeleteTAFNDRPFeeChgType",
+			Handler:    _FNDM006Service_DeleteTAFNDRPFeeChgType_Handler,
+		},
+		{
+			MethodName: "GetDataByDataID",
+			Handler:    _FNDM006Service_GetDataByDataID_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

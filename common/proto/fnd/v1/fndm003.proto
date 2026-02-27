@@ -4,6 +4,8 @@ package fnd.v1;
 option go_package = "go-transfer-agent/common/gen/fnd/v1;fndv1";
 
 import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "fnd/v1/common.proto";
 
 // ═══════════════════════════════════════════════════════════════════
 // FNDM003 Service
@@ -11,9 +13,42 @@ import "google/api/annotations.proto";
 service FNDM003Service {
   rpc TAFNDSwitch(TAFNDSwitchRequest) returns (TAFNDSwitchResponse) {
     option (google.api.http) = { get: "/TAapi/Fund/TAFNDSwitch" };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["APIFNDM003：TAFNDSwitch"]
+    };
   }
-}
 
+  rpc SaveTAFNDSwitch(TAFNDSwitchRequest) returns (SaveResponse) {
+    option (google.api.http) = { post: "/TAapi/Fund/TAFNDSwitch" body: "*" };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["APIFNDM003：TAFNDSwitch"]
+    };
+  }
+
+  rpc UpdateTAFNDSwitch(TAFNDSwitchRequest) returns (SaveResponse) {
+    option (google.api.http) = { put: "/TAapi/Fund/TAFNDSwitch" body: "*" };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["APIFNDM003：TAFNDSwitch"]
+    };
+  }
+
+  rpc DeleteTAFNDSwitch(DeleteRequest) returns (SaveResponse) {
+    option (google.api.http) = { delete: "/TAapi/Fund/TAFNDSwitch" };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["APIFNDM003：TAFNDSwitch"]
+    };
+  }
+
+
+  // GET Data by DataID (Maintain Query)
+  rpc GetDataByDataID(GetDataRequest) returns (TAFNDSwitchRequest) {
+    option (google.api.http) = { get: "/TAapi/Fund/TAFNDSwitch/GetData/{data_id}" };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["APIFNDM003：TAFNDSwitch"]
+    };
+  }
+
+}
 // ═══════════════════════════════════════════════════════════════════
 // FNDM003 Messages
 // ═══════════════════════════════════════════════════════════════════
@@ -66,4 +101,12 @@ message SwitchCryListDTO {
   string sw_i_fund_cry_nm = 4 [json_name="SwIFundCryNm"];
   string sw_o_fund_cry_set = 5 [json_name="SwOFundCrySet"];
   repeated string sw_o_fund_cry_set_nm = 6 [json_name="SwOFundCrySetNm"];
+}
+
+message ApproveTAFNDSwitchRequest {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string data_id = 2 [json_name="DataID"];
+  string checker_id = 3 [json_name="CheckerID"];
+  bool is_approved = 4 [json_name="IsApproved"];
+  string remark = 5 [json_name="Remark"];
 }

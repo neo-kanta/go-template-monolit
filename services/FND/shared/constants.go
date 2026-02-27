@@ -1,7 +1,7 @@
 package shared
 
 // CenterCurrency is the system's central/base currency (TWD for Taiwan).
-const CenterCurrency = "TWD"
+const CenterCurrency = "THB"
 
 // SettlementCurrencies are the non-miscellaneous foreign currencies.
 // A currency NOT in this map (and not CenterCurrency) is considered "miscellaneous" (雜幣).

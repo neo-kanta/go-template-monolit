@@ -1,0 +1,15 @@
+meta {
+  name: FNDM007Service_DeleteTAFNDCustGroup
+  type: http
+  seq: 1
+}
+
+delete {
+  url: {{base_url}}/TAapi/Fund/TAFNDCustGroup?DataID=&DataFlag=
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}

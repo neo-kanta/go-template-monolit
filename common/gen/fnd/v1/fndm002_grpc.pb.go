@@ -19,7 +19,11 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	FNDM002Service_TAFNDFundFee_FullMethodName = "/fnd.v1.FNDM002Service/TAFNDFundFee"
+	FNDM002Service_TAFNDFundFee_FullMethodName       = "/fnd.v1.FNDM002Service/TAFNDFundFee"
+	FNDM002Service_SaveTAFNDFundFee_FullMethodName   = "/fnd.v1.FNDM002Service/SaveTAFNDFundFee"
+	FNDM002Service_UpdateTAFNDFundFee_FullMethodName = "/fnd.v1.FNDM002Service/UpdateTAFNDFundFee"
+	FNDM002Service_DeleteTAFNDFundFee_FullMethodName = "/fnd.v1.FNDM002Service/DeleteTAFNDFundFee"
+	FNDM002Service_GetDataByDataID_FullMethodName    = "/fnd.v1.FNDM002Service/GetDataByDataID"
 )
 
 // FNDM002ServiceClient is the client API for FNDM002Service service.
@@ -31,6 +35,11 @@ const (
 // ═══════════════════════════════════════════════════════════════════
 type FNDM002ServiceClient interface {
 	TAFNDFundFee(ctx context.Context, in *TAFNDFundFeeRequest, opts ...grpc.CallOption) (*TAFNDFundFeeResponse, error)
+	SaveTAFNDFundFee(ctx context.Context, in *TAFNDFundFeeRequest, opts ...grpc.CallOption) (*SaveResponse, error)
+	UpdateTAFNDFundFee(ctx context.Context, in *TAFNDFundFeeRequest, opts ...grpc.CallOption) (*SaveResponse, error)
+	DeleteTAFNDFundFee(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*SaveResponse, error)
+	// GET Data by DataID (Maintain Query)
+	GetDataByDataID(ctx context.Context, in *GetDataRequest, opts ...grpc.CallOption) (*TAFNDFundFeeRequest, error)
 }
 
 type fNDM002ServiceClient struct {
@@ -51,6 +60,46 @@ func (c *fNDM002ServiceClient) TAFNDFundFee(ctx context.Context, in *TAFNDFundFe
 	return out, nil
 }
 
+func (c *fNDM002ServiceClient) SaveTAFNDFundFee(ctx context.Context, in *TAFNDFundFeeRequest, opts ...grpc.CallOption) (*SaveResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SaveResponse)
+	err := c.cc.Invoke(ctx, FNDM002Service_SaveTAFNDFundFee_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fNDM002ServiceClient) UpdateTAFNDFundFee(ctx context.Context, in *TAFNDFundFeeRequest, opts ...grpc.CallOption) (*SaveResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SaveResponse)
+	err := c.cc.Invoke(ctx, FNDM002Service_UpdateTAFNDFundFee_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fNDM002ServiceClient) DeleteTAFNDFundFee(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*SaveResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SaveResponse)
+	err := c.cc.Invoke(ctx, FNDM002Service_DeleteTAFNDFundFee_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fNDM002ServiceClient) GetDataByDataID(ctx context.Context, in *GetDataRequest, opts ...grpc.CallOption) (*TAFNDFundFeeRequest, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(TAFNDFundFeeRequest)
+	err := c.cc.Invoke(ctx, FNDM002Service_GetDataByDataID_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // FNDM002ServiceServer is the server API for FNDM002Service service.
 // All implementations must embed UnimplementedFNDM002ServiceServer
 // for forward compatibility.
@@ -60,6 +109,11 @@ func (c *fNDM002ServiceClient) TAFNDFundFee(ctx context.Context, in *TAFNDFundFe
 // ═══════════════════════════════════════════════════════════════════
 type FNDM002ServiceServer interface {
 	TAFNDFundFee(context.Context, *TAFNDFundFeeRequest) (*TAFNDFundFeeResponse, error)
+	SaveTAFNDFundFee(context.Context, *TAFNDFundFeeRequest) (*SaveResponse, error)
+	UpdateTAFNDFundFee(context.Context, *TAFNDFundFeeRequest) (*SaveResponse, error)
+	DeleteTAFNDFundFee(context.Context, *DeleteRequest) (*SaveResponse, error)
+	// GET Data by DataID (Maintain Query)
+	GetDataByDataID(context.Context, *GetDataRequest) (*TAFNDFundFeeRequest, error)
 	mustEmbedUnimplementedFNDM002ServiceServer()
 }
 
@@ -72,6 +126,18 @@ type UnimplementedFNDM002ServiceServer struct{}
 
 func (UnimplementedFNDM002ServiceServer) TAFNDFundFee(context.Context, *TAFNDFundFeeRequest) (*TAFNDFundFeeResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method TAFNDFundFee not implemented")
+}
+func (UnimplementedFNDM002ServiceServer) SaveTAFNDFundFee(context.Context, *TAFNDFundFeeRequest) (*SaveResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method SaveTAFNDFundFee not implemented")
+}
+func (UnimplementedFNDM002ServiceServer) UpdateTAFNDFundFee(context.Context, *TAFNDFundFeeRequest) (*SaveResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateTAFNDFundFee not implemented")
+}
+func (UnimplementedFNDM002ServiceServer) DeleteTAFNDFundFee(context.Context, *DeleteRequest) (*SaveResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteTAFNDFundFee not implemented")
+}
+func (UnimplementedFNDM002ServiceServer) GetDataByDataID(context.Context, *GetDataRequest) (*TAFNDFundFeeRequest, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetDataByDataID not implemented")
 }
 func (UnimplementedFNDM002ServiceServer) mustEmbedUnimplementedFNDM002ServiceServer() {}
 func (UnimplementedFNDM002ServiceServer) testEmbeddedByValue()                        {}
@@ -112,6 +178,78 @@ func _FNDM002Service_TAFNDFundFee_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _FNDM002Service_SaveTAFNDFundFee_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TAFNDFundFeeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FNDM002ServiceServer).SaveTAFNDFundFee(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FNDM002Service_SaveTAFNDFundFee_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FNDM002ServiceServer).SaveTAFNDFundFee(ctx, req.(*TAFNDFundFeeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FNDM002Service_UpdateTAFNDFundFee_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TAFNDFundFeeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FNDM002ServiceServer).UpdateTAFNDFundFee(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FNDM002Service_UpdateTAFNDFundFee_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FNDM002ServiceServer).UpdateTAFNDFundFee(ctx, req.(*TAFNDFundFeeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FNDM002Service_DeleteTAFNDFundFee_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FNDM002ServiceServer).DeleteTAFNDFundFee(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FNDM002Service_DeleteTAFNDFundFee_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FNDM002ServiceServer).DeleteTAFNDFundFee(ctx, req.(*DeleteRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FNDM002Service_GetDataByDataID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FNDM002ServiceServer).GetDataByDataID(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FNDM002Service_GetDataByDataID_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FNDM002ServiceServer).GetDataByDataID(ctx, req.(*GetDataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // FNDM002Service_ServiceDesc is the grpc.ServiceDesc for FNDM002Service service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -122,6 +260,22 @@ var FNDM002Service_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "TAFNDFundFee",
 			Handler:    _FNDM002Service_TAFNDFundFee_Handler,
+		},
+		{
+			MethodName: "SaveTAFNDFundFee",
+			Handler:    _FNDM002Service_SaveTAFNDFundFee_Handler,
+		},
+		{
+			MethodName: "UpdateTAFNDFundFee",
+			Handler:    _FNDM002Service_UpdateTAFNDFundFee_Handler,
+		},
+		{
+			MethodName: "DeleteTAFNDFundFee",
+			Handler:    _FNDM002Service_DeleteTAFNDFundFee_Handler,
+		},
+		{
+			MethodName: "GetDataByDataID",
+			Handler:    _FNDM002Service_GetDataByDataID_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

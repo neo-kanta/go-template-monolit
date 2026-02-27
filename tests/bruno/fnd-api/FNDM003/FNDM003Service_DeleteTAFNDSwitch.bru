@@ -1,0 +1,15 @@
+meta {
+  name: FNDM003Service_DeleteTAFNDSwitch
+  type: http
+  seq: 1
+}
+
+delete {
+  url: {{base_url}}/TAapi/Fund/TAFNDSwitch?DataID=&DataFlag=
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}

@@ -19,7 +19,12 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	FNDM004Service_TAFNDFundAgent_FullMethodName = "/fnd.v1.FNDM004Service/TAFNDFundAgent"
+	FNDM004Service_TAFNDFundAgent_FullMethodName       = "/fnd.v1.FNDM004Service/TAFNDFundAgent"
+	FNDM004Service_SaveTAFNDFundAgent_FullMethodName   = "/fnd.v1.FNDM004Service/SaveTAFNDFundAgent"
+	FNDM004Service_UpdateTAFNDFundAgent_FullMethodName = "/fnd.v1.FNDM004Service/UpdateTAFNDFundAgent"
+	FNDM004Service_DeleteTAFNDFundAgent_FullMethodName = "/fnd.v1.FNDM004Service/DeleteTAFNDFundAgent"
+	FNDM004Service_TACKFundAgentEdit_FullMethodName    = "/fnd.v1.FNDM004Service/TACKFundAgentEdit"
+	FNDM004Service_GetDataByDataID_FullMethodName      = "/fnd.v1.FNDM004Service/GetDataByDataID"
 )
 
 // FNDM004ServiceClient is the client API for FNDM004Service service.
@@ -31,6 +36,12 @@ const (
 // ═══════════════════════════════════════════════════════════════════
 type FNDM004ServiceClient interface {
 	TAFNDFundAgent(ctx context.Context, in *TAFNDFundAgentRequest, opts ...grpc.CallOption) (*TAFNDFundAgentResponse, error)
+	SaveTAFNDFundAgent(ctx context.Context, in *TAFNDFundAgentRequest, opts ...grpc.CallOption) (*SaveResponse, error)
+	UpdateTAFNDFundAgent(ctx context.Context, in *TAFNDFundAgentRequest, opts ...grpc.CallOption) (*SaveResponse, error)
+	DeleteTAFNDFundAgent(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*SaveResponse, error)
+	TACKFundAgentEdit(ctx context.Context, in *TACKFundAgentEditRequest, opts ...grpc.CallOption) (*CheckResponse, error)
+	// GET Data by DataID (Maintain Query)
+	GetDataByDataID(ctx context.Context, in *GetDataRequest, opts ...grpc.CallOption) (*TAFNDFundAgentRequest, error)
 }
 
 type fNDM004ServiceClient struct {
@@ -51,6 +62,56 @@ func (c *fNDM004ServiceClient) TAFNDFundAgent(ctx context.Context, in *TAFNDFund
 	return out, nil
 }
 
+func (c *fNDM004ServiceClient) SaveTAFNDFundAgent(ctx context.Context, in *TAFNDFundAgentRequest, opts ...grpc.CallOption) (*SaveResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SaveResponse)
+	err := c.cc.Invoke(ctx, FNDM004Service_SaveTAFNDFundAgent_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fNDM004ServiceClient) UpdateTAFNDFundAgent(ctx context.Context, in *TAFNDFundAgentRequest, opts ...grpc.CallOption) (*SaveResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SaveResponse)
+	err := c.cc.Invoke(ctx, FNDM004Service_UpdateTAFNDFundAgent_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fNDM004ServiceClient) DeleteTAFNDFundAgent(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*SaveResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SaveResponse)
+	err := c.cc.Invoke(ctx, FNDM004Service_DeleteTAFNDFundAgent_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fNDM004ServiceClient) TACKFundAgentEdit(ctx context.Context, in *TACKFundAgentEditRequest, opts ...grpc.CallOption) (*CheckResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CheckResponse)
+	err := c.cc.Invoke(ctx, FNDM004Service_TACKFundAgentEdit_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fNDM004ServiceClient) GetDataByDataID(ctx context.Context, in *GetDataRequest, opts ...grpc.CallOption) (*TAFNDFundAgentRequest, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(TAFNDFundAgentRequest)
+	err := c.cc.Invoke(ctx, FNDM004Service_GetDataByDataID_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // FNDM004ServiceServer is the server API for FNDM004Service service.
 // All implementations must embed UnimplementedFNDM004ServiceServer
 // for forward compatibility.
@@ -60,6 +121,12 @@ func (c *fNDM004ServiceClient) TAFNDFundAgent(ctx context.Context, in *TAFNDFund
 // ═══════════════════════════════════════════════════════════════════
 type FNDM004ServiceServer interface {
 	TAFNDFundAgent(context.Context, *TAFNDFundAgentRequest) (*TAFNDFundAgentResponse, error)
+	SaveTAFNDFundAgent(context.Context, *TAFNDFundAgentRequest) (*SaveResponse, error)
+	UpdateTAFNDFundAgent(context.Context, *TAFNDFundAgentRequest) (*SaveResponse, error)
+	DeleteTAFNDFundAgent(context.Context, *DeleteRequest) (*SaveResponse, error)
+	TACKFundAgentEdit(context.Context, *TACKFundAgentEditRequest) (*CheckResponse, error)
+	// GET Data by DataID (Maintain Query)
+	GetDataByDataID(context.Context, *GetDataRequest) (*TAFNDFundAgentRequest, error)
 	mustEmbedUnimplementedFNDM004ServiceServer()
 }
 
@@ -72,6 +139,21 @@ type UnimplementedFNDM004ServiceServer struct{}
 
 func (UnimplementedFNDM004ServiceServer) TAFNDFundAgent(context.Context, *TAFNDFundAgentRequest) (*TAFNDFundAgentResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method TAFNDFundAgent not implemented")
+}
+func (UnimplementedFNDM004ServiceServer) SaveTAFNDFundAgent(context.Context, *TAFNDFundAgentRequest) (*SaveResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method SaveTAFNDFundAgent not implemented")
+}
+func (UnimplementedFNDM004ServiceServer) UpdateTAFNDFundAgent(context.Context, *TAFNDFundAgentRequest) (*SaveResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateTAFNDFundAgent not implemented")
+}
+func (UnimplementedFNDM004ServiceServer) DeleteTAFNDFundAgent(context.Context, *DeleteRequest) (*SaveResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteTAFNDFundAgent not implemented")
+}
+func (UnimplementedFNDM004ServiceServer) TACKFundAgentEdit(context.Context, *TACKFundAgentEditRequest) (*CheckResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method TACKFundAgentEdit not implemented")
+}
+func (UnimplementedFNDM004ServiceServer) GetDataByDataID(context.Context, *GetDataRequest) (*TAFNDFundAgentRequest, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetDataByDataID not implemented")
 }
 func (UnimplementedFNDM004ServiceServer) mustEmbedUnimplementedFNDM004ServiceServer() {}
 func (UnimplementedFNDM004ServiceServer) testEmbeddedByValue()                        {}
@@ -112,6 +194,96 @@ func _FNDM004Service_TAFNDFundAgent_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _FNDM004Service_SaveTAFNDFundAgent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TAFNDFundAgentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FNDM004ServiceServer).SaveTAFNDFundAgent(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FNDM004Service_SaveTAFNDFundAgent_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FNDM004ServiceServer).SaveTAFNDFundAgent(ctx, req.(*TAFNDFundAgentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FNDM004Service_UpdateTAFNDFundAgent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TAFNDFundAgentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FNDM004ServiceServer).UpdateTAFNDFundAgent(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FNDM004Service_UpdateTAFNDFundAgent_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FNDM004ServiceServer).UpdateTAFNDFundAgent(ctx, req.(*TAFNDFundAgentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FNDM004Service_DeleteTAFNDFundAgent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FNDM004ServiceServer).DeleteTAFNDFundAgent(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FNDM004Service_DeleteTAFNDFundAgent_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FNDM004ServiceServer).DeleteTAFNDFundAgent(ctx, req.(*DeleteRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FNDM004Service_TACKFundAgentEdit_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TACKFundAgentEditRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FNDM004ServiceServer).TACKFundAgentEdit(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FNDM004Service_TACKFundAgentEdit_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FNDM004ServiceServer).TACKFundAgentEdit(ctx, req.(*TACKFundAgentEditRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FNDM004Service_GetDataByDataID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FNDM004ServiceServer).GetDataByDataID(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FNDM004Service_GetDataByDataID_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FNDM004ServiceServer).GetDataByDataID(ctx, req.(*GetDataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // FNDM004Service_ServiceDesc is the grpc.ServiceDesc for FNDM004Service service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -122,6 +294,26 @@ var FNDM004Service_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "TAFNDFundAgent",
 			Handler:    _FNDM004Service_TAFNDFundAgent_Handler,
+		},
+		{
+			MethodName: "SaveTAFNDFundAgent",
+			Handler:    _FNDM004Service_SaveTAFNDFundAgent_Handler,
+		},
+		{
+			MethodName: "UpdateTAFNDFundAgent",
+			Handler:    _FNDM004Service_UpdateTAFNDFundAgent_Handler,
+		},
+		{
+			MethodName: "DeleteTAFNDFundAgent",
+			Handler:    _FNDM004Service_DeleteTAFNDFundAgent_Handler,
+		},
+		{
+			MethodName: "TACKFundAgentEdit",
+			Handler:    _FNDM004Service_TACKFundAgentEdit_Handler,
+		},
+		{
+			MethodName: "GetDataByDataID",
+			Handler:    _FNDM004Service_GetDataByDataID_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -1,0 +1,15 @@
+meta {
+  name: FNDM007Service_TAFNDCustGroup
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}/TAapi/Fund/TAFNDCustGroup?SysCoID=&CustGrpCode=&CustGrpMName=&CustGrpSName=
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}

@@ -4,6 +4,8 @@ package fnd.v1;
 option go_package = "go-transfer-agent/common/gen/fnd/v1;fndv1";
 
 import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "fnd/v1/common.proto";
 
 // ═══════════════════════════════════════════════════════════════════
 // FNDM004 Service
@@ -11,9 +13,49 @@ import "google/api/annotations.proto";
 service FNDM004Service {
   rpc TAFNDFundAgent(TAFNDFundAgentRequest) returns (TAFNDFundAgentResponse) {
     option (google.api.http) = { get: "/TAapi/BaseFund/TAFNDFundAgent" };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["APIFNDM004：TAFNDFundAgent"]
+    };
   }
-}
 
+  rpc SaveTAFNDFundAgent(TAFNDFundAgentRequest) returns (SaveResponse) {
+    option (google.api.http) = { post: "/TAapi/BaseFund/TAFNDFundAgent" body: "*" };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["APIFNDM004：TAFNDFundAgent"]
+    };
+  }
+
+  rpc UpdateTAFNDFundAgent(TAFNDFundAgentRequest) returns (SaveResponse) {
+    option (google.api.http) = { put: "/TAapi/BaseFund/TAFNDFundAgent" body: "*" };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["APIFNDM004：TAFNDFundAgent"]
+    };
+  }
+
+  rpc DeleteTAFNDFundAgent(DeleteRequest) returns (SaveResponse) {
+    option (google.api.http) = { delete: "/TAapi/BaseFund/TAFNDFundAgent" };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["APIFNDM004：TAFNDFundAgent"]
+    };
+  }
+
+  rpc TACKFundAgentEdit(TACKFundAgentEditRequest) returns (CheckResponse) {
+    option (google.api.http) = { get: "/TAapi/BaseFund/TAFNDFundAgent/ChkData/TACKFundAgentEdit" };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["APIFNDM004：TAFNDFundAgent"]
+    };
+  }
+
+
+  // GET Data by DataID (Maintain Query)
+  rpc GetDataByDataID(GetDataRequest) returns (TAFNDFundAgentRequest) {
+    option (google.api.http) = { get: "/TAapi/BaseFund/TAFNDFundAgent/GetData/{data_id}" };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["APIFNDM004：TAFNDFundAgent"]
+    };
+  }
+
+}
 // ═══════════════════════════════════════════════════════════════════
 // FNDM004 Messages
 // ═══════════════════════════════════════════════════════════════════
@@ -59,4 +101,18 @@ message FundAgentDtlListDTO {
   repeated string no_sale_share_set_nm = 19 [json_name="NoSaleShareSetNm"];
   bool is_m_end_of_sale = 20 [json_name="IsMEndOfSale"];
   string term_date = 21 [json_name="TermDate"];
+}
+
+// KFNDM00402
+message TACKFundAgentEditRequest {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string check_time_point = 2 [json_name="CheckTimePoint"];
+}
+
+message ApproveTAFNDFundAgentRequest {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string data_id = 2 [json_name="DataID"];
+  string checker_id = 3 [json_name="CheckerID"];
+  bool is_approved = 4 [json_name="IsApproved"];
+  string remark = 5 [json_name="Remark"];
 }

@@ -1,0 +1,15 @@
+meta {
+  name: FNDService_TAGetDPrtFundIssueCry
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}/TAapi/Fund/TAFNDFundInfo/GetInfo/TAGetDPrtFundIssueCry?SysCoID=&IsAll=&PrtFundCode=&FeeChargeType=&FilterItem=&QueryType=
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}

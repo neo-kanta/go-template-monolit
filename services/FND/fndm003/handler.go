@@ -5,12 +5,11 @@ import (
 	"log/slog"
 
 	fndv1 "go-transfer-agent/common/gen/fnd/v1"
-
-	"google.golang.org/grpc"
 )
 
-// Handler implements the FNDM003 gRPC methods.
+// Handler implements the FNDM003 gRPC service interface.
 type Handler struct {
+	fndv1.UnimplementedFNDM003ServiceServer
 	log *slog.Logger
 	svc *Service
 }
@@ -26,7 +25,7 @@ func NewHandler(log *slog.Logger, svc *Service) *Handler {
 // Service exposes the underlying business service.
 func (h *Handler) Service() *Service { return h.svc }
 
-// TAFNDSwitch - GET endpoint implementation
+// TAFNDSwitch - GET query endpoint
 func (h *Handler) TAFNDSwitch(ctx context.Context, req *fndv1.TAFNDSwitchRequest) (*fndv1.TAFNDSwitchResponse, error) {
 	h.log.Info("TAFNDSwitch",
 		slog.String("sys_co_id", req.GetSysCoId()),
@@ -35,7 +34,35 @@ func (h *Handler) TAFNDSwitch(ctx context.Context, req *fndv1.TAFNDSwitchRequest
 	return h.svc.TAFNDSwitch(ctx, req)
 }
 
-// RegisterHandlers placeholder for gRPC server registration
-func RegisterHandlers(_ *grpc.Server) {
-	// fndv1.RegisterFNDM003ServiceServer(srv, NewHandler(log, svc))
+// SaveTAFNDSwitch - POST save (add) endpoint
+func (h *Handler) SaveTAFNDSwitch(ctx context.Context, req *fndv1.TAFNDSwitchRequest) (*fndv1.SaveResponse, error) {
+	h.log.Info("SaveTAFNDSwitch",
+		slog.String("sys_co_id", req.GetSysCoId()),
+		slog.String("prt_fund_code", req.GetPrtFundCode()),
+	)
+	return h.svc.SaveTAFNDSwitch(ctx, req)
+}
+
+// UpdateTAFNDSwitch - PUT save (modify) endpoint
+func (h *Handler) UpdateTAFNDSwitch(ctx context.Context, req *fndv1.TAFNDSwitchRequest) (*fndv1.SaveResponse, error) {
+	h.log.Info("UpdateTAFNDSwitch",
+		slog.String("sys_co_id", req.GetSysCoId()),
+		slog.String("prt_fund_code", req.GetPrtFundCode()),
+	)
+	return h.svc.UpdateTAFNDSwitch(ctx, req)
+}
+
+// DeleteTAFNDSwitch - DELETE endpoint
+func (h *Handler) DeleteTAFNDSwitch(ctx context.Context, req *fndv1.DeleteRequest) (*fndv1.SaveResponse, error) {
+	h.log.Info("DeleteTAFNDSwitch",
+		slog.String("data_id", req.GetDataId()),
+		slog.String("data_flag", req.GetDataFlag()),
+	)
+	return h.svc.DeleteTAFNDSwitch(ctx, req)
+}
+
+// ApproveTAFNDSwitch handles the Approval POST endpoint.
+func (h *Handler) ApproveTAFNDSwitch(ctx context.Context, req *fndv1.ApproveTAFNDSwitchRequest) (*fndv1.SaveResponse, error) {
+	h.log.Info("ApproveTAFNDSwitch called", slog.String("data_id", req.GetDataId()))
+	return h.svc.ApproveTAFNDSwitch(ctx, req)
 }

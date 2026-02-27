@@ -19,7 +19,12 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	FNDM008Service_TAFNDPauseTxn_FullMethodName = "/fnd.v1.FNDM008Service/TAFNDPauseTxn"
+	FNDM008Service_TAFNDPauseTxn_FullMethodName       = "/fnd.v1.FNDM008Service/TAFNDPauseTxn"
+	FNDM008Service_SaveTAFNDPauseTxn_FullMethodName   = "/fnd.v1.FNDM008Service/SaveTAFNDPauseTxn"
+	FNDM008Service_UpdateTAFNDPauseTxn_FullMethodName = "/fnd.v1.FNDM008Service/UpdateTAFNDPauseTxn"
+	FNDM008Service_DeleteTAFNDPauseTxn_FullMethodName = "/fnd.v1.FNDM008Service/DeleteTAFNDPauseTxn"
+	FNDM008Service_TACKPTxnBegDate_FullMethodName     = "/fnd.v1.FNDM008Service/TACKPTxnBegDate"
+	FNDM008Service_GetDataByDataID_FullMethodName     = "/fnd.v1.FNDM008Service/GetDataByDataID"
 )
 
 // FNDM008ServiceClient is the client API for FNDM008Service service.
@@ -31,6 +36,12 @@ const (
 // ═══════════════════════════════════════════════════════════════════
 type FNDM008ServiceClient interface {
 	TAFNDPauseTxn(ctx context.Context, in *TAFNDPauseTxnRequest, opts ...grpc.CallOption) (*TAFNDPauseTxnResponse, error)
+	SaveTAFNDPauseTxn(ctx context.Context, in *TAFNDPauseTxnRequest, opts ...grpc.CallOption) (*SaveResponse, error)
+	UpdateTAFNDPauseTxn(ctx context.Context, in *TAFNDPauseTxnRequest, opts ...grpc.CallOption) (*SaveResponse, error)
+	DeleteTAFNDPauseTxn(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*SaveResponse, error)
+	TACKPTxnBegDate(ctx context.Context, in *TACKPTxnBegDateRequest, opts ...grpc.CallOption) (*CheckResponse, error)
+	// GET Data by DataID (Maintain Query)
+	GetDataByDataID(ctx context.Context, in *GetDataRequest, opts ...grpc.CallOption) (*TAFNDPauseTxnRequest, error)
 }
 
 type fNDM008ServiceClient struct {
@@ -51,6 +62,56 @@ func (c *fNDM008ServiceClient) TAFNDPauseTxn(ctx context.Context, in *TAFNDPause
 	return out, nil
 }
 
+func (c *fNDM008ServiceClient) SaveTAFNDPauseTxn(ctx context.Context, in *TAFNDPauseTxnRequest, opts ...grpc.CallOption) (*SaveResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SaveResponse)
+	err := c.cc.Invoke(ctx, FNDM008Service_SaveTAFNDPauseTxn_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fNDM008ServiceClient) UpdateTAFNDPauseTxn(ctx context.Context, in *TAFNDPauseTxnRequest, opts ...grpc.CallOption) (*SaveResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SaveResponse)
+	err := c.cc.Invoke(ctx, FNDM008Service_UpdateTAFNDPauseTxn_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fNDM008ServiceClient) DeleteTAFNDPauseTxn(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*SaveResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(SaveResponse)
+	err := c.cc.Invoke(ctx, FNDM008Service_DeleteTAFNDPauseTxn_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fNDM008ServiceClient) TACKPTxnBegDate(ctx context.Context, in *TACKPTxnBegDateRequest, opts ...grpc.CallOption) (*CheckResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CheckResponse)
+	err := c.cc.Invoke(ctx, FNDM008Service_TACKPTxnBegDate_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fNDM008ServiceClient) GetDataByDataID(ctx context.Context, in *GetDataRequest, opts ...grpc.CallOption) (*TAFNDPauseTxnRequest, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(TAFNDPauseTxnRequest)
+	err := c.cc.Invoke(ctx, FNDM008Service_GetDataByDataID_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // FNDM008ServiceServer is the server API for FNDM008Service service.
 // All implementations must embed UnimplementedFNDM008ServiceServer
 // for forward compatibility.
@@ -60,6 +121,12 @@ func (c *fNDM008ServiceClient) TAFNDPauseTxn(ctx context.Context, in *TAFNDPause
 // ═══════════════════════════════════════════════════════════════════
 type FNDM008ServiceServer interface {
 	TAFNDPauseTxn(context.Context, *TAFNDPauseTxnRequest) (*TAFNDPauseTxnResponse, error)
+	SaveTAFNDPauseTxn(context.Context, *TAFNDPauseTxnRequest) (*SaveResponse, error)
+	UpdateTAFNDPauseTxn(context.Context, *TAFNDPauseTxnRequest) (*SaveResponse, error)
+	DeleteTAFNDPauseTxn(context.Context, *DeleteRequest) (*SaveResponse, error)
+	TACKPTxnBegDate(context.Context, *TACKPTxnBegDateRequest) (*CheckResponse, error)
+	// GET Data by DataID (Maintain Query)
+	GetDataByDataID(context.Context, *GetDataRequest) (*TAFNDPauseTxnRequest, error)
 	mustEmbedUnimplementedFNDM008ServiceServer()
 }
 
@@ -72,6 +139,21 @@ type UnimplementedFNDM008ServiceServer struct{}
 
 func (UnimplementedFNDM008ServiceServer) TAFNDPauseTxn(context.Context, *TAFNDPauseTxnRequest) (*TAFNDPauseTxnResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method TAFNDPauseTxn not implemented")
+}
+func (UnimplementedFNDM008ServiceServer) SaveTAFNDPauseTxn(context.Context, *TAFNDPauseTxnRequest) (*SaveResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method SaveTAFNDPauseTxn not implemented")
+}
+func (UnimplementedFNDM008ServiceServer) UpdateTAFNDPauseTxn(context.Context, *TAFNDPauseTxnRequest) (*SaveResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateTAFNDPauseTxn not implemented")
+}
+func (UnimplementedFNDM008ServiceServer) DeleteTAFNDPauseTxn(context.Context, *DeleteRequest) (*SaveResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteTAFNDPauseTxn not implemented")
+}
+func (UnimplementedFNDM008ServiceServer) TACKPTxnBegDate(context.Context, *TACKPTxnBegDateRequest) (*CheckResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method TACKPTxnBegDate not implemented")
+}
+func (UnimplementedFNDM008ServiceServer) GetDataByDataID(context.Context, *GetDataRequest) (*TAFNDPauseTxnRequest, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetDataByDataID not implemented")
 }
 func (UnimplementedFNDM008ServiceServer) mustEmbedUnimplementedFNDM008ServiceServer() {}
 func (UnimplementedFNDM008ServiceServer) testEmbeddedByValue()                        {}
@@ -112,6 +194,96 @@ func _FNDM008Service_TAFNDPauseTxn_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _FNDM008Service_SaveTAFNDPauseTxn_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TAFNDPauseTxnRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FNDM008ServiceServer).SaveTAFNDPauseTxn(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FNDM008Service_SaveTAFNDPauseTxn_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FNDM008ServiceServer).SaveTAFNDPauseTxn(ctx, req.(*TAFNDPauseTxnRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FNDM008Service_UpdateTAFNDPauseTxn_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TAFNDPauseTxnRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FNDM008ServiceServer).UpdateTAFNDPauseTxn(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FNDM008Service_UpdateTAFNDPauseTxn_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FNDM008ServiceServer).UpdateTAFNDPauseTxn(ctx, req.(*TAFNDPauseTxnRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FNDM008Service_DeleteTAFNDPauseTxn_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FNDM008ServiceServer).DeleteTAFNDPauseTxn(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FNDM008Service_DeleteTAFNDPauseTxn_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FNDM008ServiceServer).DeleteTAFNDPauseTxn(ctx, req.(*DeleteRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FNDM008Service_TACKPTxnBegDate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TACKPTxnBegDateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FNDM008ServiceServer).TACKPTxnBegDate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FNDM008Service_TACKPTxnBegDate_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FNDM008ServiceServer).TACKPTxnBegDate(ctx, req.(*TACKPTxnBegDateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FNDM008Service_GetDataByDataID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FNDM008ServiceServer).GetDataByDataID(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FNDM008Service_GetDataByDataID_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FNDM008ServiceServer).GetDataByDataID(ctx, req.(*GetDataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // FNDM008Service_ServiceDesc is the grpc.ServiceDesc for FNDM008Service service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -122,6 +294,26 @@ var FNDM008Service_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "TAFNDPauseTxn",
 			Handler:    _FNDM008Service_TAFNDPauseTxn_Handler,
+		},
+		{
+			MethodName: "SaveTAFNDPauseTxn",
+			Handler:    _FNDM008Service_SaveTAFNDPauseTxn_Handler,
+		},
+		{
+			MethodName: "UpdateTAFNDPauseTxn",
+			Handler:    _FNDM008Service_UpdateTAFNDPauseTxn_Handler,
+		},
+		{
+			MethodName: "DeleteTAFNDPauseTxn",
+			Handler:    _FNDM008Service_DeleteTAFNDPauseTxn_Handler,
+		},
+		{
+			MethodName: "TACKPTxnBegDate",
+			Handler:    _FNDM008Service_TACKPTxnBegDate_Handler,
+		},
+		{
+			MethodName: "GetDataByDataID",
+			Handler:    _FNDM008Service_GetDataByDataID_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

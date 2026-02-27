@@ -4,6 +4,8 @@ package fnd.v1;
 option go_package = "go-transfer-agent/common/gen/fnd/v1;fndv1";
 
 import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "fnd/v1/common.proto";
 
 // ═══════════════════════════════════════════════════════════════════
 // FNDM002 Service
@@ -11,9 +13,42 @@ import "google/api/annotations.proto";
 service FNDM002Service {
   rpc TAFNDFundFee(TAFNDFundFeeRequest) returns (TAFNDFundFeeResponse) {
     option (google.api.http) = { get: "/TAapi/Fund/TAFNDFundFee" };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["APIFNDM002：TAFNDFundFee"]
+    };
   }
-}
 
+  rpc SaveTAFNDFundFee(TAFNDFundFeeRequest) returns (SaveResponse) {
+    option (google.api.http) = { post: "/TAapi/Fund/TAFNDFundFee" body: "*" };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["APIFNDM002：TAFNDFundFee"]
+    };
+  }
+
+  rpc UpdateTAFNDFundFee(TAFNDFundFeeRequest) returns (SaveResponse) {
+    option (google.api.http) = { put: "/TAapi/Fund/TAFNDFundFee" body: "*" };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["APIFNDM002：TAFNDFundFee"]
+    };
+  }
+
+  rpc DeleteTAFNDFundFee(DeleteRequest) returns (SaveResponse) {
+    option (google.api.http) = { delete: "/TAapi/Fund/TAFNDFundFee" };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["APIFNDM002：TAFNDFundFee"]
+    };
+  }
+
+
+  // GET Data by DataID (Maintain Query)
+  rpc GetDataByDataID(GetDataRequest) returns (TAFNDFundFeeRequest) {
+    option (google.api.http) = { get: "/TAapi/Fund/TAFNDFundFee/GetData/{data_id}" };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["APIFNDM002：TAFNDFundFee"]
+    };
+  }
+
+}
 // ═══════════════════════════════════════════════════════════════════
 // FNDM002 Messages
 // ═══════════════════════════════════════════════════════════════════
@@ -157,4 +192,12 @@ message FundFeeBackDtlListResDTO {
   string hold_period_year = 4 [json_name="HoldPeriodYear"];
   int32 hold_beg_day = 5 [json_name="HoldBegDay"];
   double back_fee_rate = 6 [json_name="BackFeeRate"];
+}
+
+message ApproveTAFNDFundFeeRequest {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string data_id = 2 [json_name="DataID"];
+  string checker_id = 3 [json_name="CheckerID"];
+  bool is_approved = 4 [json_name="IsApproved"];
+  string remark = 5 [json_name="Remark"];
 }

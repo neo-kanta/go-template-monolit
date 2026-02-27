@@ -1,12 +1,48 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "fnd/v1/fnd.proto",
-    "version": "version not set"
+    "title": "TaBaseAPI",
+    "version": "1.0"
   },
   "tags": [
     {
       "name": "FNDService"
+    },
+    {
+      "name": "FNDM002Service"
+    },
+    {
+      "name": "FNDM003Service"
+    },
+    {
+      "name": "FNDM004Service"
+    },
+    {
+      "name": "FNDM005Service"
+    },
+    {
+      "name": "FNDM006Service"
+    },
+    {
+      "name": "FNDM007Service"
+    },
+    {
+      "name": "FNDM008Service"
+    },
+    {
+      "name": "FNDM009Service"
+    },
+    {
+      "name": "FNDM010Service"
+    },
+    {
+      "name": "FNDM011Service"
+    },
+    {
+      "name": "FNDM012Service"
+    },
+    {
+      "name": "FNDM013Service"
     }
   ],
   "consumes": [
@@ -16,9 +52,1024 @@
     "application/json"
   ],
   "paths": {
-    "/TAapi/Fund/TAFNDFundInfo": {
+    "/TAapi/BaseFund/TAFNDCustGroup/GetData/{DataID}": {
+      "get": {
+        "summary": "GET Data by DataID (Maintain Query)",
+        "operationId": "FNDM007Service_GetDataByDataID",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDCustGroupRequest"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "DataID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "APIFNDM007：TAFNDFundGroup"
+        ]
+      }
+    },
+    "/TAapi/BaseFund/TAFNDCustGroup/GetInfo/TAGetCustGroup": {
+      "get": {
+        "operationId": "FNDM007Service_TAGetCustGroup",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1TAGetCustGroupResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "SysCoID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "CustGrpCode",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "APIFNDM007：TAFNDFundGroup"
+        ]
+      }
+    },
+    "/TAapi/BaseFund/TAFNDFundAgent": {
+      "get": {
+        "operationId": "FNDM004Service_TAFNDFundAgent",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDFundAgentResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "SysCoID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "PrtFundCode",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "APIFNDM004：TAFNDFundAgent"
+        ]
+      },
+      "delete": {
+        "operationId": "FNDM004Service_DeleteTAFNDFundAgent",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SaveResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "DataID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "DataFlag",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "APIFNDM004：TAFNDFundAgent"
+        ]
+      },
       "post": {
-        "summary": "APIFNDM001Post/Put: Save (Add or Modify)",
+        "operationId": "FNDM004Service_SaveTAFNDFundAgent",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SaveResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDFundAgentRequest"
+            }
+          }
+        ],
+        "tags": [
+          "APIFNDM004：TAFNDFundAgent"
+        ]
+      },
+      "put": {
+        "operationId": "FNDM004Service_UpdateTAFNDFundAgent",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SaveResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDFundAgentRequest"
+            }
+          }
+        ],
+        "tags": [
+          "APIFNDM004：TAFNDFundAgent"
+        ]
+      }
+    },
+    "/TAapi/BaseFund/TAFNDFundAgent/ChkData/TACKFundAgentEdit": {
+      "get": {
+        "operationId": "FNDM004Service_TACKFundAgentEdit",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CheckResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "SysCoID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "CheckTimePoint",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "APIFNDM004：TAFNDFundAgent"
+        ]
+      }
+    },
+    "/TAapi/BaseFund/TAFNDFundAgent/GetData/{DataID}": {
+      "get": {
+        "summary": "GET Data by DataID (Maintain Query)",
+        "operationId": "FNDM004Service_GetDataByDataID",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDFundAgentRequest"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "DataID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "APIFNDM004：TAFNDFundAgent"
+        ]
+      }
+    },
+    "/TAapi/BaseFund/TAFNDFundCalDate": {
+      "get": {
+        "operationId": "FNDM005Service_TAFNDFundCalDate",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDFundCalDateResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "SysCoID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "CalYear",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "FndCalType",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "FundCry",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "APIFNDM005：TAFNDFundCalDate"
+        ]
+      },
+      "delete": {
+        "operationId": "FNDM005Service_DeleteTAFNDFundCalDate",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SaveResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "DataID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "DataFlag",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "APIFNDM005：TAFNDFundCalDate"
+        ]
+      },
+      "post": {
+        "operationId": "FNDM005Service_SaveTAFNDFundCalDate",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SaveResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDFundCalDateRequest"
+            }
+          }
+        ],
+        "tags": [
+          "APIFNDM005：TAFNDFundCalDate"
+        ]
+      },
+      "put": {
+        "operationId": "FNDM005Service_UpdateTAFNDFundCalDate",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SaveResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDFundCalDateRequest"
+            }
+          }
+        ],
+        "tags": [
+          "APIFNDM005：TAFNDFundCalDate"
+        ]
+      }
+    },
+    "/TAapi/BaseFund/TAFNDFundCalDate/ChkData/TACKFNDCalEdit": {
+      "get": {
+        "operationId": "FNDM005Service_TACKFNDCalEdit",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CheckResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "SysCoID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "CheckTimePoint",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "APIFNDM005：TAFNDFundCalDate"
+        ]
+      }
+    },
+    "/TAapi/BaseFund/TAFNDFundCalDate/GetData/{DataID}": {
+      "get": {
+        "summary": "GET Data by DataID (Maintain Query)",
+        "operationId": "FNDM005Service_GetDataByDataID",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDFundCalDateRequest"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "DataID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "APIFNDM005：TAFNDFundCalDate"
+        ]
+      }
+    },
+    "/TAapi/BaseFund/TAFNDRPFeeChgType/GetData/{DataID}": {
+      "get": {
+        "summary": "GET Data by DataID (Maintain Query)",
+        "operationId": "FNDM006Service_GetDataByDataID",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDRPFeeChgTypeRequest"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "DataID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "APIFNDM006：TAFNDRPFeeChgType"
+        ]
+      }
+    },
+    "/TAapi/Fund/TAFNDCustGroup": {
+      "get": {
+        "operationId": "FNDM007Service_TAFNDCustGroup",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDCustGroupResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "SysCoID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "CustGrpCode",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "CustGrpMName",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "CustGrpSName",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "APIFNDM007：TAFNDFundGroup"
+        ]
+      },
+      "delete": {
+        "operationId": "FNDM007Service_DeleteTAFNDCustGroup",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SaveResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "DataID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "DataFlag",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "APIFNDM007：TAFNDFundGroup"
+        ]
+      },
+      "post": {
+        "operationId": "FNDM007Service_SaveTAFNDCustGroup",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SaveResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDCustGroupRequest"
+            }
+          }
+        ],
+        "tags": [
+          "APIFNDM007：TAFNDFundGroup"
+        ]
+      },
+      "put": {
+        "operationId": "FNDM007Service_UpdateTAFNDCustGroup",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SaveResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDCustGroupRequest"
+            }
+          }
+        ],
+        "tags": [
+          "APIFNDM007：TAFNDFundGroup"
+        ]
+      }
+    },
+    "/TAapi/Fund/TAFNDFavDisc": {
+      "get": {
+        "operationId": "FNDM009Service_TAFNDFavDisc",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDFavDiscResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "SysCoID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "CusIDCode",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "DiscItemSet",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "DiscFundType",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "APIFNDM009：TAFNDFavDisc"
+        ]
+      },
+      "delete": {
+        "operationId": "FNDM009Service_DeleteTAFNDFavDisc",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SaveResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "DataID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "DataFlag",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "APIFNDM009：TAFNDFavDisc"
+        ]
+      },
+      "post": {
+        "operationId": "FNDM009Service_SaveTAFNDFavDisc",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SaveResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDFavDiscRequest"
+            }
+          }
+        ],
+        "tags": [
+          "APIFNDM009：TAFNDFavDisc"
+        ]
+      },
+      "put": {
+        "operationId": "FNDM009Service_UpdateTAFNDFavDisc",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SaveResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDFavDiscRequest"
+            }
+          }
+        ],
+        "tags": [
+          "APIFNDM009：TAFNDFavDisc"
+        ]
+      }
+    },
+    "/TAapi/Fund/TAFNDFavDisc/GetData/{DataID}": {
+      "get": {
+        "summary": "GET Data by DataID (Maintain Query)",
+        "operationId": "FNDM009Service_GetDataByDataID",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDFavDiscRequest"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "DataID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "APIFNDM009：TAFNDFavDisc"
+        ]
+      }
+    },
+    "/TAapi/Fund/TAFNDFundFee": {
+      "get": {
+        "operationId": "FNDM002Service_TAFNDFundFee",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDFundFeeResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "SysCoID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "PrtFundCode",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "APIFNDM002：TAFNDFundFee"
+        ]
+      },
+      "delete": {
+        "operationId": "FNDM002Service_DeleteTAFNDFundFee",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SaveResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "DataID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "DataFlag",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "APIFNDM002：TAFNDFundFee"
+        ]
+      },
+      "post": {
+        "operationId": "FNDM002Service_SaveTAFNDFundFee",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SaveResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDFundFeeRequest"
+            }
+          }
+        ],
+        "tags": [
+          "APIFNDM002：TAFNDFundFee"
+        ]
+      },
+      "put": {
+        "operationId": "FNDM002Service_UpdateTAFNDFundFee",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SaveResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDFundFeeRequest"
+            }
+          }
+        ],
+        "tags": [
+          "APIFNDM002：TAFNDFundFee"
+        ]
+      }
+    },
+    "/TAapi/Fund/TAFNDFundFee/GetData/{DataID}": {
+      "get": {
+        "summary": "GET Data by DataID (Maintain Query)",
+        "operationId": "FNDM002Service_GetDataByDataID",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDFundFeeRequest"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "DataID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "APIFNDM002：TAFNDFundFee"
+        ]
+      }
+    },
+    "/TAapi/Fund/TAFNDFundInfo": {
+      "delete": {
+        "summary": "DELETE: Delete data",
+        "operationId": "FNDService_DeleteTAFNDFundInfo",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SaveResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "DataID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "DataFlag",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "APIFNDM001：TAFNDFundInfo"
+        ]
+      },
+      "post": {
+        "summary": "APIFNDM001Post: Save (Add)",
         "operationId": "FNDService_SaveFundInfo",
         "responses": {
           "200": {
@@ -45,7 +1096,71 @@
           }
         ],
         "tags": [
-          "FNDService"
+          "APIFNDM001：TAFNDFundInfo"
+        ]
+      },
+      "put": {
+        "summary": "APIFNDM001Put: Update (Modify)",
+        "operationId": "FNDService_UpdateFundInfo",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SaveFundInfoResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1SaveFundInfoRequest"
+            }
+          }
+        ],
+        "tags": [
+          "APIFNDM001：TAFNDFundInfo"
+        ]
+      }
+    },
+    "/TAapi/Fund/TAFNDFundInfo/Approve": {
+      "post": {
+        "summary": "APIFNDM001Approve: Approve (4-Eyes Principle)",
+        "operationId": "FNDService_ApproveFundInfo",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SaveFundInfoResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1ApproveFundInfoRequest"
+            }
+          }
+        ],
+        "tags": [
+          "APIFNDM001：TAFNDFundInfo"
         ]
       }
     },
@@ -88,7 +1203,7 @@
           }
         ],
         "tags": [
-          "FNDService"
+          "APIFNDM001：TAFNDFundInfo"
         ]
       }
     },
@@ -125,7 +1240,7 @@
           }
         ],
         "tags": [
-          "FNDService"
+          "APIFNDM001：TAFNDFundInfo"
         ]
       }
     },
@@ -156,14 +1271,14 @@
           }
         ],
         "tags": [
-          "FNDService"
+          "APIFNDM001：TAFNDFundInfo"
         ]
       }
     },
-    "/TAapi/Fund/TAFNDFundInfo/GetData/{PrtFundCode}": {
+    "/TAapi/Fund/TAFNDFundInfo/GetData/{DataID}": {
       "get": {
         "summary": "APIFNDM001GetMaintain: Maintain查詢 — returns full AUDResponse",
-        "operationId": "FNDService_QueryFundInfoByDataID",
+        "operationId": "FNDService_GetDataByDataID",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -180,20 +1295,14 @@
         },
         "parameters": [
           {
-            "name": "PrtFundCode",
+            "name": "DataID",
             "in": "path",
             "required": true,
-            "type": "string"
-          },
-          {
-            "name": "SysCoID",
-            "in": "query",
-            "required": false,
             "type": "string"
           }
         ],
         "tags": [
-          "FNDService"
+          "APIFNDM001：TAFNDFundInfo"
         ]
       }
     },
@@ -254,7 +1363,7 @@
           }
         ],
         "tags": [
-          "FNDService"
+          "APIFNDM001：TAFNDFundInfo"
         ]
       }
     },
@@ -321,18 +1430,18 @@
           }
         ],
         "tags": [
-          "FNDService"
+          "APIFNDM001：TAFNDFundInfo"
         ]
       }
     },
-    "/api/v1/transactions": {
+    "/TAapi/Fund/TAFNDIShareFundFee": {
       "get": {
-        "operationId": "FNDService_ListTransactions",
+        "operationId": "FNDM010Service_TAFNDIShareFundFee",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1ListTransactionsResponse"
+              "$ref": "#/definitions/v1TAFNDIShareFundFeeResponse"
             }
           },
           "default": {
@@ -344,31 +1453,63 @@
         },
         "parameters": [
           {
-            "name": "PageSize",
+            "name": "SysCoID",
             "in": "query",
             "required": false,
-            "type": "integer",
-            "format": "int32"
+            "type": "string"
           },
           {
-            "name": "PageToken",
+            "name": "FundCode",
             "in": "query",
             "required": false,
             "type": "string"
           }
         ],
         "tags": [
-          "FNDService"
+          "APIFNDM010：TAFNDIShareFundFee"
         ]
       },
-      "post": {
-        "summary": "Existing POC methods",
-        "operationId": "FNDService_CreateTransaction",
+      "delete": {
+        "operationId": "FNDM010Service_DeleteTAFNDIShareFundFee",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1CreateTransactionResponse"
+              "$ref": "#/definitions/v1SaveResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "DataID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "DataFlag",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "APIFNDM010：TAFNDIShareFundFee"
+        ]
+      },
+      "post": {
+        "operationId": "FNDM010Service_SaveTAFNDIShareFundFee",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SaveResponse"
             }
           },
           "default": {
@@ -384,12 +1525,1159 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1CreateTransactionRequest"
+              "$ref": "#/definitions/v1TAFNDIShareFundFeeRequest"
             }
           }
         ],
         "tags": [
-          "FNDService"
+          "APIFNDM010：TAFNDIShareFundFee"
+        ]
+      },
+      "put": {
+        "operationId": "FNDM010Service_UpdateTAFNDIShareFundFee",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SaveResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDIShareFundFeeRequest"
+            }
+          }
+        ],
+        "tags": [
+          "APIFNDM010：TAFNDIShareFundFee"
+        ]
+      }
+    },
+    "/TAapi/Fund/TAFNDIShareFundFee/GetData/{DataID}": {
+      "get": {
+        "summary": "GET Data by DataID (Maintain Query)",
+        "operationId": "FNDM010Service_GetDataByDataID",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDIShareFundFeeRequest"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "DataID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "APIFNDM010：TAFNDIShareFundFee"
+        ]
+      }
+    },
+    "/TAapi/Fund/TAFNDIShareFundFeeRdm": {
+      "get": {
+        "operationId": "FNDM011Service_TAFNDIShareFundFeeRdm",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDIShareFundFeeRdmResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "SysCoID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "FundCode",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "FeeName",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "RdmRangeType",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "RdmDateType",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "RdmBaseID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "SubsBaseID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "RdmCalcID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "ShouldHoldDays",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "FeeRate",
+            "in": "query",
+            "required": false,
+            "type": "number",
+            "format": "double"
+          }
+        ],
+        "tags": [
+          "APIFNDM011：TAFNDIShareFundFeeRdm"
+        ]
+      },
+      "delete": {
+        "operationId": "FNDM011Service_DeleteTAFNDIShareFundFeeRdm",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SaveResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "DataID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "DataFlag",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "APIFNDM011：TAFNDIShareFundFeeRdm"
+        ]
+      },
+      "post": {
+        "operationId": "FNDM011Service_SaveTAFNDIShareFundFeeRdm",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SaveResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDIShareFundFeeRdmRequest"
+            }
+          }
+        ],
+        "tags": [
+          "APIFNDM011：TAFNDIShareFundFeeRdm"
+        ]
+      },
+      "put": {
+        "operationId": "FNDM011Service_UpdateTAFNDIShareFundFeeRdm",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SaveResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDIShareFundFeeRdmRequest"
+            }
+          }
+        ],
+        "tags": [
+          "APIFNDM011：TAFNDIShareFundFeeRdm"
+        ]
+      }
+    },
+    "/TAapi/Fund/TAFNDIShareFundFeeRdm/GetData/{DataID}": {
+      "get": {
+        "summary": "GET Data by DataID (Maintain Query)",
+        "operationId": "FNDM011Service_GetDataByDataID",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDIShareFundFeeRdmRequest"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "DataID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "APIFNDM011：TAFNDIShareFundFeeRdm"
+        ]
+      }
+    },
+    "/TAapi/Fund/TAFNDPGFundFeeRdm": {
+      "get": {
+        "operationId": "FNDM012Service_TAFNDPGFundFeeRdm",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDPGFundFeeRdmResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "SysCoID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "PrtFundCode",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "RdmCalcBegDate",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "FeeRate",
+            "in": "query",
+            "required": false,
+            "type": "number",
+            "format": "double"
+          }
+        ],
+        "tags": [
+          "APIFNDM012：TAFNDPGFundFeeRdm"
+        ]
+      },
+      "delete": {
+        "operationId": "FNDM012Service_DeleteTAFNDPGFundFeeRdm",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SaveResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "DataID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "DataFlag",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "APIFNDM012：TAFNDPGFundFeeRdm"
+        ]
+      },
+      "post": {
+        "operationId": "FNDM012Service_SaveTAFNDPGFundFeeRdm",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SaveResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDPGFundFeeRdmRequest"
+            }
+          }
+        ],
+        "tags": [
+          "APIFNDM012：TAFNDPGFundFeeRdm"
+        ]
+      },
+      "put": {
+        "operationId": "FNDM012Service_UpdateTAFNDPGFundFeeRdm",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SaveResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDPGFundFeeRdmRequest"
+            }
+          }
+        ],
+        "tags": [
+          "APIFNDM012：TAFNDPGFundFeeRdm"
+        ]
+      }
+    },
+    "/TAapi/Fund/TAFNDPGFundFeeRdm/GetData/{DataID}": {
+      "get": {
+        "summary": "GET Data by DataID (Maintain Query)",
+        "operationId": "FNDM012Service_GetDataByDataID",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDPGFundFeeRdmRequest"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "DataID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "APIFNDM012：TAFNDPGFundFeeRdm"
+        ]
+      }
+    },
+    "/TAapi/Fund/TAFNDPauseTxn": {
+      "get": {
+        "operationId": "FNDM008Service_TAFNDPauseTxn",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDPauseTxnResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "SysCoID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "PrtFundCode",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "PTxnBegDate",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "PTxnEndDate",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "Remark",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "APIFNDM008：TAFNDPauseTxn"
+        ]
+      },
+      "delete": {
+        "operationId": "FNDM008Service_DeleteTAFNDPauseTxn",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SaveResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "DataID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "DataFlag",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "APIFNDM008：TAFNDPauseTxn"
+        ]
+      },
+      "post": {
+        "operationId": "FNDM008Service_SaveTAFNDPauseTxn",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SaveResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDPauseTxnRequest"
+            }
+          }
+        ],
+        "tags": [
+          "APIFNDM008：TAFNDPauseTxn"
+        ]
+      },
+      "put": {
+        "operationId": "FNDM008Service_UpdateTAFNDPauseTxn",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SaveResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDPauseTxnRequest"
+            }
+          }
+        ],
+        "tags": [
+          "APIFNDM008：TAFNDPauseTxn"
+        ]
+      }
+    },
+    "/TAapi/Fund/TAFNDPauseTxn/ChkData/TACKPTxnBegDate": {
+      "get": {
+        "operationId": "FNDM008Service_TACKPTxnBegDate",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CheckResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "SysCoID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "PrtFundCode",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "PTxnBegDate",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "PauseTxnSet",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          }
+        ],
+        "tags": [
+          "APIFNDM008：TAFNDPauseTxn"
+        ]
+      }
+    },
+    "/TAapi/Fund/TAFNDPauseTxn/GetData/{DataID}": {
+      "get": {
+        "summary": "GET Data by DataID (Maintain Query)",
+        "operationId": "FNDM008Service_GetDataByDataID",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDPauseTxnRequest"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "DataID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "APIFNDM008：TAFNDPauseTxn"
+        ]
+      }
+    },
+    "/TAapi/Fund/TAFNDRPFeeChgType": {
+      "get": {
+        "operationId": "FNDM006Service_TAFNDRPFeeChgType",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDRPFeeChgTypeResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "SysCoID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "PmtTxnType",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "PrtFundCode",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "APIFNDM006：TAFNDRPFeeChgType"
+        ]
+      },
+      "delete": {
+        "operationId": "FNDM006Service_DeleteTAFNDRPFeeChgType",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SaveResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "DataID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "DataFlag",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "APIFNDM006：TAFNDRPFeeChgType"
+        ]
+      },
+      "post": {
+        "operationId": "FNDM006Service_SaveTAFNDRPFeeChgType",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SaveResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDRPFeeChgTypeRequest"
+            }
+          }
+        ],
+        "tags": [
+          "APIFNDM006：TAFNDRPFeeChgType"
+        ]
+      },
+      "put": {
+        "operationId": "FNDM006Service_UpdateTAFNDRPFeeChgType",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SaveResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDRPFeeChgTypeRequest"
+            }
+          }
+        ],
+        "tags": [
+          "APIFNDM006：TAFNDRPFeeChgType"
+        ]
+      }
+    },
+    "/TAapi/Fund/TAFNDSwitch": {
+      "get": {
+        "operationId": "FNDM003Service_TAFNDSwitch",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDSwitchResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "SysCoID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "PrtFundCode",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "IsSwitchIn",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "APIFNDM003：TAFNDSwitch"
+        ]
+      },
+      "delete": {
+        "operationId": "FNDM003Service_DeleteTAFNDSwitch",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SaveResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "DataID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "DataFlag",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "APIFNDM003：TAFNDSwitch"
+        ]
+      },
+      "post": {
+        "operationId": "FNDM003Service_SaveTAFNDSwitch",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SaveResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDSwitchRequest"
+            }
+          }
+        ],
+        "tags": [
+          "APIFNDM003：TAFNDSwitch"
+        ]
+      },
+      "put": {
+        "operationId": "FNDM003Service_UpdateTAFNDSwitch",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SaveResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDSwitchRequest"
+            }
+          }
+        ],
+        "tags": [
+          "APIFNDM003：TAFNDSwitch"
+        ]
+      }
+    },
+    "/TAapi/Fund/TAFNDSwitch/GetData/{DataID}": {
+      "get": {
+        "summary": "GET Data by DataID (Maintain Query)",
+        "operationId": "FNDM003Service_GetDataByDataID",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDSwitchRequest"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "DataID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "APIFNDM003：TAFNDSwitch"
+        ]
+      }
+    },
+    "/TAapi/Fund/TAFNDTMFundFeeRdm": {
+      "get": {
+        "operationId": "FNDM013Service_TAFNDTMFundFeeRdm",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDTMFundFeeRdmResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "SysCoID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "PrtFundCode",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "RdmCalcBegDate",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "APIFNDM013：TAFNDTMFundFeeRdm"
+        ]
+      },
+      "delete": {
+        "operationId": "FNDM013Service_DeleteTAFNDTMFundFeeRdm",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SaveResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "DataID",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "DataFlag",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "APIFNDM013：TAFNDTMFundFeeRdm"
+        ]
+      },
+      "post": {
+        "operationId": "FNDM013Service_SaveTAFNDTMFundFeeRdm",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SaveResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDTMFundFeeRdmRequest"
+            }
+          }
+        ],
+        "tags": [
+          "APIFNDM013：TAFNDTMFundFeeRdm"
+        ]
+      },
+      "put": {
+        "operationId": "FNDM013Service_UpdateTAFNDTMFundFeeRdm",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SaveResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDTMFundFeeRdmRequest"
+            }
+          }
+        ],
+        "tags": [
+          "APIFNDM013：TAFNDTMFundFeeRdm"
+        ]
+      }
+    },
+    "/TAapi/Fund/TAFNDTMFundFeeRdm/GetData/{DataID}": {
+      "get": {
+        "summary": "GET Data by DataID (Maintain Query)",
+        "operationId": "FNDM013Service_GetDataByDataID",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1TAFNDTMFundFeeRdmRequest"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "DataID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "APIFNDM013：TAFNDTMFundFeeRdm"
         ]
       }
     }
@@ -423,6 +2711,26 @@
         }
       }
     },
+    "v1ApproveFundInfoRequest": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "CheckerID": {
+          "type": "string"
+        },
+        "IsApproved": {
+          "type": "boolean"
+        },
+        "Remark": {
+          "type": "string"
+        }
+      }
+    },
     "v1CheckResponse": {
       "type": "object",
       "properties": {
@@ -432,42 +2740,79 @@
         "Message": {
           "type": "string"
         }
-      }
+      },
+      "description": "CheckResponse is the standard response for check (ChkData) operations."
     },
-    "v1CreateTransactionRequest": {
+    "v1ChgTypeListDTO": {
       "type": "object",
       "properties": {
-        "FromAccount": {
+        "SysCoID": {
           "type": "string"
         },
-        "ToAccount": {
+        "PmtTxnType": {
           "type": "string"
         },
-        "AmountMinor": {
-          "type": "string",
-          "format": "int64"
-        },
-        "Currency": {
+        "PrtFundCode": {
           "type": "string"
         },
-        "Memo": {
+        "CryKind": {
           "type": "string"
         },
-        "CreatedBy": {
+        "RemitFeeObj": {
+          "type": "string"
+        },
+        "RemitFeeChgType": {
+          "type": "string"
+        },
+        "PostFeeObj": {
           "type": "string"
         }
       }
     },
-    "v1CreateTransactionResponse": {
+    "v1CustFundGroupListDTO": {
       "type": "object",
       "properties": {
-        "TransactionID": {
+        "SysCoID": {
           "type": "string"
         },
-        "Status": {
+        "CustGrpCode": {
           "type": "string"
         },
-        "CreatedAt": {
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "PrtFundCodeNm": {
+          "type": "string"
+        }
+      }
+    },
+    "v1CustGroupLookupDTO": {
+      "type": "object",
+      "properties": {
+        "CustGrpCode": {
+          "type": "string"
+        },
+        "CustGrpCodeNM": {
+          "type": "string"
+        }
+      }
+    },
+    "v1CustGroupMasterDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "SysCoIDNm": {
+          "type": "string"
+        },
+        "CustGrpCode": {
+          "type": "string"
+        },
+        "CustGrpMName": {
+          "type": "string"
+        },
+        "CustGrpSName": {
           "type": "string"
         }
       }
@@ -1452,6 +3797,685 @@
       },
       "title": "9. 境內子基金可交易幣別檔 — DTA_FND_FundTxCry (DTAFNDFundTxCry)"
     },
+    "v1FavDiscMasterDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "SysCoIDNm": {
+          "type": "string"
+        },
+        "CusIDCode": {
+          "type": "string"
+        },
+        "CusIDCodeNm": {
+          "type": "string"
+        },
+        "DiscItemSet": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "DiscFundType": {
+          "type": "string"
+        },
+        "AllotDiscType": {
+          "type": "string"
+        },
+        "RspDiscType": {
+          "type": "string"
+        },
+        "SwDiscType": {
+          "type": "string"
+        }
+      }
+    },
+    "v1FavDiscPrtFundListDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "CusIDCode": {
+          "type": "string"
+        },
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "PrtFundCodeNm": {
+          "type": "string"
+        }
+      }
+    },
+    "v1FavDiscTypeDtlListDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "CusIDCode": {
+          "type": "string"
+        },
+        "DiscItem": {
+          "type": "string"
+        },
+        "TxCry": {
+          "type": "string"
+        },
+        "TxCryNm": {
+          "type": "string"
+        },
+        "RangeAmtAbove": {
+          "type": "number",
+          "format": "double"
+        },
+        "RangeFeeRate": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "v1FavDiscTypeListDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "CusIDCode": {
+          "type": "string"
+        },
+        "DiscItem": {
+          "type": "string"
+        },
+        "DiscType": {
+          "type": "string"
+        }
+      }
+    },
+    "v1FundAgentDtlListDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "AgentType": {
+          "type": "string"
+        },
+        "AgentCode": {
+          "type": "string"
+        },
+        "AgentCodeNm": {
+          "type": "string"
+        },
+        "IsMAgentOPType": {
+          "type": "boolean"
+        },
+        "AgentOPType": {
+          "type": "string"
+        },
+        "IsMRcvTxnType": {
+          "type": "boolean"
+        },
+        "RcvTxnType": {
+          "type": "string"
+        },
+        "IsMSubsFeePct": {
+          "type": "boolean"
+        },
+        "SubsFeePctAG": {
+          "type": "number",
+          "format": "double"
+        },
+        "SubsFeePctFH": {
+          "type": "number",
+          "format": "double"
+        },
+        "IsMSubsFeePctType": {
+          "type": "boolean"
+        },
+        "SubsFeePctType": {
+          "type": "string"
+        },
+        "IsMFundCrySet": {
+          "type": "boolean"
+        },
+        "FundCrySet": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "FundCrySetNm": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "NoSaleShareSet": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "NoSaleShareSetNm": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "IsMEndOfSale": {
+          "type": "boolean"
+        },
+        "TermDate": {
+          "type": "string"
+        }
+      }
+    },
+    "v1FundAgentMasterDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "SysCoIDNm": {
+          "type": "string"
+        },
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "PrtFundCodeNm": {
+          "type": "string"
+        },
+        "FundIpoDate": {
+          "type": "string"
+        }
+      }
+    },
+    "v1FundCalMasterDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "SysCoIDNm": {
+          "type": "string"
+        },
+        "CalYear": {
+          "type": "string"
+        },
+        "FndCalType": {
+          "type": "string"
+        },
+        "FundCry": {
+          "type": "string"
+        },
+        "FundCryNm": {
+          "type": "string"
+        }
+      }
+    },
+    "v1FundClosedDateFundListDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "CalYear": {
+          "type": "string"
+        },
+        "FndCalType": {
+          "type": "string"
+        },
+        "FundCry": {
+          "type": "string"
+        },
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "PrtFundCodeNm": {
+          "type": "string"
+        },
+        "CalDate": {
+          "type": "string"
+        }
+      }
+    },
+    "v1FundClosedDateMemoListDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "CalYear": {
+          "type": "string"
+        },
+        "FndCalType": {
+          "type": "string"
+        },
+        "FundCry": {
+          "type": "string"
+        },
+        "CalDate": {
+          "type": "string"
+        },
+        "Remark": {
+          "type": "string"
+        }
+      }
+    },
+    "v1FundFeeBackDtlListReqDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "FundCode": {
+          "type": "string"
+        },
+        "HoldPeriodYear": {
+          "type": "string"
+        },
+        "HoldBegDay": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "BackFeeRate": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "v1FundFeeBackDtlListResDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "FundCode": {
+          "type": "string"
+        },
+        "HoldPeriodYear": {
+          "type": "string"
+        },
+        "HoldBegDay": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "BackFeeRate": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "v1FundFeeBackListReqDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "FundCode": {
+          "type": "string"
+        },
+        "HoldPeriodYear": {
+          "type": "string"
+        },
+        "SubsCalcID": {
+          "type": "string"
+        }
+      }
+    },
+    "v1FundFeeBackListResDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "FundCode": {
+          "type": "string"
+        },
+        "HoldPeriodYear": {
+          "type": "string"
+        },
+        "SubsCalcID": {
+          "type": "string"
+        },
+        "FundFeeBackDtlList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1FundFeeBackDtlListResDTO"
+          }
+        }
+      }
+    },
+    "v1FundFeeCDSCDtlListReqDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "FundCode": {
+          "type": "string"
+        },
+        "MatureYear": {
+          "type": "string"
+        },
+        "HoldBegDay": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "CDSCFeeRate": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "v1FundFeeCDSCDtlListResDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "FundCode": {
+          "type": "string"
+        },
+        "MatureYear": {
+          "type": "string"
+        },
+        "HoldBegDay": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "CDSCFeeRate": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "v1FundFeeCDSCListReqDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "FundCode": {
+          "type": "string"
+        },
+        "MatureYear": {
+          "type": "string"
+        },
+        "SubsCalcID": {
+          "type": "string"
+        }
+      }
+    },
+    "v1FundFeeCDSCListResDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "FundCode": {
+          "type": "string"
+        },
+        "MatureYear": {
+          "type": "string"
+        },
+        "SubsCalcID": {
+          "type": "string"
+        },
+        "FundFeeCDSCDtlList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1FundFeeCDSCDtlListResDTO"
+          }
+        }
+      }
+    },
+    "v1FundFeeMasterDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "SysCoIDNm": {
+          "type": "string"
+        },
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "PrtFundCodeNm": {
+          "type": "string"
+        }
+      }
+    },
+    "v1FundFeeSubDtlListReqDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "FundCode": {
+          "type": "string"
+        },
+        "CryID": {
+          "type": "string"
+        },
+        "RangeAmtAbove": {
+          "type": "number",
+          "format": "double"
+        },
+        "SubsFeeRate": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "v1FundFeeSubDtlListResDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "FundCode": {
+          "type": "string"
+        },
+        "CryID": {
+          "type": "string"
+        },
+        "RangeAmtAbove": {
+          "type": "number",
+          "format": "double"
+        },
+        "SubsFeeRate": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "v1FundFeeSubListReqDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "FundCode": {
+          "type": "string"
+        },
+        "CryID": {
+          "type": "string"
+        }
+      }
+    },
+    "v1FundFeeSubListResDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "FundCode": {
+          "type": "string"
+        },
+        "CryID": {
+          "type": "string"
+        },
+        "CryIDNm": {
+          "type": "string"
+        },
+        "FundFeeSubDtlList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1FundFeeSubDtlListResDTO"
+          }
+        }
+      }
+    },
+    "v1FundSwitchFeeListDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "FundCode": {
+          "type": "string"
+        },
+        "SwFundType": {
+          "type": "string"
+        },
+        "SwDiscType": {
+          "type": "string"
+        },
+        "SwitchRate": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "v1IShareFundFeeListDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "FundCode": {
+          "type": "string"
+        },
+        "RangeAmtAbove": {
+          "type": "number",
+          "format": "double"
+        },
+        "SubsFeeRate": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "v1IShareFundFeeMasterDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "SysCoIDNm": {
+          "type": "string"
+        },
+        "FundCode": {
+          "type": "string"
+        },
+        "FundCodeNm": {
+          "type": "string"
+        }
+      }
+    },
+    "v1IShareFundFeeRdmMasterDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "SysCoIDNm": {
+          "type": "string"
+        },
+        "FundCode": {
+          "type": "string"
+        },
+        "FundCodeNm": {
+          "type": "string"
+        },
+        "FeeName": {
+          "type": "string"
+        },
+        "RdmRangeType": {
+          "type": "string"
+        },
+        "RdmDateType": {
+          "type": "string"
+        },
+        "RdmBaseID": {
+          "type": "string"
+        },
+        "SubsBaseID": {
+          "type": "string"
+        },
+        "RdmCalcID": {
+          "type": "string"
+        },
+        "ShouldHoldDays": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "FeeRate": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
     "v1IssueCurrencyDTO": {
       "type": "object",
       "properties": {
@@ -1466,19 +4490,90 @@
         }
       }
     },
-    "v1ListTransactionsResponse": {
+    "v1PGFundFeeRdmMasterDTO": {
       "type": "object",
       "properties": {
-        "Transactions": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/v1Transaction"
-          }
+        "SysCoID": {
+          "type": "string"
         },
-        "Total": {
-          "type": "integer",
-          "format": "int32"
+        "SysCoIDNm": {
+          "type": "string"
+        },
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "PrtFundCodeNm": {
+          "type": "string"
+        },
+        "RdmCalcBegDate": {
+          "type": "string"
+        },
+        "FeeRate": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "v1PauseTxnCryListDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "PTxnBegDate": {
+          "type": "string"
+        },
+        "CryID": {
+          "type": "string"
+        },
+        "CryIDNm": {
+          "type": "string"
+        }
+      }
+    },
+    "v1PauseTxnMasterDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "SysCoIDNm": {
+          "type": "string"
+        },
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "PrtFundCodeNm": {
+          "type": "string"
+        },
+        "PTxnBegDate": {
+          "type": "string"
+        },
+        "PTxnEndDate": {
+          "type": "string"
+        },
+        "Remark": {
+          "type": "string"
+        }
+      }
+    },
+    "v1PauseTxnTypeListDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "PTxnBegDate": {
+          "type": "string"
+        },
+        "PauseTxnType": {
+          "type": "string"
         }
       }
     },
@@ -1608,6 +4703,26 @@
         }
       }
     },
+    "v1RPFeeChgTypeMasterDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "SysCoIDNm": {
+          "type": "string"
+        },
+        "PmtTxnType": {
+          "type": "string"
+        },
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "PrtFundCodeNm": {
+          "type": "string"
+        }
+      }
+    },
     "v1SaveFundInfoRequest": {
       "type": "object",
       "properties": {
@@ -1717,6 +4832,388 @@
         },
         "ReturnCode": {
           "type": "string"
+        }
+      }
+    },
+    "v1SaveResponse": {
+      "type": "object",
+      "properties": {
+        "Success": {
+          "type": "boolean"
+        },
+        "Message": {
+          "type": "string"
+        },
+        "ReturnCode": {
+          "type": "string"
+        }
+      },
+      "description": "SaveResponse is the standard response for POST/PUT save operations."
+    },
+    "v1SwitchCryListDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "SwIFundCry": {
+          "type": "string"
+        },
+        "SwIFundCryNm": {
+          "type": "string"
+        },
+        "SwOFundCrySet": {
+          "type": "string"
+        },
+        "SwOFundCrySetNm": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "v1SwitchFundListDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "SwOPrtFundCode": {
+          "type": "string"
+        },
+        "SwOPrtFundCodeNm": {
+          "type": "string"
+        },
+        "SwDateType": {
+          "type": "string"
+        }
+      }
+    },
+    "v1SwitchMasterDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "SysCoIDNm": {
+          "type": "string"
+        },
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "PrtFundCodeNm": {
+          "type": "string"
+        },
+        "IsSwitchIn": {
+          "type": "string"
+        }
+      }
+    },
+    "v1TAFNDCustGroupRequest": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "CustGrpCode": {
+          "type": "string"
+        },
+        "CustGrpMName": {
+          "type": "string"
+        },
+        "CustGrpSName": {
+          "type": "string"
+        },
+        "CustFundGroupList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1CustFundGroupListDTO"
+          }
+        }
+      }
+    },
+    "v1TAFNDCustGroupResponse": {
+      "type": "object",
+      "properties": {
+        "ResultList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1CustGroupMasterDTO"
+          }
+        },
+        "CustFundGroupList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1CustFundGroupListDTO"
+          }
+        }
+      }
+    },
+    "v1TAFNDFavDiscRequest": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "CusIDCode": {
+          "type": "string"
+        },
+        "DiscItemSet": {
+          "type": "string"
+        },
+        "DiscFundType": {
+          "type": "string"
+        },
+        "PrtFundList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1FavDiscPrtFundListDTO"
+          }
+        },
+        "DiscTypeList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1FavDiscTypeListDTO"
+          }
+        },
+        "DiscTypeDtlList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1FavDiscTypeDtlListDTO"
+          }
+        }
+      }
+    },
+    "v1TAFNDFavDiscResponse": {
+      "type": "object",
+      "properties": {
+        "ResultList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1FavDiscMasterDTO"
+          }
+        },
+        "PrtFundList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1FavDiscPrtFundListDTO"
+          }
+        },
+        "AllotDiscTypeDtlList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1FavDiscTypeDtlListDTO"
+          }
+        },
+        "RspDiscTypeDtlList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1FavDiscTypeDtlListDTO"
+          }
+        },
+        "SwDiscTypeDtlList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1FavDiscTypeDtlListDTO"
+          }
+        }
+      }
+    },
+    "v1TAFNDFundAgentRequest": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "FundAgentDtlList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1FundAgentDtlListDTO"
+          }
+        }
+      }
+    },
+    "v1TAFNDFundAgentResponse": {
+      "type": "object",
+      "properties": {
+        "ResultList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1FundAgentMasterDTO"
+          }
+        },
+        "FundAgentDtlList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1FundAgentDtlListDTO"
+          }
+        }
+      }
+    },
+    "v1TAFNDFundCalDateRequest": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "CalYear": {
+          "type": "string"
+        },
+        "FndCalType": {
+          "type": "string"
+        },
+        "FundCry": {
+          "type": "string"
+        },
+        "FundClosedMemoList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1FundClosedDateMemoListDTO"
+          }
+        },
+        "FundClosedDateFundList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1FundClosedDateFundListDTO"
+          }
+        }
+      }
+    },
+    "v1TAFNDFundCalDateResponse": {
+      "type": "object",
+      "properties": {
+        "ResultList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1FundCalMasterDTO"
+          }
+        },
+        "FundClosedMemoList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1FundClosedDateMemoListDTO"
+          }
+        },
+        "FundClosedDateFundList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1FundClosedDateFundListDTO"
+          }
+        }
+      }
+    },
+    "v1TAFNDFundFeeRequest": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "FundFeeSubList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1FundFeeSubListReqDTO"
+          }
+        },
+        "FundFeeSubDtlList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1FundFeeSubDtlListReqDTO"
+          }
+        },
+        "FundFeeCDSCList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1FundFeeCDSCListReqDTO"
+          }
+        },
+        "FundFeeCDSCDtlList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1FundFeeCDSCDtlListReqDTO"
+          }
+        },
+        "FundFeeBackList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1FundFeeBackListReqDTO"
+          }
+        },
+        "FundFeeBackDtlList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1FundFeeBackDtlListReqDTO"
+          }
+        }
+      }
+    },
+    "v1TAFNDFundFeeResponse": {
+      "type": "object",
+      "properties": {
+        "ResultList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1FundFeeMasterDTO"
+          }
+        },
+        "FundFeeSubList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1FundFeeSubListResDTO"
+          }
+        },
+        "FundFeeCDSCList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1FundFeeCDSCListResDTO"
+          }
+        },
+        "FundFeeBackList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1FundFeeBackListResDTO"
+          }
         }
       }
     },
@@ -1831,6 +5328,18 @@
         },
         "OfdFHCode": {
           "type": "string"
+        },
+        "MakerID": {
+          "type": "string"
+        },
+        "CheckerID": {
+          "type": "string"
+        },
+        "ApprovalStatus": {
+          "type": "string"
+        },
+        "ApprovalRemark": {
+          "type": "string"
         }
       },
       "title": "Master — TA_FND_FundInfo (TAFNDFundInfo)"
@@ -1884,9 +5393,354 @@
         "FundStatusNm": {
           "type": "string",
           "title": "output only — from GetOpt(\"000007\")"
+        },
+        "MakerID": {
+          "type": "string"
+        },
+        "CheckerID": {
+          "type": "string"
+        },
+        "ApprovalStatus": {
+          "type": "string"
         }
       },
       "title": "ResultList DTO — TAFNDFundInfoDTO (一般查詢 list row)"
+    },
+    "v1TAFNDIShareFundFeeRdmRequest": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "FundCode": {
+          "type": "string"
+        },
+        "FeeName": {
+          "type": "string"
+        },
+        "RdmRangeType": {
+          "type": "string"
+        },
+        "RdmDateType": {
+          "type": "string"
+        },
+        "RdmBaseID": {
+          "type": "string"
+        },
+        "SubsBaseID": {
+          "type": "string"
+        },
+        "RdmCalcID": {
+          "type": "string"
+        },
+        "ShouldHoldDays": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "FeeRate": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "v1TAFNDIShareFundFeeRdmResponse": {
+      "type": "object",
+      "properties": {
+        "ResultList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1IShareFundFeeRdmMasterDTO"
+          }
+        }
+      }
+    },
+    "v1TAFNDIShareFundFeeRequest": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "FundCode": {
+          "type": "string"
+        },
+        "IShareFundFeeList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1IShareFundFeeListDTO"
+          }
+        }
+      }
+    },
+    "v1TAFNDIShareFundFeeResponse": {
+      "type": "object",
+      "properties": {
+        "ResultList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1IShareFundFeeMasterDTO"
+          }
+        },
+        "IShareFundFeeList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1IShareFundFeeListDTO"
+          }
+        }
+      }
+    },
+    "v1TAFNDPGFundFeeRdmRequest": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "RdmCalcBegDate": {
+          "type": "string"
+        },
+        "FeeRate": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "v1TAFNDPGFundFeeRdmResponse": {
+      "type": "object",
+      "properties": {
+        "ResultList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1PGFundFeeRdmMasterDTO"
+          }
+        }
+      }
+    },
+    "v1TAFNDPauseTxnRequest": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "PTxnBegDate": {
+          "type": "string"
+        },
+        "PTxnEndDate": {
+          "type": "string"
+        },
+        "Remark": {
+          "type": "string"
+        },
+        "PauseTxnCryList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1PauseTxnCryListDTO"
+          }
+        },
+        "PauseTxnTypeList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1PauseTxnTypeListDTO"
+          }
+        }
+      }
+    },
+    "v1TAFNDPauseTxnResponse": {
+      "type": "object",
+      "properties": {
+        "ResultList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1PauseTxnMasterDTO"
+          }
+        },
+        "PauseTxnCryList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1PauseTxnCryListDTO"
+          }
+        },
+        "PauseTxnTypeList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1PauseTxnTypeListDTO"
+          }
+        }
+      }
+    },
+    "v1TAFNDRPFeeChgTypeRequest": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "PmtTxnType": {
+          "type": "string"
+        },
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "ChgTypeList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1ChgTypeListDTO"
+          }
+        }
+      }
+    },
+    "v1TAFNDRPFeeChgTypeResponse": {
+      "type": "object",
+      "properties": {
+        "ResultList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1RPFeeChgTypeMasterDTO"
+          }
+        },
+        "ChgTypeList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1ChgTypeListDTO"
+          }
+        }
+      }
+    },
+    "v1TAFNDSwitchRequest": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "IsSwitchIn": {
+          "type": "string"
+        },
+        "SwitchFundList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1SwitchFundListDTO"
+          }
+        },
+        "FundSwitchFeeList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1FundSwitchFeeListDTO"
+          }
+        },
+        "SwitchCryList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1SwitchCryListDTO"
+          }
+        }
+      }
+    },
+    "v1TAFNDSwitchResponse": {
+      "type": "object",
+      "properties": {
+        "ResultList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1SwitchMasterDTO"
+          }
+        },
+        "SwitchFundList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1SwitchFundListDTO"
+          }
+        },
+        "FundSwitchFeeList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1FundSwitchFeeListDTO"
+          }
+        },
+        "SwitchCryList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1SwitchCryListDTO"
+          }
+        }
+      }
+    },
+    "v1TAFNDTMFundFeeRdmRequest": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
+          "type": "string"
+        },
+        "PrtFundCode": {
+          "type": "string"
+        },
+        "RdmCalcBegDate": {
+          "type": "string"
+        },
+        "FundFeeDtlList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1TMFundFeeRdmDtlListDTO"
+          }
+        }
+      }
+    },
+    "v1TAFNDTMFundFeeRdmResponse": {
+      "type": "object",
+      "properties": {
+        "ResultList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1TMFundFeeRdmMasterDTO"
+          }
+        },
+        "FundFeeDtlList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1TMFundFeeRdmDtlListDTO"
+          }
+        }
+      }
+    },
+    "v1TAGetCustGroupResponse": {
+      "type": "object",
+      "properties": {
+        "Master": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1CustGroupLookupDTO"
+          }
+        }
+      }
     },
     "v1TAGetDPrtFundIssueCryResponse": {
       "type": "object",
@@ -1912,35 +5766,43 @@
         }
       }
     },
-    "v1Transaction": {
+    "v1TMFundFeeRdmDtlListDTO": {
       "type": "object",
       "properties": {
-        "TransactionID": {
+        "SysCoID": {
           "type": "string"
         },
-        "FromAccount": {
+        "PrtFundCode": {
           "type": "string"
         },
-        "ToAccount": {
+        "RdmCalcBegDate": {
           "type": "string"
         },
-        "AmountMinor": {
-          "type": "string",
-          "format": "int64"
-        },
-        "Currency": {
+        "RdmCalcEndDate": {
           "type": "string"
         },
-        "Memo": {
+        "FeeRate": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "v1TMFundFeeRdmMasterDTO": {
+      "type": "object",
+      "properties": {
+        "SysCoID": {
           "type": "string"
         },
-        "Status": {
+        "SysCoIDNm": {
           "type": "string"
         },
-        "CreatedBy": {
+        "PrtFundCode": {
           "type": "string"
         },
-        "CreatedAt": {
+        "PrtFundCodeNm": {
+          "type": "string"
+        },
+        "RdmCalcBegDate": {
           "type": "string"
         }
       }

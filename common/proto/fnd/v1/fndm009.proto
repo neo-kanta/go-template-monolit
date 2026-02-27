@@ -4,6 +4,8 @@ package fnd.v1;
 option go_package = "go-transfer-agent/common/gen/fnd/v1;fndv1";
 
 import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "fnd/v1/common.proto";
 
 // ═══════════════════════════════════════════════════════════════════
 // FNDM009 Service
@@ -11,9 +13,42 @@ import "google/api/annotations.proto";
 service FNDM009Service {
   rpc TAFNDFavDisc(TAFNDFavDiscRequest) returns (TAFNDFavDiscResponse) {
     option (google.api.http) = { get: "/TAapi/Fund/TAFNDFavDisc" };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["APIFNDM009：TAFNDFavDisc"]
+    };
   }
-}
 
+  rpc SaveTAFNDFavDisc(TAFNDFavDiscRequest) returns (SaveResponse) {
+    option (google.api.http) = { post: "/TAapi/Fund/TAFNDFavDisc" body: "*" };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["APIFNDM009：TAFNDFavDisc"]
+    };
+  }
+
+  rpc UpdateTAFNDFavDisc(TAFNDFavDiscRequest) returns (SaveResponse) {
+    option (google.api.http) = { put: "/TAapi/Fund/TAFNDFavDisc" body: "*" };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["APIFNDM009：TAFNDFavDisc"]
+    };
+  }
+
+  rpc DeleteTAFNDFavDisc(DeleteRequest) returns (SaveResponse) {
+    option (google.api.http) = { delete: "/TAapi/Fund/TAFNDFavDisc" };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["APIFNDM009：TAFNDFavDisc"]
+    };
+  }
+
+
+  // GET Data by DataID (Maintain Query)
+  rpc GetDataByDataID(GetDataRequest) returns (TAFNDFavDiscRequest) {
+    option (google.api.http) = { get: "/TAapi/Fund/TAFNDFavDisc/GetData/{data_id}" };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["APIFNDM009：TAFNDFavDisc"]
+    };
+  }
+
+}
 // ═══════════════════════════════════════════════════════════════════
 // FNDM009 Messages
 // ═══════════════════════════════════════════════════════════════════
@@ -70,4 +105,12 @@ message FavDiscTypeDtlListDTO {
   string tx_cry_nm = 5 [json_name="TxCryNm"];
   double range_amt_above = 6 [json_name="RangeAmtAbove"];
   double range_fee_rate = 7 [json_name="RangeFeeRate"];
+}
+
+message ApproveTAFNDFavDiscRequest {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string data_id = 2 [json_name="DataID"];
+  string checker_id = 3 [json_name="CheckerID"];
+  bool is_approved = 4 [json_name="IsApproved"];
+  string remark = 5 [json_name="Remark"];
 }

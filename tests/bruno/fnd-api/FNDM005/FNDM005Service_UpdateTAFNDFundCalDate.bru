@@ -1,0 +1,19 @@
+meta {
+  name: FNDM005Service_UpdateTAFNDFundCalDate
+  type: http
+  seq: 1
+}
+
+put {
+  url: {{base_url}}/TAapi/BaseFund/TAFNDFundCalDate
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}
+
+body:json {
+  {}
+}

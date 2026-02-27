@@ -7,6 +7,7 @@
 package fndv1
 
 import (
+	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -270,11 +271,87 @@ func (x *IShareFundFeeListDTO) GetSubsFeeRate() float64 {
 	return 0
 }
 
+type ApproveTAFNDIShareFundFeeRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	SysCoId       string                 `protobuf:"bytes,1,opt,name=sys_co_id,json=SysCoID,proto3" json:"sys_co_id,omitempty"`
+	DataId        string                 `protobuf:"bytes,2,opt,name=data_id,json=DataID,proto3" json:"data_id,omitempty"`
+	CheckerId     string                 `protobuf:"bytes,3,opt,name=checker_id,json=CheckerID,proto3" json:"checker_id,omitempty"`
+	IsApproved    bool                   `protobuf:"varint,4,opt,name=is_approved,json=IsApproved,proto3" json:"is_approved,omitempty"`
+	Remark        string                 `protobuf:"bytes,5,opt,name=remark,json=Remark,proto3" json:"remark,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ApproveTAFNDIShareFundFeeRequest) Reset() {
+	*x = ApproveTAFNDIShareFundFeeRequest{}
+	mi := &file_fnd_v1_fndm010_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ApproveTAFNDIShareFundFeeRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ApproveTAFNDIShareFundFeeRequest) ProtoMessage() {}
+
+func (x *ApproveTAFNDIShareFundFeeRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_fnd_v1_fndm010_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ApproveTAFNDIShareFundFeeRequest.ProtoReflect.Descriptor instead.
+func (*ApproveTAFNDIShareFundFeeRequest) Descriptor() ([]byte, []int) {
+	return file_fnd_v1_fndm010_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *ApproveTAFNDIShareFundFeeRequest) GetSysCoId() string {
+	if x != nil {
+		return x.SysCoId
+	}
+	return ""
+}
+
+func (x *ApproveTAFNDIShareFundFeeRequest) GetDataId() string {
+	if x != nil {
+		return x.DataId
+	}
+	return ""
+}
+
+func (x *ApproveTAFNDIShareFundFeeRequest) GetCheckerId() string {
+	if x != nil {
+		return x.CheckerId
+	}
+	return ""
+}
+
+func (x *ApproveTAFNDIShareFundFeeRequest) GetIsApproved() bool {
+	if x != nil {
+		return x.IsApproved
+	}
+	return false
+}
+
+func (x *ApproveTAFNDIShareFundFeeRequest) GetRemark() string {
+	if x != nil {
+		return x.Remark
+	}
+	return ""
+}
+
 var File_fnd_v1_fndm010_proto protoreflect.FileDescriptor
 
 const file_fnd_v1_fndm010_proto_rawDesc = "" +
 	"\n" +
-	"\x14fnd/v1/fndm010.proto\x12\x06fnd.v1\x1a\x1cgoogle/api/annotations.proto\"\xa4\x01\n" +
+	"\x14fnd/v1/fndm010.proto\x12\x06fnd.v1\x1a\x1cgoogle/api/annotations.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\x1a\x13fnd/v1/common.proto\"\xa4\x01\n" +
 	"\x19TAFNDIShareFundFeeRequest\x12\x1a\n" +
 	"\tsys_co_id\x18\x01 \x01(\tR\aSysCoID\x12\x1b\n" +
 	"\tfund_code\x18\x02 \x01(\tR\bFundCode\x12N\n" +
@@ -293,9 +370,26 @@ const file_fnd_v1_fndm010_proto_rawDesc = "" +
 	"\tsys_co_id\x18\x01 \x01(\tR\aSysCoID\x12\x1b\n" +
 	"\tfund_code\x18\x02 \x01(\tR\bFundCode\x12&\n" +
 	"\x0frange_amt_above\x18\x03 \x01(\x01R\rRangeAmtAbove\x12\"\n" +
-	"\rsubs_fee_rate\x18\x04 \x01(\x01R\vSubsFeeRate2\x96\x01\n" +
-	"\x0eFNDM010Service\x12\x83\x01\n" +
-	"\x12TAFNDIShareFundFee\x12!.fnd.v1.TAFNDIShareFundFeeRequest\x1a\".fnd.v1.TAFNDIShareFundFeeResponse\"&\x82\xd3\xe4\x93\x02 \x12\x1e/TAapi/Fund/TAFNDIShareFundFeeB+Z)go-transfer-agent/common/gen/fnd/v1;fndv1b\x06proto3"
+	"\rsubs_fee_rate\x18\x04 \x01(\x01R\vSubsFeeRate\"\xaf\x01\n" +
+	" ApproveTAFNDIShareFundFeeRequest\x12\x1a\n" +
+	"\tsys_co_id\x18\x01 \x01(\tR\aSysCoID\x12\x17\n" +
+	"\adata_id\x18\x02 \x01(\tR\x06DataID\x12\x1d\n" +
+	"\n" +
+	"checker_id\x18\x03 \x01(\tR\tCheckerID\x12\x1f\n" +
+	"\vis_approved\x18\x04 \x01(\bR\n" +
+	"IsApproved\x12\x16\n" +
+	"\x06remark\x18\x05 \x01(\tR\x06Remark2\xc5\x06\n" +
+	"\x0eFNDM010Service\x12\xa7\x01\n" +
+	"\x12TAFNDIShareFundFee\x12!.fnd.v1.TAFNDIShareFundFeeRequest\x1a\".fnd.v1.TAFNDIShareFundFeeResponse\"J\x92A!\n" +
+	"\x1fAPIFNDM010：TAFNDIShareFundFee\x82\xd3\xe4\x93\x02 \x12\x1e/TAapi/Fund/TAFNDIShareFundFee\x12\xa0\x01\n" +
+	"\x16SaveTAFNDIShareFundFee\x12!.fnd.v1.TAFNDIShareFundFeeRequest\x1a\x14.fnd.v1.SaveResponse\"M\x92A!\n" +
+	"\x1fAPIFNDM010：TAFNDIShareFundFee\x82\xd3\xe4\x93\x02#:\x01*\"\x1e/TAapi/Fund/TAFNDIShareFundFee\x12\xa2\x01\n" +
+	"\x18UpdateTAFNDIShareFundFee\x12!.fnd.v1.TAFNDIShareFundFeeRequest\x1a\x14.fnd.v1.SaveResponse\"M\x92A!\n" +
+	"\x1fAPIFNDM010：TAFNDIShareFundFee\x82\xd3\xe4\x93\x02#:\x01*\x1a\x1e/TAapi/Fund/TAFNDIShareFundFee\x12\x93\x01\n" +
+	"\x18DeleteTAFNDIShareFundFee\x12\x15.fnd.v1.DeleteRequest\x1a\x14.fnd.v1.SaveResponse\"J\x92A!\n" +
+	"\x1fAPIFNDM010：TAFNDIShareFundFee\x82\xd3\xe4\x93\x02 *\x1e/TAapi/Fund/TAFNDIShareFundFee\x12\xaa\x01\n" +
+	"\x0fGetDataByDataID\x12\x16.fnd.v1.GetDataRequest\x1a!.fnd.v1.TAFNDIShareFundFeeRequest\"\\\x92A!\n" +
+	"\x1fAPIFNDM010：TAFNDIShareFundFee\x82\xd3\xe4\x93\x022\x120/TAapi/Fund/TAFNDIShareFundFee/GetData/{data_id}B+Z)go-transfer-agent/common/gen/fnd/v1;fndv1b\x06proto3"
 
 var (
 	file_fnd_v1_fndm010_proto_rawDescOnce sync.Once
@@ -309,21 +403,33 @@ func file_fnd_v1_fndm010_proto_rawDescGZIP() []byte {
 	return file_fnd_v1_fndm010_proto_rawDescData
 }
 
-var file_fnd_v1_fndm010_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_fnd_v1_fndm010_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_fnd_v1_fndm010_proto_goTypes = []any{
-	(*TAFNDIShareFundFeeRequest)(nil),  // 0: fnd.v1.TAFNDIShareFundFeeRequest
-	(*TAFNDIShareFundFeeResponse)(nil), // 1: fnd.v1.TAFNDIShareFundFeeResponse
-	(*IShareFundFeeMasterDTO)(nil),     // 2: fnd.v1.IShareFundFeeMasterDTO
-	(*IShareFundFeeListDTO)(nil),       // 3: fnd.v1.IShareFundFeeListDTO
+	(*TAFNDIShareFundFeeRequest)(nil),        // 0: fnd.v1.TAFNDIShareFundFeeRequest
+	(*TAFNDIShareFundFeeResponse)(nil),       // 1: fnd.v1.TAFNDIShareFundFeeResponse
+	(*IShareFundFeeMasterDTO)(nil),           // 2: fnd.v1.IShareFundFeeMasterDTO
+	(*IShareFundFeeListDTO)(nil),             // 3: fnd.v1.IShareFundFeeListDTO
+	(*ApproveTAFNDIShareFundFeeRequest)(nil), // 4: fnd.v1.ApproveTAFNDIShareFundFeeRequest
+	(*DeleteRequest)(nil),                    // 5: fnd.v1.DeleteRequest
+	(*GetDataRequest)(nil),                   // 6: fnd.v1.GetDataRequest
+	(*SaveResponse)(nil),                     // 7: fnd.v1.SaveResponse
 }
 var file_fnd_v1_fndm010_proto_depIdxs = []int32{
 	3, // 0: fnd.v1.TAFNDIShareFundFeeRequest.i_share_fund_fee_list:type_name -> fnd.v1.IShareFundFeeListDTO
 	2, // 1: fnd.v1.TAFNDIShareFundFeeResponse.result_list:type_name -> fnd.v1.IShareFundFeeMasterDTO
 	3, // 2: fnd.v1.TAFNDIShareFundFeeResponse.i_share_fund_fee_list:type_name -> fnd.v1.IShareFundFeeListDTO
 	0, // 3: fnd.v1.FNDM010Service.TAFNDIShareFundFee:input_type -> fnd.v1.TAFNDIShareFundFeeRequest
-	1, // 4: fnd.v1.FNDM010Service.TAFNDIShareFundFee:output_type -> fnd.v1.TAFNDIShareFundFeeResponse
-	4, // [4:5] is the sub-list for method output_type
-	3, // [3:4] is the sub-list for method input_type
+	0, // 4: fnd.v1.FNDM010Service.SaveTAFNDIShareFundFee:input_type -> fnd.v1.TAFNDIShareFundFeeRequest
+	0, // 5: fnd.v1.FNDM010Service.UpdateTAFNDIShareFundFee:input_type -> fnd.v1.TAFNDIShareFundFeeRequest
+	5, // 6: fnd.v1.FNDM010Service.DeleteTAFNDIShareFundFee:input_type -> fnd.v1.DeleteRequest
+	6, // 7: fnd.v1.FNDM010Service.GetDataByDataID:input_type -> fnd.v1.GetDataRequest
+	1, // 8: fnd.v1.FNDM010Service.TAFNDIShareFundFee:output_type -> fnd.v1.TAFNDIShareFundFeeResponse
+	7, // 9: fnd.v1.FNDM010Service.SaveTAFNDIShareFundFee:output_type -> fnd.v1.SaveResponse
+	7, // 10: fnd.v1.FNDM010Service.UpdateTAFNDIShareFundFee:output_type -> fnd.v1.SaveResponse
+	7, // 11: fnd.v1.FNDM010Service.DeleteTAFNDIShareFundFee:output_type -> fnd.v1.SaveResponse
+	0, // 12: fnd.v1.FNDM010Service.GetDataByDataID:output_type -> fnd.v1.TAFNDIShareFundFeeRequest
+	8, // [8:13] is the sub-list for method output_type
+	3, // [3:8] is the sub-list for method input_type
 	3, // [3:3] is the sub-list for extension type_name
 	3, // [3:3] is the sub-list for extension extendee
 	0, // [0:3] is the sub-list for field type_name
@@ -334,13 +440,14 @@ func file_fnd_v1_fndm010_proto_init() {
 	if File_fnd_v1_fndm010_proto != nil {
 		return
 	}
+	file_fnd_v1_common_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_fnd_v1_fndm010_proto_rawDesc), len(file_fnd_v1_fndm010_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -1,0 +1,15 @@
+meta {
+  name: FNDM006Service_DeleteTAFNDRPFeeChgType
+  type: http
+  seq: 1
+}
+
+delete {
+  url: {{base_url}}/TAapi/Fund/TAFNDRPFeeChgType?DataID=&DataFlag=
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}

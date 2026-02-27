@@ -1,6 +1,10 @@
 package db
 
 import (
+	"github.com/shopspring/decimal"
+
+	models "go-transfer-agent/common/platform/model"
+
 	"time"
 )
 
@@ -10,10 +14,10 @@ import (
 
 // DTAFNDPGFundFeeRdm represents the DTA_FND_PGFundFeeRdm table.
 type DTAFNDPGFundFeeRdm struct {
-	SysCoID        string    `gorm:"column:SysCoID;type:varchar(20);primaryKey;not null"`
-	PrtFundCode    string    `gorm:"column:PrtFundCode;type:varchar(10);primaryKey;not null"`
-	RdmCalcBegDate time.Time `gorm:"column:RdmCalcBegDate;type:timestamp with time zone;primaryKey;not null"`
-	FeeRate        float64   `gorm:"column:FeeRate;type:numeric;not null;default:0"`
+	SysCoID        string          `gorm:"column:SysCoID;type:varchar(20);primaryKey;not null"`
+	PrtFundCode    string          `gorm:"column:PrtFundCode;type:varchar(10);primaryKey;not null"`
+	RdmCalcBegDate time.Time       `gorm:"column:RdmCalcBegDate;type:timestamp with time zone;primaryKey;not null"`
+	FeeRate        decimal.Decimal `gorm:"column:FeeRate;type:numeric;not null;default:0"`
 
 	// Standard Audit Fields
 	ValidFrom   time.Time `gorm:"column:ValidFrom;type:timestamp;not null;default:CURRENT_TIMESTAMP"`
@@ -29,6 +33,7 @@ type DTAFNDPGFundFeeRdm struct {
 	UpdateDate  time.Time `gorm:"column:UpdateDate;type:timestamp with time zone;not null;default:'1900-01-01 00:00:00+08'"`
 	DataFlag    []byte    `gorm:"column:DataFlag;type:bytea"`
 	DiffColumns string    `gorm:"column:DiffColumns;type:text;not null;default:''"`
+	models.MakerCheckerFields
 }
 
 // TableName overrides the table name used by GORM.

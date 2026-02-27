@@ -19,6 +19,6 @@ RUN apk add --no-cache ca-certificates tzdata
 
 COPY --from=builder /bin/fnd /usr/local/bin/fnd
 
-EXPOSE 50051
+EXPOSE 50051 8081
 
 ENTRYPOINT ["fnd"]

@@ -5,6 +5,10 @@ import (
 	"testing"
 	"time"
 
+	"github.com/shopspring/decimal"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+
 	fndv1 "go-transfer-agent/common/gen/fnd/v1"
 	"go-transfer-agent/services/fnd/fndm012"
 	"go-transfer-agent/services/fnd/fndm012/db"
@@ -17,9 +21,7 @@ func TestService_TAFNDPGFundFeeRdm_Integration(t *testing.T) {
 
 	// 1. AutoMigrate schemas
 	err := database.AutoMigrate(&db.DTAFNDPGFundFeeRdm{})
-	if err != nil {
-		t.Fatalf("Failed to migrate FNDM012 schemas: %v", err)
-	}
+	require.NoError(t, err)
 
 	// 2. Clean up
 	database.Exec(`DELETE FROM "TA_STD_TH"."DTA_FND_PGFundFeeRdm"`)
@@ -30,13 +32,13 @@ func TestService_TAFNDPGFundFeeRdm_Integration(t *testing.T) {
 		SysCoID:        "C01",
 		PrtFundCode:    "F1",
 		RdmCalcBegDate: now.AddDate(-1, 0, 0),
-		FeeRate:        0.75,
+		FeeRate:        decimal.NewFromFloat(0.75).RoundBank(4),
 	}
 	dtl2 := db.DTAFNDPGFundFeeRdm{
 		SysCoID:        "C01",
 		PrtFundCode:    "F1",
 		RdmCalcBegDate: now.AddDate(1, 0, 0),
-		FeeRate:        1.0,
+		FeeRate:        decimal.NewFromFloat(1.0).RoundBank(4),
 	}
 
 	if err := database.Create(&[]db.DTAFNDPGFundFeeRdm{dtl1, dtl2}).Error; err != nil {
@@ -53,9 +55,7 @@ func TestService_TAFNDPGFundFeeRdm_Integration(t *testing.T) {
 	}
 
 	res, err := svc.TAFNDPGFundFeeRdm(ctx, req)
-	if err != nil {
-		t.Fatalf("Service error: %v", err)
-	}
+	require.NoError(t, err)
 
 	// 5. Assertions
 	if len(res.ResultList) != 2 {
@@ -65,12 +65,8 @@ func TestService_TAFNDPGFundFeeRdm_Integration(t *testing.T) {
 	fees := map[float64]bool{}
 	for _, r := range res.ResultList {
 		fees[r.FeeRate] = true
-		if r.SysCoId != "C01" {
-			t.Errorf("Expected SysCoID 'C01', got '%v'", r.SysCoId)
-		}
-		if r.PrtFundCode != "F1" {
-			t.Errorf("Expected PrtFundCode 'F1', got '%v'", r.PrtFundCode)
-		}
+		assert.Equal(t, "C01", r.SysCoId)
+		assert.Equal(t, "F1", r.PrtFundCode)
 	}
 
 	if !fees[0.75] || !fees[1.0] {

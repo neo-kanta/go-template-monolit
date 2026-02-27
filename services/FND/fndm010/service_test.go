@@ -4,6 +4,10 @@ import (
 	"context"
 	"testing"
 
+	"github.com/shopspring/decimal"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+
 	fndv1 "go-transfer-agent/common/gen/fnd/v1"
 	"go-transfer-agent/services/fnd/fndm010"
 	"go-transfer-agent/services/fnd/fndm010/db"
@@ -19,9 +23,7 @@ func TestService_TAFNDIShareFundFee_Integration(t *testing.T) {
 		&db.DTAFNDIShareFundFee{},
 		&db.DTAFNDIShareFundFeeSub{},
 	)
-	if err != nil {
-		t.Fatalf("Failed to migrate FNDM010 schemas: %v", err)
-	}
+	require.NoError(t, err)
 
 	// 2. Clean up
 	database.Exec(`DELETE FROM "TA_STD_TH"."DTA_FND_IShareFundFeeSub"`)
@@ -39,14 +41,14 @@ func TestService_TAFNDIShareFundFee_Integration(t *testing.T) {
 	sub1 := db.DTAFNDIShareFundFeeSub{
 		SysCoID:       "C01",
 		FundCode:      "F1",
-		RangeAmtAbove: 1000,
-		SubsFeeRate:   1.0,
+		RangeAmtAbove: decimal.NewFromFloat(1000).RoundBank(2),
+		SubsFeeRate:   decimal.NewFromFloat(1.0).RoundBank(4),
 	}
 	sub2 := db.DTAFNDIShareFundFeeSub{
 		SysCoID:       "C01",
 		FundCode:      "F1",
-		RangeAmtAbove: 5000,
-		SubsFeeRate:   0.5,
+		RangeAmtAbove: decimal.NewFromFloat(5000).RoundBank(2),
+		SubsFeeRate:   decimal.NewFromFloat(0.5).RoundBank(4),
 	}
 
 	if err := database.Create(&[]db.DTAFNDIShareFundFeeSub{sub1, sub2}).Error; err != nil {
@@ -63,9 +65,7 @@ func TestService_TAFNDIShareFundFee_Integration(t *testing.T) {
 	}
 
 	res, err := svc.TAFNDIShareFundFee(ctx, req)
-	if err != nil {
-		t.Fatalf("Service error: %v", err)
-	}
+	require.NoError(t, err)
 
 	// 5. Assertions
 	if len(res.ResultList) != 1 {
@@ -73,12 +73,8 @@ func TestService_TAFNDIShareFundFee_Integration(t *testing.T) {
 	}
 
 	resultMaster := res.ResultList[0]
-	if resultMaster.SysCoId != "C01" {
-		t.Errorf("Expected SysCoID 'C01', got '%v'", resultMaster.SysCoId)
-	}
-	if resultMaster.FundCode != "F1" {
-		t.Errorf("Expected FundCode 'F1', got '%v'", resultMaster.FundCode)
-	}
+	assert.Equal(t, "C01", resultMaster.SysCoId)
+	assert.Equal(t, "F1", resultMaster.FundCode)
 
 	if len(res.IShareFundFeeList) != 2 {
 		t.Fatalf("Expected 2 sub details, got %d", len(res.IShareFundFeeList))

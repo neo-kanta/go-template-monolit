@@ -1,4 +1,3 @@
-// Package main is the entry point for the FND gRPC + HTTP service.
 package main
 
 import (
@@ -25,7 +24,13 @@ func main() {
 	// ─── gRPC Server ───
 	lis, err := net.Listen("tcp", cfg.GRPCAddr)
 	if err != nil {
-		log.Error("failed to listen (gRPC)", slog.String("addr", cfg.GRPCAddr), slog.String("error", err.Error()))
+		if strings.Contains(err.Error(), "address already in use") {
+			log.Error("❌ gRPC port conflict",
+				slog.String("addr", cfg.GRPCAddr),
+				slog.String("suggestion", "Ensure no other service (like wslrelay.exe) is using this port. You can change it via GRPC_ADDR environment variable."))
+		} else {
+			log.Error("failed to listen (gRPC)", slog.String("addr", cfg.GRPCAddr), slog.String("error", err.Error()))
+		}
 		os.Exit(1)
 	}
 
@@ -33,7 +38,12 @@ func main() {
 
 	// Start gRPC server in background (must be listening before gateway dials it)
 	go func() {
-		log.Info("🚀 FND gRPC service starting", slog.String("addr", cfg.GRPCAddr))
+		grpcColonIdx := strings.LastIndex(cfg.GRPCAddr, ":")
+		grpcPort := cfg.GRPCAddr[grpcColonIdx:]
+		log.Info("🚀 FND gRPC service starting",
+			slog.String("addr", cfg.GRPCAddr),
+			slog.String("link", "grpc://localhost"+grpcPort),
+		)
 		if err := grpcSrv.Serve(lis); err != nil {
 			log.Error("gRPC server failed", slog.String("error", err.Error()))
 			os.Exit(1)
@@ -73,10 +83,17 @@ func main() {
 	port := cfg.HTTPAddr[colonIdx:]
 	log.Info("📖 HTTP gateway + Swagger UI starting",
 		slog.String("addr", cfg.HTTPAddr),
-		slog.String("swagger", "http://localhost"+port+"/swagger/"),
+		slog.String("link", "http://localhost"+port),
+		slog.String("swagger", "http://localhost"+port+"/swagger/index.html"),
 	)
 	if err := httpSrv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-		log.Error("HTTP server failed", slog.String("error", err.Error()))
+		if strings.Contains(err.Error(), "address already in use") {
+			log.Error("❌ HTTP port conflict",
+				slog.String("addr", cfg.GRPCAddr),
+				slog.String("suggestion", "Ensure no other service is using this port. You can change it via HTTP_ADDR environment variable."))
+		} else {
+			log.Error("HTTP server failed", slog.String("error", err.Error()))
+		}
 		os.Exit(1)
 	}
 }

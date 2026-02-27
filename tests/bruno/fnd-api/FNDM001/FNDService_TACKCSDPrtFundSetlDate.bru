@@ -1,0 +1,15 @@
+meta {
+  name: FNDService_TACKCSDPrtFundSetlDate
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}/TAapi/Fund/TAFNDFundInfo/ChkData/TACKCSDPrtFundSetlDate?SysCoID=&CsdPrtFundSetlDate=&FundCode=
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}

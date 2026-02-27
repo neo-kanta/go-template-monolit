@@ -4,6 +4,8 @@ package fnd.v1;
 option go_package = "go-transfer-agent/common/gen/fnd/v1;fndv1";
 
 import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "fnd/v1/common.proto";
 
 // ═══════════════════════════════════════════════════════════════════
 // FNDM013 Service
@@ -11,9 +13,42 @@ import "google/api/annotations.proto";
 service FNDM013Service {
   rpc TAFNDTMFundFeeRdm(TAFNDTMFundFeeRdmRequest) returns (TAFNDTMFundFeeRdmResponse) {
     option (google.api.http) = { get: "/TAapi/Fund/TAFNDTMFundFeeRdm" };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["APIFNDM013：TAFNDTMFundFeeRdm"]
+    };
   }
-}
 
+  rpc SaveTAFNDTMFundFeeRdm(TAFNDTMFundFeeRdmRequest) returns (SaveResponse) {
+    option (google.api.http) = { post: "/TAapi/Fund/TAFNDTMFundFeeRdm" body: "*" };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["APIFNDM013：TAFNDTMFundFeeRdm"]
+    };
+  }
+
+  rpc UpdateTAFNDTMFundFeeRdm(TAFNDTMFundFeeRdmRequest) returns (SaveResponse) {
+    option (google.api.http) = { put: "/TAapi/Fund/TAFNDTMFundFeeRdm" body: "*" };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["APIFNDM013：TAFNDTMFundFeeRdm"]
+    };
+  }
+
+  rpc DeleteTAFNDTMFundFeeRdm(DeleteRequest) returns (SaveResponse) {
+    option (google.api.http) = { delete: "/TAapi/Fund/TAFNDTMFundFeeRdm" };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["APIFNDM013：TAFNDTMFundFeeRdm"]
+    };
+  }
+
+
+  // GET Data by DataID (Maintain Query)
+  rpc GetDataByDataID(GetDataRequest) returns (TAFNDTMFundFeeRdmRequest) {
+    option (google.api.http) = { get: "/TAapi/Fund/TAFNDTMFundFeeRdm/GetData/{data_id}" };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: ["APIFNDM013：TAFNDTMFundFeeRdm"]
+    };
+  }
+
+}
 // ═══════════════════════════════════════════════════════════════════
 // FNDM013 Messages
 // ═══════════════════════════════════════════════════════════════════
@@ -44,4 +79,12 @@ message TMFundFeeRdmDtlListDTO {
   string rdm_calc_beg_date = 3 [json_name="RdmCalcBegDate"];
   string rdm_calc_end_date = 4 [json_name="RdmCalcEndDate"];
   double fee_rate = 5 [json_name="FeeRate"];
+}
+
+message ApproveTAFNDTMFundFeeRdmRequest {
+  string sys_co_id = 1 [json_name="SysCoID"];
+  string data_id = 2 [json_name="DataID"];
+  string checker_id = 3 [json_name="CheckerID"];
+  bool is_approved = 4 [json_name="IsApproved"];
+  string remark = 5 [json_name="Remark"];
 }

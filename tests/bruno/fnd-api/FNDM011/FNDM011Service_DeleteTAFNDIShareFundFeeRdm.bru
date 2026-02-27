@@ -1,0 +1,15 @@
+meta {
+  name: FNDM011Service_DeleteTAFNDIShareFundFeeRdm
+  type: http
+  seq: 1
+}
+
+delete {
+  url: {{base_url}}/TAapi/Fund/TAFNDIShareFundFeeRdm?DataID=&DataFlag=
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}

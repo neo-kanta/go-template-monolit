@@ -1,6 +1,7 @@
 package db
 
 import (
+	models "go-transfer-agent/common/platform/model"
 	"time"
 )
 
@@ -28,6 +29,7 @@ type DTAFNDRPFeeChgType struct {
 	UpdateDate  time.Time `gorm:"column:UpdateDate;type:timestamp with time zone;not null;default:'1900-01-01 00:00:00+08'"`
 	DataFlag    []byte    `gorm:"column:DataFlag;type:bytea"`
 	DiffColumns string    `gorm:"column:DiffColumns;type:text;not null;default:''"`
+	models.MakerCheckerFields
 }
 
 func (DTAFNDRPFeeChgType) TableName() string {
@@ -68,6 +70,7 @@ type DTAFNDRPFeeChgTypeDtl struct {
 	UpdateDate  time.Time `gorm:"column:UpdateDate;type:timestamp with time zone;not null;default:'1900-01-01 00:00:00+08'"`
 	DataFlag    []byte    `gorm:"column:DataFlag;type:bytea"`
 	DiffColumns string    `gorm:"column:DiffColumns;type:text;not null;default:''"`
+	models.MakerCheckerFields
 }
 
 func (DTAFNDRPFeeChgTypeDtl) TableName() string {

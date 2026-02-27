@@ -1,0 +1,19 @@
+meta {
+  name: FNDM007Service_UpdateTAFNDCustGroup
+  type: http
+  seq: 1
+}
+
+put {
+  url: {{base_url}}/TAapi/Fund/TAFNDCustGroup
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}
+
+body:json {
+  {}
+}

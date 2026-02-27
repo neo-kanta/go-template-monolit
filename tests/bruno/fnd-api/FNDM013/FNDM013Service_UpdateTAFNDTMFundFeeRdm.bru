@@ -1,0 +1,19 @@
+meta {
+  name: FNDM013Service_UpdateTAFNDTMFundFeeRdm
+  type: http
+  seq: 1
+}
+
+put {
+  url: {{base_url}}/TAapi/Fund/TAFNDTMFundFeeRdm
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}
+
+body:json {
+  {}
+}

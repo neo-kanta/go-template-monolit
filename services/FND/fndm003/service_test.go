@@ -4,6 +4,10 @@ import (
 	"context"
 	"testing"
 
+	"github.com/shopspring/decimal"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+
 	fndv1 "go-transfer-agent/common/gen/fnd/v1"
 	"go-transfer-agent/services/fnd/fndm003"
 	"go-transfer-agent/services/fnd/fndm003/db"
@@ -21,9 +25,7 @@ func TestService_TAFNDSwitch_Integration(t *testing.T) {
 		&db.DTAFNDFundFeeSwitch{},
 		&db.DTAFNDSwitchCry{},
 	)
-	if err != nil {
-		t.Fatalf("Failed to migrate FNDM003 schemas: %v", err)
-	}
+	require.NoError(t, err)
 
 	// 2. Clean up
 	database.Exec(`DELETE FROM "TA_STD_TH"."DTA_FND_SwitchCry"`)
@@ -49,7 +51,7 @@ func TestService_TAFNDSwitch_Integration(t *testing.T) {
 	}
 
 	fees := []db.DTAFNDFundFeeSwitch{
-		{SysCoID: "C01", PrtFundCode: "F1", FundCode: "F2", SwFundType: "TYPE1", SwDiscType: "DISC1", SwitchRate: 0.5},
+		{SysCoID: "C01", PrtFundCode: "F1", FundCode: "F2", SwFundType: "TYPE1", SwDiscType: "DISC1", SwitchRate: decimal.NewFromFloat(0.5).RoundBank(4)},
 	}
 	if err := database.Create(&fees).Error; err != nil {
 		t.Fatalf("Failed to seed fees: %v", err)
@@ -73,9 +75,7 @@ func TestService_TAFNDSwitch_Integration(t *testing.T) {
 	}
 
 	res, err := svc.TAFNDSwitch(ctx, req)
-	if err != nil {
-		t.Fatalf("Service error: %v", err)
-	}
+	require.NoError(t, err)
 
 	// 5. Assertions
 	if len(res.ResultList) != 1 {
@@ -97,9 +97,7 @@ func TestService_TAFNDSwitch_Integration(t *testing.T) {
 		t.Fatalf("SwitchCryList mapping failed")
 	}
 	sc := res.SwitchCryList[0]
-	if sc.SwIFundCry != "THB" {
-		t.Errorf("Expected SwIFundCry 'THB', got '%v'", sc.SwIFundCry)
-	}
+	assert.Equal(t, "THB", sc.SwIFundCry)
 	if len(sc.SwOFundCrySetNm) != 2 || sc.SwOFundCrySetNm[0] != "USD" || sc.SwOFundCrySetNm[1] != "EUR" {
 		t.Errorf("SwOFundCrySet split mapping failed: %v", sc.SwOFundCrySetNm) // Based on set splitting logic
 	}

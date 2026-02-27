@@ -1,0 +1,15 @@
+meta {
+  name: FNDM008Service_TACKPTxnBegDate
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}/TAapi/Fund/TAFNDPauseTxn/ChkData/TACKPTxnBegDate?SysCoID=&PrtFundCode=&PTxnBegDate=&PauseTxnSet=
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}

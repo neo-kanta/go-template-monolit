@@ -1,6 +1,7 @@
 package db
 
 import (
+	models "go-transfer-agent/common/platform/model"
 	"time"
 )
 
@@ -14,7 +15,6 @@ type DTAFNDPauseTxn struct {
 	PrtFundCode string    `gorm:"column:PrtFundCode;type:varchar(10);primaryKey;not null"`
 	PTxnBegDate time.Time `gorm:"column:PTxnBegDate;type:timestamp with time zone;primaryKey;not null"`
 	PTxnEndDate time.Time `gorm:"column:PTxnEndDate;type:timestamp with time zone;not null;default:'1900-01-01 00:00:00+08'"`
-	Remark      string    `gorm:"column:Remark;type:varchar(200);not null;default:''"`
 
 	// Standard Audit Fields
 	ValidFrom   time.Time `gorm:"column:ValidFrom;type:timestamp;not null;default:CURRENT_TIMESTAMP"`
@@ -30,6 +30,7 @@ type DTAFNDPauseTxn struct {
 	UpdateDate  time.Time `gorm:"column:UpdateDate;type:timestamp with time zone;not null;default:'1900-01-01 00:00:00+08'"`
 	DataFlag    []byte    `gorm:"column:DataFlag;type:bytea"`
 	DiffColumns string    `gorm:"column:DiffColumns;type:text;not null;default:''"`
+	models.MakerCheckerFields
 }
 
 func (DTAFNDPauseTxn) TableName() string {
@@ -67,6 +68,7 @@ type DTAFNDPauseTxnCry struct {
 	UpdateDate  time.Time `gorm:"column:UpdateDate;type:timestamp with time zone;not null;default:'1900-01-01 00:00:00+08'"`
 	DataFlag    []byte    `gorm:"column:DataFlag;type:bytea"`
 	DiffColumns string    `gorm:"column:DiffColumns;type:text;not null;default:''"`
+	models.MakerCheckerFields
 }
 
 func (DTAFNDPauseTxnCry) TableName() string {
@@ -104,6 +106,7 @@ type DTAFNDPauseTxnDtl struct {
 	UpdateDate  time.Time `gorm:"column:UpdateDate;type:timestamp with time zone;not null;default:'1900-01-01 00:00:00+08'"`
 	DataFlag    []byte    `gorm:"column:DataFlag;type:bytea"`
 	DiffColumns string    `gorm:"column:DiffColumns;type:text;not null;default:''"`
+	models.MakerCheckerFields
 }
 
 func (DTAFNDPauseTxnDtl) TableName() string {
