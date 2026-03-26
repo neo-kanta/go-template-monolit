@@ -1,0 +1,19 @@
+meta {
+  name: FNDM013Service_SaveTAFNDTMFundFeeRdm
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{base_url}}/TAapi/Fund/TAFNDTMFundFeeRdm
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}
+
+body:json {
+  {}
+}

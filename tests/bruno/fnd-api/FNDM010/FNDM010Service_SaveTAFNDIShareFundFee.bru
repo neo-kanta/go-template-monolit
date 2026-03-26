@@ -1,0 +1,19 @@
+meta {
+  name: FNDM010Service_SaveTAFNDIShareFundFee
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{base_url}}/TAapi/Fund/TAFNDIShareFundFee
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}
+
+body:json {
+  {}
+}

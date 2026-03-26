@@ -1,0 +1,189 @@
+User Interface Specification
+目錄
+應用程式介面說明 2
+壹、功能說明 2
+貳、變更說明 2
+叁、傳入傳出參數(Utility) 2
+一、UTY2002001：TAOrgSetAgent 2
+二、UTY2002002：TAGetChannel 3
+三、UTY2002003：TAGetAgent 5
+四、UTY2002004：TAGetTxAgent 7
+五、UTY2002005：TAGetAgentForACQ 9
+應用程式介面說明
+壹、功能說明
+查詢機構相關API
+貳、變更說明
+[TABLE]
+變更日期	變更人員	變更說明
+2023/06/02	Joyce Lin	1．ReBuild
+2024/03/29	Meg Pan	Modify，配合ACQM003調整\n1．UTY2002002：傳出參數增加「含全部通路選項」欄位、調整邏輯說明\n2．UTY2002003：傳出參數增加「含全部銷售機構選項」欄位、調整邏輯說明
+2024/05/06	Meg Pan	Modify\n1．UTY2002004：配合TXNM021調整，傳出參數增加「CDSC資料提供方式」
+2024/05/13	Dechang Chen	Modify\n1．配合ACQM011調整，新增UTY2002005
+2024/07/03	Dechang Chen	Modify，配合多公司別調整\n1．UTY2002003、UTY2002004、UTY2002005：新增傳入參數「公司代碼」
+2024/08/06	Meg Pan	Modify\n1．UTY2002004：信託專戶的銷售機構改以受益人基本資料登載的資料為准，刪除傳出參數「CDSC資料提供方式」
+2025/01/23	Joyce Lin	Modify\n1．UTY2002004：傳入參數「交易類別」選項代碼原「S」調整為「Subs」、原「R」調整為「Rdm」
+2025/02/19	Ann Wu	Modify\n1．調整幣別欄位長度為6
+2025/03/05	Joyce Lin	Modify\n1．UTY2002004：傳出欄位「手續費拆帳基礎(AllotFeePctType)」調整為「手續費拆帳基礎(SubsFeePctType)」
+2025/12/26	Meg Pan	Modify，配合前端組件，選項String『Y、N』變更為Bool『True、False』\n1．UTY2002001、UTY2002002、UTY2002003、UTY2002004：「有效碼」相關欄位判斷規則
+
+叁、傳入傳出參數(Utility)
+一、UTY2002001：TAOrgSetAgent
+取得可被設定銷售機構的機構代碼(Searcher For 銷售機構建立) Url：{root}/TAapi/BaseUtility/OrgInfo/TAOrgSetAgent
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+機構類別\nOrgType	String	O	1．選項(OPT：TA-000053)
+機構全碼\nOrgFullCode	String	O
+有效碼\nIsValid	Bool	O
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+機構清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+機構代碼\nOrgFullCode	String	1．機構全碼(OrgFullCode)
+機構簡稱\nOrgFullCodeNM	String	1．機構簡稱(OrgCodeNM)
+
+邏輯說明
+資料來源檔案
+取得機構查詢資料(SysUtility.GetOrgV)：取得「資料查詢類別」為『1.銷售機構』且「機構種類」為『L.大機構』的資料
+二、UTY2002002：TAGetChannel
+取得通路代碼(Searcher For 交易、查詢/報表條件) Url：{root}/TAapi/BaseUtility/OrgInfo/TAGetChannel
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+機構類別\nOrgType	String	V	1．選項(OPT：TA-000053)
+機構全碼\nOrgFullCode	String	O
+機構種類\nOrgKind	String	O	1．選項\nL：大機構；M：中機構；S：小機構；A：全部機構；LM：大、中機構；MS：中、小機構\n2．預設為A
+有效碼\nIsValid	Bool	O
+含全部通路選項\nIsALL	Bool	O	1．預設為False
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+通路清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+通路代碼\nChannelCode	String	1．機構全碼(OrgFullCode)
+通路簡稱\nChannelCodeNM	String	1．機構簡稱(OrgCodeNM)
+大通路代碼\nChannelBCode	String	1．總機構代碼(OrgHeadCode)
+
+邏輯說明
+資料來源檔案
+取得機構查詢資料(SysUtility.GetOrgV)：取得「資料查詢類別」為『2.通路』的資料
+取得All選項查詢資料(SysUtility.GetSysAll)
+資料處理說明
+全部通路(@AllList)：若《含全部通路選項》為『True』時，至【取得All選項查詢資料(SysUtility.GetSysAll)】取得「All選項Key」為『Org』的資料
+通路清單(@ChannelList)：依下述處理後再回傳結果
+若《含全部基金選項》為『True』時，依據全部通路(@AllList)內容新增一筆資料，資料內容如下
+「通路代碼」：為全部通路(@AllList)的『All選項代碼(AllValue)』
+「通路簡稱」：為全部通路(@AllList)的『All選項名稱(AllName)』
+其餘欄位為空值
+資料排序說明
+若《含全部通路選項》為『True』時，全部通路(@AllList)固定為第一筆
+三、UTY2002003：TAGetAgent
+取得銷售機構代碼(Searcher For 查詢/報表條件) Url：{root}/TAapi/BaseUtility/OrgInfo/TAGetAgent
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+機構類別\nOrgType	String	V	1．選項(OPT：TA-000053)
+機構全碼\nOrgFullCode	String	O
+機構種類\nOrgKind	String	O	1．選項\nL：大機構；M：中機構；S：小機構；A：全部機構；LM：大、中機構；MS：中、小機構\n2．預設為A
+有效碼\nIsValid	Bool	O
+含全部銷售機構選項\nIsALL	Bool	O	1．預設為False
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+銷售機構清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+銷售機構代碼\nAgentCode	String	1．機構全碼(OrgFullCode)
+銷售機構簡稱\nAgentCodeNM	String	1．機構簡稱(OrgCodeNM)
+大銷售機構代碼\nAgentBCode	String	1．總機構代碼(OrgHeadCode)
+
+邏輯說明
+資料來源檔案
+銷售機構檔(TA_CMM_Agent)
+取得機構查詢資料(SysUtility.GetOrgV)
+資料處理說明
+以【銷售機構檔(TA_CMM_Agent)】為主，取得存在於【取得機構查詢資料(SysUtility.GetOrgV)】「資料查詢類別」為『1.銷售機構』的資料。
+取得All選項查詢資料(SysUtility.GetSysAll)
+資料處理說明
+全部銷售機構(@AllList)：若《含全部銷售機構選項》為『True』時，至【取得All選項查詢資料(SysUtility.GetSysAll)】取得「All選項Key」為『Org』的資料
+銷售機構清單(@AgentList)：依下述處理後再回傳結果
+若《含全部基金選項》為『True』時，依據全部銷售機構(@AllList)內容新增一筆資料，資料內容如下
+「通路代碼」：為全部銷售機構(@AllList)的『All選項代碼(AllValue)』
+「通路簡稱」：為全部銷售機構(@AllList)的『All選項名稱(AllName)』
+其餘欄位為空值
+資料排序說明
+若《含全部銷售機構選項》為『True』時，全部銷售機構(@AllList)固定為第一筆
+四、UTY2002004：TAGetTxAgent
+取得境內基金承銷機構代碼(Searcher For 交易) Url：{root}/TAapi/BaseUtility/OrgInfo/TAGetTxAgent
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+母基金代碼\nPrtFundCode	String	V
+銷售機構類別\nAgentType	String	V	1．選項(OPT：TA-000053)
+銷售機構代碼\nAgentCode	String	O
+交易類別\nTxType	String	V	1．選項\nSubs：申購、Rdm：買回
+收件日期\nRcvDate	Datetime	V
+交易幣別\nTxCry	String	O	1．「交易類別」為『申購』時，才有傳入值
+公司基金級別\nFHFundShare	String	O	1．「交易類別」為『申購』時，才有傳入值\n2．選項(TCCode：031)
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+銷售機構清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+銷售機構代碼\nAgentCode	String	1．機構查詢.機構全碼(SysUtility.GetOrgV.OrgFullCode)
+銷售機構簡稱\nAgentCodeNM	String	1．機構查詢.機構簡稱(SysUtility.GetOrgV.OrgCodeNM)
+大銷售機構代碼\nAgentBCode	String	1．機構查詢.總機構代碼(SysUtility.GetOrgV.OrgHeadCode)
+手續費占比-銷售機構\nSubsFeePctAG	Decimal	1．「交易類別」為『申購』時，才有傳出值
+手續費拆帳基礎\nSubsFeePctType	String	1．「交易類別」為『申購』時，才有傳出值\n2．選項(OPT：TA-000052)
+銀行分類\nBankCateg	String	1．選項(OPT：TA-000021)\n2．機構查詢. 銀行分類(SysUtility.GetOrgV.BankCateg)
+
+邏輯說明
+資料來源檔案
+取得境內基金承銷機構查詢資料(SysUtility.GetDFundAgent)
+取得機構查詢資料(SysUtility.GetOrgV)
+資料處理說明
+銷售機構清單(@AgentList)：以傳入參數及下述條件至【取得境內基金承銷機構查詢資料(SysUtility.GetDFundAgent)】取得資料
+再以「銷售機構清單(@AgentList)」為主，取得存在於【取得機構查詢資料(SysUtility.GetOrgV)】「資料查詢類別」為『1.銷售機構』且「機構種類」為『A.全部機構』且「有效碼」為『Y』『True』的資料。
+五、UTY2002005：TAGetAgentForACQ
+取得收單權限的銷售機構代碼(Searcher For ACQM011) Url：{root}/TAapi/BaseUtility/OrgInfo/TAGetAgentForACQ
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+使用者代碼\nUserID	String	V
+機構類別\nOrgType	String	V	1．選項(OPT：TA-000053)
+機構全碼\nOrgFullCode	String	O
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+銷售機構清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+銷售機構代碼\nAgentCode	String
+銷售機構簡稱\nAgentCodeNM	String
+大銷售機構代碼\nAgentBCode	String
+
+邏輯說明
+資料來源檔案
+取得使用者部門權限下所屬的銷售機構(TASysUtility.GetACQUserDeptPerm)

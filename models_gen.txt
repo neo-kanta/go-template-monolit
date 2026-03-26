@@ -1,0 +1,290 @@
+// DTAFundInfoListEdit represents the TA_STD_TH.DTAFundInfoList_Edit table
+type DTAFundInfoListEdit struct {
+	SysCoID string `gorm:"column:SysCoID;type:varchar(50);not null;default:''"`
+	PrtFundCode string `gorm:"column:PrtFundCode;type:varchar(50);not null;default:''"`
+	SITCAFundType string `gorm:"column:SITCAFundType;type:varchar(50);not null;default:''"`
+	DFundType string `gorm:"column:DFundType;type:varchar(50);not null;default:''"`
+	DInvArea string `gorm:"column:DInvArea;type:varchar(50);not null;default:''"`
+	OfferType string `gorm:"column:OfferType;type:varchar(50);not null;default:''"`
+	BCFundQuoUpAmt float64 `gorm:"column:BCFundQuoUpAmt;type:numeric(20,6);not null;default:0"`
+	BCFundQuoMinAmt float64 `gorm:"column:BCFundQuoMinAmt;type:numeric(20,6);not null;default:0"`
+	FundQuoLmtRate float64 `gorm:"column:FundQuoLmtRate;type:numeric(20,6);not null;default:0"`
+	TradeWarningAmt float64 `gorm:"column:TradeWarningAmt;type:numeric(20,6);not null;default:0"`
+	ExchUnitLmt string `gorm:"column:ExchUnitLmt;type:varchar(50);not null;default:''"`
+	FMNetQuoUpUnit float64 `gorm:"column:FMNetQuoUpUnit;type:numeric(20,6);not null;default:0"`
+	ExchNetQuoUpUnit float64 `gorm:"column:ExchNetQuoUpUnit;type:numeric(20,6);not null;default:0"`
+	FundIPODate time.Time `gorm:"column:FundIPODate;type:timestamp with time zone;not null;default:'1900-01-01 00:00:00+08'"`
+	BegRdmDate time.Time `gorm:"column:BegRdmDate;type:timestamp with time zone;not null;default:'1900-01-01 00:00:00+08'"`
+	FundIssueType string `gorm:"column:FundIssueType;type:varchar(50);not null;default:''"`
+	FundIssueDate time.Time `gorm:"column:FundIssueDate;type:timestamp with time zone;not null;default:'1900-01-01 00:00:00+08'"`
+	CSDOnlineDate time.Time `gorm:"column:CSDOnlineDate;type:timestamp with time zone;not null;default:'1900-01-01 00:00:00+08'"`
+	CSDPrtFundSetlDate time.Time `gorm:"column:CSDPrtFundSetlDate;type:timestamp with time zone;not null;default:'1900-01-01 00:00:00+08'"`
+	ApprovelDate time.Time `gorm:"column:ApprovelDate;type:timestamp with time zone;not null;default:'1900-01-01 00:00:00+08'"`
+	ClearDate time.Time `gorm:"column:ClearDate;type:timestamp with time zone;not null;default:'1900-01-01 00:00:00+08'"`
+	LastSubsDate time.Time `gorm:"column:LastSubsDate;type:timestamp with time zone;not null;default:'1900-01-01 00:00:00+08'"`
+	LastRdmDate time.Time `gorm:"column:LastRdmDate;type:timestamp with time zone;not null;default:'1900-01-01 00:00:00+08'"`
+	BIZDayDef string `gorm:"column:BIZDayDef;type:varchar(50);not null;default:''"`
+	SubsDateType string `gorm:"column:SubsDateType;type:varchar(50);not null;default:''"`
+	RdmDateType string `gorm:"column:RdmDateType;type:varchar(50);not null;default:''"`
+	RdmPayDateType string `gorm:"column:RdmPayDateType;type:varchar(50);not null;default:''"`
+	SubsNavDay int16 `gorm:"column:SubsNavDay;type:smallint;not null;default:0"`
+	RdmNavDay int16 `gorm:"column:RdmNavDay;type:smallint;not null;default:0"`
+	RdmPayDay int16 `gorm:"column:RdmPayDay;type:smallint;not null;default:0"`
+	CustBankHeadID string `gorm:"column:CustBankHeadID;type:varchar(50);not null;default:''"`
+	FundAccMName string `gorm:"column:FundAccMName;type:varchar(50);not null;default:''"`
+	FundAccSName string `gorm:"column:FundAccSName;type:varchar(50);not null;default:''"`
+	CheckDiffDay int16 `gorm:"column:CheckDiffDay;type:smallint;not null;default:0"`
+	CashDiffDay int16 `gorm:"column:CashDiffDay;type:smallint;not null;default:0"`
+	FASubsInDay int16 `gorm:"column:FASubsInDay;type:smallint;not null;default:0"`
+	FARdmOutDay int16 `gorm:"column:FARdmOutDay;type:smallint;not null;default:0"`
+	FASubsSetlDay int16 `gorm:"column:FASubsSetlDay;type:smallint;not null;default:0"`
+	FARdmSetlDay int16 `gorm:"column:FARdmSetlDay;type:smallint;not null;default:0"`
+	SubsFeeGroup string `gorm:"column:SubsFeeGroup;type:varchar(50);not null;default:''"`
+	CDSCFeeGroup string `gorm:"column:CDSCFeeGroup;type:varchar(50);not null;default:''"`
+	DivFundGroup string `gorm:"column:DivFundGroup;type:varchar(50);not null;default:''"`
+	CSDSubsDeadline string `gorm:"column:CSDSubsDeadline;type:varchar(50);not null;default:''"`
+	CSDRdmDeadline string `gorm:"column:CSDRdmDeadline;type:varchar(50);not null;default:''"`
+	BeginShortDate time.Time `gorm:"column:BeginShortDate;type:timestamp with time zone;not null;default:'1900-01-01 00:00:00+08'"`
+	ShortCalcMemo string `gorm:"column:ShortCalcMemo;type:varchar(50);not null;default:''"`
+	ShortTxMemo string `gorm:"column:ShortTxMemo;type:varchar(50);not null;default:''"`
+	ShortMemo string `gorm:"column:ShortMemo;type:varchar(50);not null;default:''"`
+	RemitChargeCD string `gorm:"column:RemitChargeCD;type:varchar(50);not null;default:''"`
+	IsIPO bool `gorm:"column:IsIPO;type:boolean;not null;default:false"`
+}
+
+func (DTAFundInfoListEdit) TableName() string {
+	return "TA_STD_TH.DTAFundInfoList_Edit"
+}
+
+// DTAFundAntiDilListEdit represents the TA_STD_TH.DTAFundAntiDilList_Edit table
+type DTAFundAntiDilListEdit struct {
+	DTAFundMGTFeeList string `gorm:"column:DTAFundMGTFeeList;type:varchar(50);not null;default:''"`
+	DTAMGTFeeDtlList string `gorm:"column:DTAMGTFeeDtlList;type:varchar(50);not null;default:''"`
+}
+
+func (DTAFundAntiDilListEdit) TableName() string {
+	return "TA_STD_TH.DTAFundAntiDilList_Edit"
+}
+
+// DTASpecialListEdit represents the TA_STD_TH.DTASpecialList_Edit table
+type DTASpecialListEdit struct {
+	SysCoID string `gorm:"column:SysCoID;type:varchar(50);not null;default:''"`
+	PrtFundCode string `gorm:"column:PrtFundCode;type:varchar(50);not null;default:''"`
+	IsHighRisk bool `gorm:"column:IsHighRisk;type:boolean;not null;default:false"`
+	IsPGF bool `gorm:"column:IsPGF;type:boolean;not null;default:false"`
+	PGFStay string `gorm:"column:PGFStay;type:varchar(50);not null;default:''"`
+	PGFMatureYear int16 `gorm:"column:PGFMatureYear;type:smallint;not null;default:0"`
+	PGFStopSubsDay int16 `gorm:"column:PGFStopSubsDay;type:smallint;not null;default:0"`
+	PGFExpiryDate time.Time `gorm:"column:PGFExpiryDate;type:timestamp with time zone;not null;default:'1900-01-01 00:00:00+08'"`
+	IsPGFRdmFee bool `gorm:"column:IsPGFRdmFee;type:boolean;not null;default:false"`
+	IsTMF bool `gorm:"column:IsTMF;type:boolean;not null;default:false"`
+	TMFKind string `gorm:"column:TMFKind;type:varchar(50);not null;default:''"`
+	TMFStopSubsDay int16 `gorm:"column:TMFStopSubsDay;type:smallint;not null;default:0"`
+	TMFTargetDate time.Time `gorm:"column:TMFTargetDate;type:timestamp with time zone;not null;default:'1900-01-01 00:00:00+08'"`
+	TMFStay int16 `gorm:"column:TMFStay;type:smallint;not null;default:0"`
+	TMFExpiryDate time.Time `gorm:"column:TMFExpiryDate;type:timestamp with time zone;not null;default:'1900-01-01 00:00:00+08'"`
+	TMFRetunrBC string `gorm:"column:TMFRetunrBC;type:varchar(50);not null;default:''"`
+	TMFReturnStarr string `gorm:"column:TMFReturnStarr;type:varchar(50);not null;default:''"`
+	IsTMFRdmFee bool `gorm:"column:IsTMFRdmFee;type:boolean;not null;default:false"`
+	IsPFF bool `gorm:"column:IsPFF;type:boolean;not null;default:false"`
+	PvtFundLimit int16 `gorm:"column:PvtFundLimit;type:smallint;not null;default:0"`
+	IsPerformanceFee bool `gorm:"column:IsPerformanceFee;type:boolean;not null;default:false"`
+	IsUmbrella bool `gorm:"column:IsUmbrella;type:boolean;not null;default:false"`
+	UmbrellaName string `gorm:"column:UmbrellaName;type:varchar(50);not null;default:''"`
+}
+
+func (DTASpecialListEdit) TableName() string {
+	return "TA_STD_TH.DTASpecialList_Edit"
+}
+
+// DTACryGroupListEdit represents the TA_STD_TH.DTACryGroupList_Edit table
+type DTACryGroupListEdit struct {
+	SysCoID string `gorm:"column:SysCoID;type:varchar(50);not null;default:''"`
+	PrtFundCode string `gorm:"column:PrtFundCode;type:varchar(50);not null;default:''"`
+	IssueCry string `gorm:"column:IssueCry;type:varchar(50);not null;default:''"`
+	FundFaceAmt float64 `gorm:"column:FundFaceAmt;type:numeric(20,6);not null;default:0"`
+	NavDotLen int16 `gorm:"column:NavDotLen;type:smallint;not null;default:0"`
+	IsOthTxCry bool `gorm:"column:IsOthTxCry;type:boolean;not null;default:false"`
+	OthTxCry string `gorm:"column:OthTxCry;type:varchar(50);not null;default:''"`
+	FundQuoAmtBC float64 `gorm:"column:FundQuoAmtBC;type:numeric(20,6);not null;default:0"`
+	UnitConvRate float64 `gorm:"column:UnitConvRate;type:numeric(20,6);not null;default:0"`
+	FundQuoUnit float64 `gorm:"column:FundQuoUnit;type:numeric(20,6);not null;default:0"`
+	IPOSubsFeeDisType string `gorm:"column:IPOSubsFeeDisType;type:varchar(50);not null;default:''"`
+	IPOFixRate float64 `gorm:"column:IPOFixRate;type:numeric(20,6);not null;default:0"`
+	IPODiscRateOff float64 `gorm:"column:IPODiscRateOff;type:numeric(20,6);not null;default:0"`
+	FundMBankBrh string `gorm:"column:FundMBankBrh;type:varchar(50);not null;default:''"`
+	FundMAccount string `gorm:"column:FundMAccount;type:varchar(50);not null;default:''"`
+	CRemitFeeID string `gorm:"column:CRemitFeeID;type:varchar(50);not null;default:''"`
+	CRemitFeeFM float64 `gorm:"column:CRemitFeeFM;type:numeric(20,6);not null;default:0"`
+	CRemitFeeOtherID string `gorm:"column:CRemitFeeOtherID;type:varchar(50);not null;default:''"`
+	CRemitFeeOtherFM float64 `gorm:"column:CRemitFeeOtherFM;type:numeric(20,6);not null;default:0"`
+	IsRSP bool `gorm:"column:IsRSP;type:boolean;not null;default:false"`
+	BeginRspDate time.Time `gorm:"column:BeginRspDate;type:timestamp with time zone;not null;default:'1900-01-01 00:00:00+08'"`
+	RSPMinAmt float64 `gorm:"column:RSPMinAmt;type:numeric(20,6);not null;default:0"`
+	RSPAmtApc float64 `gorm:"column:RSPAmtApc;type:numeric(20,6);not null;default:0"`
+	RSPMaxAmt float64 `gorm:"column:RSPMaxAmt;type:numeric(20,6);not null;default:0"`
+	RSPMinAmtTxC float64 `gorm:"column:RSPMinAmtTxC;type:numeric(20,6);not null;default:0"`
+	RSPAmtApcTxC float64 `gorm:"column:RSPAmtApcTxC;type:numeric(20,6);not null;default:0"`
+	RSPMaxAmtTxC float64 `gorm:"column:RSPMaxAmtTxC;type:numeric(20,6);not null;default:0"`
+	RSPConFailCnt int16 `gorm:"column:RSPConFailCnt;type:smallint;not null;default:0"`
+	RSPFeeRate float64 `gorm:"column:RSPFeeRate;type:numeric(20,6);not null;default:0"`
+	IsRSPChgAmt bool `gorm:"column:IsRSPChgAmt;type:boolean;not null;default:false"`
+	IsRSPShareSet bool `gorm:"column:IsRSPShareSet;type:boolean;not null;default:false"`
+	IsDividend bool `gorm:"column:IsDividend;type:boolean;not null;default:false"`
+	DivType string `gorm:"column:DivType;type:varchar(50);not null;default:''"`
+	DivMinAmt float64 `gorm:"column:DivMinAmt;type:numeric(20,6);not null;default:0"`
+	DivShortfallHandling string `gorm:"column:DivShortfallHandling;type:varchar(50);not null;default:''"`
+	DivCycle string `gorm:"column:DivCycle;type:varchar(50);not null;default:''"`
+	DivPayPlatform string `gorm:"column:DivPayPlatform;type:varchar(50);not null;default:''"`
+	TaxFormat string `gorm:"column:TaxFormat;type:varchar(50);not null;default:''"`
+	LakhSubsAmt float64 `gorm:"column:LakhSubsAmt;type:numeric(20,6);not null;default:0"`
+	LakhRdmAmt float64 `gorm:"column:LakhRdmAmt;type:numeric(20,6);not null;default:0"`
+}
+
+func (DTACryGroupListEdit) TableName() string {
+	return "TA_STD_TH.DTACryGroupList_Edit"
+}
+
+// DTAFundDetailListEdit represents the TA_STD_TH.DTAFundDetailList_Edit table
+type DTAFundDetailListEdit struct {
+	SysCoID string `gorm:"column:SysCoID;type:varchar(50);not null;default:''"`
+	PrtFundCode string `gorm:"column:PrtFundCode;type:varchar(50);not null;default:''"`
+	FundCode string `gorm:"column:FundCode;type:varchar(50);not null;default:''"`
+	FundCry string `gorm:"column:FundCry;type:varchar(50);not null;default:''"`
+	FundInShName string `gorm:"column:FundInShName;type:varchar(50);not null;default:''"`
+	FundShMName string `gorm:"column:FundShMName;type:varchar(50);not null;default:''"`
+	FundShSName string `gorm:"column:FundShSName;type:varchar(50);not null;default:''"`
+	FHFundShare string `gorm:"column:FHFundShare;type:varchar(50);not null;default:''"`
+	ShareFirSaleDate time.Time `gorm:"column:ShareFirSaleDate;type:timestamp with time zone;not null;default:'1900-01-01 00:00:00+08'"`
+	SMARTFundCode string `gorm:"column:SMARTFundCode;type:varchar(50);not null;default:''"`
+	CSDFundCode string `gorm:"column:CSDFundCode;type:varchar(50);not null;default:''"`
+	SITCAFundCode string `gorm:"column:SITCAFundCode;type:varchar(50);not null;default:''"`
+	FAFundCode string `gorm:"column:FAFundCode;type:varchar(50);not null;default:''"`
+	FISFeeCode string `gorm:"column:FISFeeCode;type:varchar(50);not null;default:''"`
+	ISINCode string `gorm:"column:ISINCode;type:varchar(50);not null;default:''"`
+	IsTISA bool `gorm:"column:IsTISA;type:boolean;not null;default:false"`
+	TISAHoldM int16 `gorm:"column:TISAHoldM;type:smallint;not null;default:0"`
+	IsIShare bool `gorm:"column:IsIShare;type:boolean;not null;default:false"`
+	DivCalcType string `gorm:"column:DivCalcType;type:varchar(50);not null;default:''"`
+	SubsFeeType string `gorm:"column:SubsFeeType;type:varchar(50);not null;default:''"`
+	SubsMinAmt float64 `gorm:"column:SubsMinAmt;type:numeric(20,6);not null;default:0"`
+	SubsAmtApc float64 `gorm:"column:SubsAmtApc;type:numeric(20,6);not null;default:0"`
+	SwMinAmt float64 `gorm:"column:SwMinAmt;type:numeric(20,6);not null;default:0"`
+	IsDistributionFee string `gorm:"column:IsDistributionFee;type:varchar(50);not null;default:''"`
+	MatureYear int16 `gorm:"column:MatureYear;type:smallint;not null;default:0"`
+	MatureFund string `gorm:"column:MatureFund;type:varchar(50);not null;default:''"`
+	CSDSubsSetlDate time.Time `gorm:"column:CSDSubsSetlDate;type:timestamp with time zone;not null;default:'1900-01-01 00:00:00+08'"`
+	RdmMinUnitSur float64 `gorm:"column:RdmMinUnitSur;type:numeric(20,6);not null;default:0"`
+	RdmMinUnit float64 `gorm:"column:RdmMinUnit;type:numeric(20,6);not null;default:0"`
+	RdmMinAmt float64 `gorm:"column:RdmMinAmt;type:numeric(20,6);not null;default:0"`
+	CSDRdmSetlDate time.Time `gorm:"column:CSDRdmSetlDate;type:timestamp with time zone;not null;default:'1900-01-01 00:00:00+08'"`
+	IsShareRSP bool `gorm:"column:IsShareRSP;type:boolean;not null;default:false"`
+	RSPMinAmt float64 `gorm:"column:RSPMinAmt;type:numeric(20,6);not null;default:0"`
+	RSPAmtApc float64 `gorm:"column:RSPAmtApc;type:numeric(20,6);not null;default:0"`
+	RSPMaxAmt float64 `gorm:"column:RSPMaxAmt;type:numeric(20,6);not null;default:0"`
+	SubsMinAmtTxC float64 `gorm:"column:SubsMinAmtTxC;type:numeric(20,6);not null;default:0"`
+	SubsAmtApcTxC float64 `gorm:"column:SubsAmtApcTxC;type:numeric(20,6);not null;default:0"`
+	SwMinAmtTxC float64 `gorm:"column:SwMinAmtTxC;type:numeric(20,6);not null;default:0"`
+	RSPMinAmtTxC float64 `gorm:"column:RSPMinAmtTxC;type:numeric(20,6);not null;default:0"`
+	RSPAmtApcTxC float64 `gorm:"column:RSPAmtApcTxC;type:numeric(20,6);not null;default:0"`
+	RSPMaxAmtTxC float64 `gorm:"column:RSPMaxAmtTxC;type:numeric(20,6);not null;default:0"`
+	IsAdditional bool `gorm:"column:IsAdditional;type:boolean;not null;default:false"`
+	IsOld bool `gorm:"column:IsOld;type:boolean;not null;default:false"`
+	ShareMemo string `gorm:"column:ShareMemo;type:varchar(50);not null;default:''"`
+}
+
+func (DTAFundDetailListEdit) TableName() string {
+	return "TA_STD_TH.DTAFundDetailList_Edit"
+}
+
+// DTAFundAccountListEdit represents the TA_STD_TH.DTAFundAccountList_Edit table
+type DTAFundAccountListEdit struct {
+	SysCoID string `gorm:"column:SysCoID;type:varchar(50);not null;default:''"`
+	PrtFundCode string `gorm:"column:PrtFundCode;type:varchar(50);not null;default:''"`
+	FundCode string `gorm:"column:FundCode;type:varchar(50);not null;default:''"`
+	DataSeq int16 `gorm:"column:DataSeq;type:smallint;not null;default:0"`
+	CusBankBrh string `gorm:"column:CusBankBrh;type:varchar(50);not null;default:''"`
+	FundAccount string `gorm:"column:FundAccount;type:varchar(50);not null;default:''"`
+	SRemitVCode string `gorm:"column:SRemitVCode;type:varchar(50);not null;default:''"`
+	AccountUseSet string `gorm:"column:AccountUseSet;type:varchar(50);not null;default:''"`
+	Remark string `gorm:"column:Remark;type:varchar(50);not null;default:''"`
+}
+
+func (DTAFundAccountListEdit) TableName() string {
+	return "TA_STD_TH.DTAFundAccountList_Edit"
+}
+
+// DTAFundRelGroupListEdit represents the TA_STD_TH.DTAFundRelGroupList_Edit table
+type DTAFundRelGroupListEdit struct {
+	SysCoID string `gorm:"column:SysCoID;type:varchar(50);not null;default:''"`
+	PrtFundCode string `gorm:"column:PrtFundCode;type:varchar(50);not null;default:''"`
+	FundCode string `gorm:"column:FundCode;type:varchar(50);not null;default:''"`
+	FundGroupNo string `gorm:"column:FundGroupNo;type:varchar(50);not null;default:''"`
+	GroupTypeNo string `gorm:"column:GroupTypeNo;type:varchar(50);not null;default:''"`
+	SysCoID string `gorm:"column:SysCoID;type:varchar(50);not null;default:''"`
+	PrtFundCode string `gorm:"column:PrtFundCode;type:varchar(50);not null;default:''"`
+	FundCode string `gorm:"column:FundCode;type:varchar(50);not null;default:''"`
+	EffDate time.Time `gorm:"column:EffDate;type:timestamp with time zone;not null;default:'1900-01-01 00:00:00+08'"`
+	AnnManagerRate string `gorm:"column:AnnManagerRate;type:varchar(50);not null;default:''"`
+	AnnCustodyRate string `gorm:"column:AnnCustodyRate;type:varchar(50);not null;default:''"`
+	AnnDistributionRate string `gorm:"column:AnnDistributionRate;type:varchar(50);not null;default:''"`
+	AnnOtherFee string `gorm:"column:AnnOtherFee;type:varchar(50);not null;default:''"`
+}
+
+func (DTAFundRelGroupListEdit) TableName() string {
+	return "TA_STD_TH.DTAFundRelGroupList_Edit"
+}
+
+// DTAFundDisFeeListEdit represents the TA_STD_TH.DTAFundDisFeeList_Edit table
+type DTAFundDisFeeListEdit struct {
+}
+
+func (DTAFundDisFeeListEdit) TableName() string {
+	return "TA_STD_TH.DTAFundDisFeeList_Edit"
+}
+
+// DTAFundTxCryListEdit represents the TA_STD_TH.DTAFundTxCryList_Edit table
+type DTAFundTxCryListEdit struct {
+	SysCoID string `gorm:"column:SysCoID;type:varchar(50);not null;default:''"`
+	PrtFundCode string `gorm:"column:PrtFundCode;type:varchar(50);not null;default:''"`
+	FundCode string `gorm:"column:FundCode;type:varchar(50);not null;default:''"`
+	CryID string `gorm:"column:CryID;type:varchar(50);not null;default:''"`
+	CryDataSrc string `gorm:"column:CryDataSrc;type:varchar(50);not null;default:''"`
+}
+
+func (DTAFundTxCryListEdit) TableName() string {
+	return "TA_STD_TH.DTAFundTxCryList_Edit"
+}
+
+// DTAFundShortInfListEdit represents the TA_STD_TH.DTAFundShortInfList_Edit table
+type DTAFundShortInfListEdit struct {
+	SysCoID string `gorm:"column:SysCoID;type:varchar(50);not null;default:''"`
+	PrtFundCode string `gorm:"column:PrtFundCode;type:varchar(50);not null;default:''"`
+	RdmRangeType string `gorm:"column:RdmRangeType;type:varchar(50);not null;default:''"`
+	ShortDateType string `gorm:"column:ShortDateType;type:varchar(50);not null;default:''"`
+	RdmBaseID string `gorm:"column:RdmBaseID;type:varchar(50);not null;default:''"`
+	SubsBaseID string `gorm:"column:SubsBaseID;type:varchar(50);not null;default:''"`
+	ShortCalcID string `gorm:"column:ShortCalcID;type:varchar(50);not null;default:''"`
+}
+
+func (DTAFundShortInfListEdit) TableName() string {
+	return "TA_STD_TH.DTAFundShortInfList_Edit"
+}
+
+// DTACustContactListEdit represents the TA_STD_TH.DTACustContactList_Edit table
+type DTACustContactListEdit struct {
+	SysCoID string `gorm:"column:SysCoID;type:varchar(50);not null;default:''"`
+	PrtFundCode string `gorm:"column:PrtFundCode;type:varchar(50);not null;default:''"`
+	DataSeq int16 `gorm:"column:DataSeq;type:smallint;not null;default:0"`
+	IsMainContact bool `gorm:"column:IsMainContact;type:boolean;not null;default:false"`
+	ContactMan string `gorm:"column:ContactMan;type:varchar(50);not null;default:''"`
+	ContactTel string `gorm:"column:ContactTel;type:varchar(50);not null;default:''"`
+	Fax1 string `gorm:"column:Fax1;type:varchar(50);not null;default:''"`
+	Fax2 string `gorm:"column:Fax2;type:varchar(50);not null;default:''"`
+	WorkItem string `gorm:"column:WorkItem;type:varchar(50);not null;default:''"`
+}
+
+func (DTACustContactListEdit) TableName() string {
+	return "TA_STD_TH.DTACustContactList_Edit"
+}
+

@@ -2,21 +2,21 @@ services:
   postgres:
     image: postgres:16-alpine
     environment:
-      POSTGRES_DB: taplatform
+      POSTGRES_DB: taplatformw
       POSTGRES_USER: taplatform
       POSTGRES_PASSWORD: taplatform
     ports:
-      - "5432:5432"
+      - "5436:5436"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U taplatform -d taplatform"]
       interval: 5s
       timeout: 3s
       retries: 10
 
-  fnd:
+  sample:
     build:
       context: ../../
-      dockerfile: deploy/docker/Dockerfile.fnd
+      dockerfile: deploy/docker/Dockerfile.sample
     environment:
       - GRPC_ADDR=0.0.0.0:50051
       - DB_DSN=host=postgres user=taplatform password=taplatform dbname=taplatform port=5432 sslmode=disable TimeZone=Asia/Bangkok
@@ -26,6 +26,7 @@ services:
         condition: service_healthy
     ports:
       - "50051:50051"
+      - "8081:8081"
 
   gateway:
     build:
@@ -36,7 +37,8 @@ services:
       - PORT=8080
       - JWT_SECRET=docker-compose-poc-secret
       - JWT_EXPIRY_MINUTES=60
+      - SAMPLE_SERVICE_ADDR=sample:50051
     depends_on:
-      - fnd
+      - sample
     ports:
       - "8080:8080"

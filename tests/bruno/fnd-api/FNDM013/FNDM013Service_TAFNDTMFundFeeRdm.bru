@@ -1,0 +1,15 @@
+meta {
+  name: FNDM013Service_TAFNDTMFundFeeRdm
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}/TAapi/Fund/TAFNDTMFundFeeRdm?SysCoID=&PrtFundCode=&RdmCalcBegDate=
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}

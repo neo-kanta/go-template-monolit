@@ -1,0 +1,40 @@
+User Interface Specification
+目錄
+應用程式介面說明 2
+壹、功能說明 2
+貳、變更說明 2
+叁、傳入傳出參數(Utility) 2
+一、UTY2014001：TAGetDFundAdjust 2
+應用程式介面說明
+壹、功能說明
+取得帳務中心之境內基金相關API。
+貳、變更說明
+[TABLE]
+變更日期	變更人員	變更說明
+2024/07/29	Meg Pan	1．Build
+2024/08/29	Joyce Lin	Modify\n1．UTY2014001：調整Url名稱、傳出參數欄位代碼
+
+叁、傳入傳出參數(Utility)
+一、UTY2014001：TAGetDFundAdjust
+取得帳務調整中的TA基金 Url：{root}/TAapi/Utility/Biz/GetAccData/TAGetDFundAdjust
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+基金代碼\nFundCode	String	O
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+查詢清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+基金代碼\nFundCode	String
+帳務回帳起日\nAccAdjBegDate	DateTime
+帳務回帳迄日\nAccAdjEndDate	DateTime
+
+邏輯說明
+資料來源檔案
+取得帳務調整中的TA基金(TABizUtility.GetAdjustDFund)

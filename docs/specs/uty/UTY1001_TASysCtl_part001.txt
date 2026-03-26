@@ -1,0 +1,220 @@
+User Interface Specification
+目錄
+應用程式介面說明 2
+壹、功能說明 2
+貳、變更說明 2
+叁、傳入傳出參數(Utility) 2
+一、UTY1001001：TASysParam 3
+二、UTY1001002：TASysDefault 3
+三、UTY1001003：DTACDSCDefFee 4
+四、UTY1001004：DTACSDDefDdl(XX) 5
+五、UTY1001005：TAGetSysPath 7
+六、UTY1001006：TAGetAnnualCalGen(XX) 8
+七、UTY1001007：TASysPovCo 9
+八、UTY1001008：TASysAll 10
+應用程式介面說明
+壹、功能說明
+取得系統控制檔相關API
+貳、變更說明
+[TABLE]
+變更日期	變更人員	變更說明
+2023/06/02	Joyce Lin	1．ReBuild
+2024/02/23	Meg Pan	Modify\n1．UTY1001001：配合TA_CTL_System更名為「系統參數值設定檔」\n2．UTY1001002：配合TA_CTL_SysDefault更名為「自訂系統參數值設定檔」
+2024/03/22	Meg Pan	Modify，\n1．新增UTY1001006，由原【GCMMM05301】搬移過來
+2024/07/03	Dechang Chen	Modify，配合多公司別調整\n1．UTY1001001、UTY1001002、UTY1001003、UTY1001005：新增傳入參數「公司代碼」
+2024/10/23	Joyce LIn	Modify\n1．配合CMMM001新增UTY1001007
+2025/02/17	Dechang Chen	Modify\n1．UTY1001007：新增傳入參數「系統提供公司代碼」
+2025/03/18	Dechang Chen	Modify\n1．新增UTY1001008
+2025/05/15	JoyceLin	Modify\n1．刪除UTY1001006改以【GCMMM05302】取代
+
+叁、傳入傳出參數(Utility)
+一、UTY1001001：TASysParam
+取得系統參數資料 Url：{root}/TAapi/BaseUtility/CTL/TASysParam
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	O
+系統代碼\nSysCode	String	V	1．資料用『，』串接
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+系統功能清單\nMaster	List	V
+
+Master
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+系統代碼\nSysCode	String	V
+系統參數值\nSysValue	String	V
+
+邏輯說明
+資料來源檔案
+取得系統參數查詢資料(SysUtility.GetSystem)
+二、UTY1001002：TASysDefault
+取得自訂系統參數資料 Url：{root}/TAapi/BaseUtility/CTL/TASysDefault
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	O
+系統代碼\nSysCode	String	V	1．資料用『，』串接
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+系統預設參數清單\nMaster	List	V
+
+Master
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+系統代碼\nSysCode	String	V
+系統參數值\nSysValue	String	V
+
+邏輯說明
+資料來源檔案
+取得自訂系統參數查詢資料(SysUtility.GetSysDef)
+三、UTY1001003：DTACDSCDefFee
+取得境內遞延手續費預設資料 Url：{root}/TAapi/Utility/CTL/DTACDSCDefFee
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+到期年限\nMatureYear	Tinyint	V
+計算規則\nHoldRule	String	V	1．選項(OPT：TA-000042)
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+遞延手續費預設清單\nMaster	List	V
+
+Master
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+起算日/年(含)\nHoldBegDay	Int	V
+遞延手續費率(%)\nCDSCFeeRate	Decimal	V
+
+邏輯說明
+資料來源檔案
+境內系統遞延手續費預設檔(DTA_CTL_CDSCDefaultFee)
+四、UTY1001004：DTACSDDefDdl(XX)
+取得基金集保清算平台申購買回預設截止時間 Url：{root}/TAapi/Utility/CTL/DTACSDDefDdl
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+基金類型代碼(公會)\nSITCAFundType	String	V
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+集保預設截止時間清單\nMaster	List	V
+
+Master
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+申購交易截止時間\nSubsDeadline	String	V
+買回交易截止時間\nRdmDeadline	String	V
+
+邏輯說明
+資料來源檔案
+取得系統預設值查詢資料(SysUtility.GetTASysDef)
+資料處理說明
+國內貨幣基金公會代碼(@MMFType)：至【取得系統預設值查詢資料(SysUtility.GetTASysDef)】取得「系統代碼」為『000003』的資料
+國內貨幣基金否(@IsMMF)：若《基金類型代碼(公會)》與「國內貨幣基金公會代碼(@MMFType)」相同，則為『Y.是』，反之為『N.否』
+至【取得系統預設值查詢資料(SysUtility.GetTASysDef)】依「貨幣基金否(@IsMMF)」抓取「系統代碼」的資料回傳
+為『Y.是』時
+申購交易截止時間：為『000012』
+買回交易截止時間：為『000013』
+為『N.否』時
+申購交易截止時間：為『000014』
+買回交易截止時間：為『000015』
+For 開發人員
+Ddl：deadline。
+五、UTY1001005：TAGetSysPath
+取得傳、收檔案的預設路徑 Url：{root}/TAapi/BaseUtility/CTL/TAGetSysPath
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+檔案平台\nFilePlatform	String	V	1．選項(OPT：TA-900003)\n2．資料用『，』串接
+檔案種類\nFileStyle	String	O	1．選項(OPT：TA-900004)\n2．資料用『，』串接
+檔案編號\nFileID	String	O	1．資料用『，』串接
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+檔案路徑清單\nMaster	List	V
+
+Master
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+檔案種類\nFileStyle	String	V
+檔案編號\nFileID	String	V
+檔案路徑\nFilePath	String	V
+
+邏輯說明
+資料來源檔案
+取得傳收檔案預設路徑查詢資料(SysUtility.GetSysPath)
+六、UTY1001006：TAGetAnnualCalGen(XX)
+取得年度行事曆是否已產生 Url：{root}/TAapi/BaseUtility/CTL/TAGetAnnualCalGen
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+行事曆年度\nCalYear	String		1．格式：YYYY
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+確認結果清單\nMaster	List	V
+
+Master
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+已產生否\nIsGenerated	String	V	1．選項\nY：是、N：否
+
+邏輯說明
+資料來源檔案
+年度行事曆日期檔(TA_CTL_AnnualDate)
+資料處理說明
+以《行事曆年度》至【年度行事曆日期檔(TA_CTL_AnnualDate)】取得資料。若有資料，為『Y』，反之為『N』
+七、UTY1001007：TASysPovCo
+取得系統提供的公司代碼資料 Url：{root}/TAapi/BaseUtility/CTL/TASysPovCo
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+系統提供公司代碼\nSysPovCoID	String	O
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司清單\nMaster	List	V
+
+Master
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+系統提供公司代碼\nSysPovCoID	String	V	1．傳出時，資料須做系統解密
+
+邏輯說明
+資料來源檔案
+系統所提供公司檔(TA_CTL_SysPovCo)
+八、UTY1001008：TASysAll
+取得系統All選項查詢資料 Url：{root}/TAapi/BaseUtility/CTL/TASysAll
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+All選項Key\nAllKey	String	V	1．資料用『，』串接
+UI使用元件類型\nUIControlType	String	O	1．選項\nSEC：Searcher、OPT：下拉選項\n2．預設為SEC
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+資料清單\nMaster	List	V
+
+Master
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+All選項Key\nAllKey	String	V
+All選項代碼\nAllValue	String	V
+All選項名稱\nAllName	String	V
+
+邏輯說明
+資料來源檔案
+取得All選項查詢資料(SysUtility.GetSysAll)

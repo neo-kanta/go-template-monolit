@@ -1,0 +1,69 @@
+User Interface Specification
+目錄
+應用程式介面說明 2
+APIFNDM011：TAFNDIShareFundFeeRdm 2
+壹、功能說明 2
+貳、變更說明 2
+叁、傳入傳出參數(Function) 2
+一、傳入參數 2
+二、傳出參數 3
+三、邏輯說明 4
+肆、傳入傳出參數(檢核) 5
+伍、傳入傳出參數(Get) 5
+應用程式介面說明
+APIFNDM011：TAFNDIShareFundFeeRdm
+壹、功能說明
+建立法人級別基金買回時應收取費用之名稱及費用的收取方式。
+Url：{root}/TAapi/Fund/TAFNDIShareFundFeeRdm
+貳、變更說明
+[TABLE]
+變更日期	變更人員	變更說明
+2024/03/20	Johnson	1．ReBuild
+2024/07/01	Dechang Chen	Modify，配合多公司別調整\n1．APIFNDM011：新增欄位「公司代碼」
+2024/11/27	Dechang Chen	Modify\n1．APIFNDM011：傳入參數「公司代碼」調整為必填
+2025/02/20	Ann Wu	Modify\n1．新增時固定值移至UI 規格書說明\n2．配合前端頁籤呈現增加公司代碼回傳資訊
+
+叁、傳入傳出參數(Function)
+一、傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+基金代碼\nFundCode	String	O
+費用名稱\nFeeName	String	O	1．選項(OPT：TA-000227)
+買回區間\nRdmRangeType	String		1．選項(OPT：TA-000018)
+買回費計算行事曆類別\nRdmDateType	String		1．選項(OPT：TA-000019)
+買回基準日\nRdmBaseID	String		1．選項(OPT：TA-000020)
+申購基準日\nSubsBaseID	String		1．選項(OPT：TA-000020)
+買回費計算規則\nRdmCalcID	String		1．選項(OPT：TA-000228)
+應計收費用的持有天數(含)\nShouldHoldDays	Smallint
+費率(%)\nFeeRate	Decimal
+
+二、傳出參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+法人級別基金買回費清單\nResultList \ Master	List	V	V
+
+ResultList \ Master
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+公司代碼\nSysCoID	String	V	V
+公司名稱\nSysCoIDNM	String		V	1．公司代碼名稱查詢.公司名稱(SysUtility.GetSysCoNM.SysCoIDNM)
+基金代碼\nFundCode	String	V	V
+基金簡稱\nFundCodeNM	String	V	V	1．境內基金基礎類查詢.基金簡稱(SysUtility.GetDFund.FundCodeNM)
+費用名稱\nFeeName	String	V	V
+買回區間\nRdmRangeType	String		V	1．選項(OPT：TA-000018)
+買回費計算行事曆類別\nRdmDateType	String		V	1．選項(OPT：TA-000019)
+買回基準日\nRdmBaseID	String	V	V
+申購基準日\nSubsBaseID	String	V	V
+買回費計算規則\nRdmCalcID	String	V	V
+應計收費用的持有天數(含)\nShouldHoldDays	Smallint	V	V
+費率(%)\nFeeRate	Decimal	V	V
+
+三、邏輯說明
+資料來源檔案
+更新檔案
+法人級別基金買回費率設定Edit檔(DTA_FND_IShareFundFeeRdm_Edit)
+肆、傳入傳出參數(檢核)
+無。
+伍、傳入傳出參數(Get)
+無。

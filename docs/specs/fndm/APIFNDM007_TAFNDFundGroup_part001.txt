@@ -1,0 +1,96 @@
+User Interface Specification
+目錄
+應用程式介面說明 2
+APIFNDM007：TAFNDCustGroup 2
+壹、功能說明 2
+貳、變更說明 2
+叁、傳入傳出參數(Function) 2
+一、傳入參數 2
+二、傳出參數 3
+三、邏輯說明 4
+肆、傳入傳出參數(檢核) 4
+伍、傳入傳出參數(Get) 5
+一、GFNDM00701：TAGetCustGroup 5
+應用程式介面說明
+APIFNDM007：TAFNDCustGroup
+壹、功能說明
+建立使用者自定義的基金群組資料。
+Url：{root}/TAapi/BaseFund/TAFNDCustGroup
+貳、變更說明
+[TABLE]
+變更日期	變更人員	變更說明
+2023/06/02	Meg Pan	1．ReBuild
+2024/07/01	Dechang Chen	Modify，配合多公司別調整\n1．APIFNDM007：新增欄位「公司代碼」\n2．GFNDM00701：新增傳入參數「公司代碼」
+2024/11/27	Dechang Chen	Modify\n1．APIFNDM007：傳入參數「公司代碼」調整為必填
+2025/02/17	Dechang Chen	Modify\n1．GFNDM00701：調整傳入參數「自訂群組代碼」命名
+2025/02/20	Ann Wu	Modify\n1．配合前端頁籤呈現增加公司代碼回傳資訊
+
+叁、傳入傳出參數(Function)
+一、傳入參數
+[TABLE]
+欄位名稱	資料型態	長度	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	20	V
+自訂基金群組代碼\nCustGrpCode	String	5	O
+自訂基金群組主要名稱\nCustGrpMName	String	200
+自訂基金群組次要名稱\nCustGrpSName	String	200
+基金明細清單\nCustFundGroupList	List
+
+基金明細清單GustFundGroupList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String
+自訂基金群組代碼\nCustGrpCode	String
+母基金代碼\nPrtFundCode	String
+
+二、傳出參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+自訂群組清單\nResultList \ Master	List	V	V
+基金明細清單\nCustFundGroupList	List		V
+
+ResultList \ Master
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+公司代碼\nSysCoID	String	V	V
+公司名稱\nSysCoIDNM	String		V	1．公司代碼名稱查詢.公司名稱(SysUtility.GetSysCoNM.SysCoIDNM)
+自訂基金群組代碼\nCustGrpCode	String	V	V
+自訂基金群組主要名稱\nCustGrpMName	String	V	V
+自訂基金群組次要名稱\nCustGrpSName	String	V	V
+
+基金明細清單CustFundGroupList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+公司代碼\nSysCoID	String		V
+自訂基金群組代碼\nCustGrpCode	String		V
+母基金代碼\nPrtFundCode	String		V
+母基金簡稱\nPrtFundCodeNM	String		V	1．境內母基金簡稱查詢.母基金簡稱(SysUtility.GetDPrtFundNM.PrtFundCodeNM)
+
+三、邏輯說明
+資料來源檔案
+更新檔案
+自訂基金群組Edit檔(TA_FND_CustGroup_Edit)
+自訂基金群組Edit明細檔(TA_FND_CustGroupDtl_Edit)
+肆、傳入傳出參數(檢核)
+無。
+伍、傳入傳出參數(Get)
+一、GFNDM00701：TAGetCustGroup
+取得自訂基金群組代碼(For Searcher) Url：{root}/TAapi/BaseFund/TAFNDCustGroup/GetInfo/TAGetCustGroup
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+自訂基金群組代碼\nCustGrpCode	String	O
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+基金群組清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+基金群組代碼\nCustGrpCode	String
+基金群組名稱\nCustGrpCodeNM	String
+
+資料來源檔案
+取得自訂基金群組查詢資料(SysUtility.GetCustGroup)

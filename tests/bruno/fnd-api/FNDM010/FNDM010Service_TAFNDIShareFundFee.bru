@@ -1,0 +1,15 @@
+meta {
+  name: FNDM010Service_TAFNDIShareFundFee
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}/TAapi/Fund/TAFNDIShareFundFee?SysCoID=&FundCode=
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}

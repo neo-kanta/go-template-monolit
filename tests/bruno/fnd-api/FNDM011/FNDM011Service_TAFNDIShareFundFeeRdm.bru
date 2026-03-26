@@ -1,0 +1,15 @@
+meta {
+  name: FNDM011Service_TAFNDIShareFundFeeRdm
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}/TAapi/Fund/TAFNDIShareFundFeeRdm?SysCoID=&FundCode=&FeeName=&RdmRangeType=&RdmDateType=&RdmBaseID=&SubsBaseID=&RdmCalcID=&ShouldHoldDays=&FeeRate=
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}

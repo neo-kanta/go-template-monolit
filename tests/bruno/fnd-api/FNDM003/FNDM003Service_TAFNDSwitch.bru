@@ -1,0 +1,15 @@
+meta {
+  name: FNDM003Service_TAFNDSwitch
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}/TAapi/Fund/TAFNDSwitch?SysCoID=&PrtFundCode=&IsSwitchIn=
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}

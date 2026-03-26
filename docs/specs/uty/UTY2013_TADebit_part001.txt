@@ -1,0 +1,215 @@
+User Interface Specification
+目錄
+應用程式介面說明 2
+壹、功能說明 2
+貳、變更說明 2
+叁、傳入傳出參數(Utility) 3
+一、UTY2013001：TAGetBankDebitPlat 3
+二、UTY2013002：TACKDebitPlatForCSD 6
+三、UTY2013003：TASealBatchNo 8
+四、UTY2013004：TADebitBatchNo 9
+應用程式介面說明
+壹、功能說明
+取得扣款平台相關資料API。
+貳、變更說明
+[TABLE]
+變更日期	變更人員	變更說明
+2024/06/17	Joyce Lin	1．Build
+2024/07/03	Dechang Chen	Modify，配合多公司別調整\n1．UTY2013001：新增傳入參數「公司代碼」
+2024/09/18	Joyce Lin	Modify\n1．調整「帳號類別」『指定外幣』及『綜合外幣』選項代碼
+2024/09/27	Meg Pan	Modify\n1．UTY2013001：Review調整
+2024/11/27	Dechang Chen	Modify，配合Table調整\n1．UTY2021301、UTY201302：取得「機構扣款平台類別(@OrgDebitPlatType)」條件增加「總機構代碼」
+2024/11/29	Joyce Lin	Modify\n1．UTY2013001、UTY2013002 配合農漁會調整
+2025/02/19	Ann Wu	Modify\n1．調整幣別欄位長度為6
+2025/04/16	Joyce Lin	Modify\n1．UTY2013001：調整變數命名\n2．UTY2013002：新增「機構總行代碼」及相關調整
+2025/04/16	Johnson	Modify\n1．UTY2013002：新增傳入參數「公司代碼」
+2025/11/19	Joyce Lin	Modify\n1．UTY2013001：增加傳出參數「代理扣款機構」、調整變數命名原「代理行扣款平台類別(@AGDebitPlatType)」調整為「扣款平台類別(@DebitPlatType)」
+2025/12/17	Meg Pan	Modify\n1．UTY2013001：調整錯誤代碼{BF0006}的檢核規則
+2025/12/23	Joyce Lin	Modify\n1．UTY2013003：Review調整
+2025/12/23	Meg Pan	Modify，UTY2013001\n1．刪除傳出參數「代理扣款機構」\n2．新增傳入參數「查詢類別」\n3．配合定額收件規則，調整邏輯
+2025/12/30	Joyce Lin	Modify\n1．UTY2013004：改為取得扣款送件批號
+
+叁、傳入傳出參數(Utility)
+一、UTY2013001：TAGetBankDebitPlat
+取得銀行預設投信扣款平台 Url：{root}/TAapi/Utility/TADebitInfo/TAGetBankDebitPlat
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+查詢類別\nQueryType	String	O	1．選項\n1：受益人約定帳號、2：定額約定帳號\n2．預設為1
+銀行代碼\nBankID	String	V
+帳號類別\nAcctType	String	V	1．選項(TA-000066)
+指定外幣幣別\nAcctCry	String	O
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+查詢清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+扣款平台類別\nDebitPlatType	String	1．選項(TA-000167)
+
+邏輯說明
+資料來源檔案
+取得銀行查詢資料(SysUtility.GetBankV)
+機構檔(TA_CMM_Org)
+機構核印扣款設定明細檔(TA_CMM_OrgSealDebig)
+扣款機構基本資料檔(DTA_DEB_DebitPlatform)
+取得資料規則
+《查詢類別》為『1.受益人約定帳號』時
+只抓取「扣款平台類別」為『FIS.FIS』或『PTP.點對點』的資料
+只回傳第一筆資料
+《查詢類別》為『2.定額約定帳號』時
+只抓取「扣款平台類別」為『FIS.FIS』或『ACH.ACH』或『PTP.點對點』的資料
+回傳所有資料，排列順序為『FIS.FIS』『ACH.ACH』『PTP.點對點』
+資料處理說明
+至【取得銀行查詢資料(SysUtility.GetBankV)】取得「資料查詢類別」為『0.總行＋分行』且「銀行代碼」為《銀行代碼》的資料
+機構總行代碼(@OrgCodeHeadID)：若「銀行類型」為『04.農會』或『05.漁會』時，為「銀行總行代碼」，反之為空白
+機構代碼(@OrgCode)：若「銀行類型」為『04.農會』或『05.漁會』時，為「機構代碼」，反之為「銀行總行代碼」
+機構扣款平台清單(@OrgsSealDebitList)：至【機構核印扣款設定明細檔(TA_CMM_OrgSealDebit)】取得資料
+查詢條件
+「機構類別」＝『01.銀行』
+「總機構代碼」＝機構總行代碼(@OrgCodeHeadID)
+「機構代碼」＝機構代碼(@OrgCode)
+「公司代碼」＝《公司代碼》
+「扣款機構類別」＝{『1.投信』或『3.投信＋集保』}
+判斷《查詢類別》
+為『1.受益人約定帳號』
+判斷《帳號類別》
+為『1.台幣』時，判斷《查詢類別》
+為『1.受益人約定帳號』，「扣款平台類別」＝『FIS.FIS』
+為『2.定額約定帳號』，「扣款平台類別」＝{『FIS.FIS』或『ACH.ACH』或『PTP.點對點』}
+為{『3.綜合外幣』或『2.指定外幣』}時，「扣款平台類別」＝{『FIS.FIS』或『PTP.點對點』}
+取得欄位
+機構扣款平台類別(@OrgDebitPlatType)
+若《帳號類別》為{『3.綜合外幣』或『2.指定外幣』}時且機構扣款平台清單(@OrgsSealDebitList)無資料時機構扣款平台類別(@OrgDebitPlatType)非{『FIS.FIS』或『PTP.點對點』}，則回傳結果代碼{BF0006}，不做下列任何處理
+代理行扣款平台清單(@AGDebitList)：以機構扣款平台清單(@OrgsSealDebitList)為主，至【扣款機構基本資料檔(DTA_DEB_DebitPlatform)】取得以下欄位資料回傳
+查詢條件
+若《帳號類別》為『1.台幣』時
+「公司代碼」＝《公司代碼》
+「扣款平台類別」＝『FIS.FIS』
+判斷《查詢類別》
+為『1.受益人約定帳號』，「扣款平台類別」＝『FIS.FIS』
+為『2.定額約定帳號』，「扣款平台類別」＝{『FIS.FIS』或『ACH.ACH』或『PTP.點對點』}
+「平台可扣款幣別類型集合」含『CCY.台幣』
+若《帳號類別》為{『3.綜合外幣』或『2.指定外幣』}時
+「公司代碼」＝《公司代碼》
+「扣款平台類別」＝{『FIS.FIS』或『PTP.點對點』}
+「平台可扣款幣別類型集合」含『FCY.外幣』
+「除外外幣集合」不含《指定外幣幣別》
+取得欄位
+代理行扣款平台類別(@AGDebitPlatType)扣款平台類別(@DebitPlatType)
+傳出條件：若《查詢類別》為『1.受益人約定帳號』時，依下列優先順序，依次取得
+《帳號類別》為{『3.綜合外幣』或『2.指定外幣』}時，若代理行扣款平台類別(@AGDebitPlatType)扣款平台類別(@DebitPlatType)同時有『FIS.FIS』及『PTP.點對點』資料，以『PTP.點對點』為優先
+資料排序說明：若《查詢類別》為『2.定額約定帳號』時
+依『FIS.FIS』『ACH.ACH』『PTP.點對點』排序。
+若無資料，則判斷《帳號類別》
+為『1.台幣』，回傳結果代碼{BF0005}
+為『3.綜合外幣』或『2.指定外幣』回傳結果代碼{BF0007}
+二、UTY2013002：TACKDebitPlatForCSD
+檢核銀行是否為集保平台配合扣款銀行(For 受益人開戶) Url：{root}/TAapi/Utility/TADebitChkData/TACKDebitPlatForCSD
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+銀行代碼\nBankID	String	V
+帳號類別\nAcctType	String	V	1．選項(TA-000066)
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+查詢清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+扣款平台類別\nDebitPlatType	String	1．選項(TA-000167)
+
+邏輯說明
+資料來源檔案
+取得銀行查詢資料(SysUtility.GetBankV)
+機構檔(TA_CMM_Org)
+機構核印扣款設定明細檔(TA_CMM_OrgSealDebit)
+集保款項收付銀行檔(TA_CSD_BKType)
+資料處理說明
+至【取得銀行查詢資料(SysUtility.GetBankV)】取得「資料查詢類別」為『0.總行＋分行』且「銀行代碼」為《銀行代碼》的資料
+銀行總行代碼(@BankHeadID)：為「銀行總行代碼」
+機構代碼(@OrgCode)
+機構總行代碼(@OrgCodeHeadID)：若「銀行類型」為『04.農會』或『05.漁會』時，為「銀行總行代碼」，反之為空白
+機構扣款平台清單(@OrgsSealDebitList)：至【機構核印扣款設定明細檔(TA_CMM_OrgSealDebit)】取得資料
+查詢條件
+「機構類別」＝『01.銀行』
+「總機構代碼」＝機構總行代碼(@OrgCodeHeadID)
+「機構代碼」＝機構代碼(@OrgCode)
+「公司代碼」＝《公司代碼》
+「扣款機構類別」＝{『2.集保』或『3.投信＋集保』}的資料
+取得欄位
+機構扣款平台類別(@OrgDebitPlatType)
+若機構扣款平台類別(@OrgDebitPlatType)為空值，則回傳結果代碼{BF0008}，不做下列任何處理
+若《帳號類別》為{『3.綜合外幣』或『2.指定外幣』}時，以銀行總行代碼(@BankHeadID)至【集保款項收付銀行檔(TA_CSD_BKType)】取得「集保扣款作業別」
+若「集保扣款作業別」為『PTP2.款項收付銀行(台幣)』時，則回傳結果代碼{BF0009}
+三、UTY2013003：TASealBatchNo
+取得境內核印送件批號 Url：{root}/TAapi/Utility/TASealInfo/TASealBatchNo
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+扣款平台類別\nDebitPlatType	String	V	1．選項(TA-000167)
+幣別類型\nCryKind	String	V	1．選項(TA-000148)
+送件批號\nBatchNo	String	O
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+查詢清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+送件批號\nBatchNo	String	1．「系統批號」
+送核日期\nSealDate	Datetime
+
+邏輯說明
+資料來源檔案
+投信扣款帳號核印檔(DTA_MDV_AcctINVSeal)
+資料處理說明
+至【受益人投信核印帳號紀錄檔(DTA_MDV_INVSealRec)】取得資料
+查詢條件
+「公司代碼」＝《公司代碼》
+「扣款平台類別」＝《扣款平台類別》
+「幣別類型」＝《幣別類型》
+{「核印進度」＝『1.核印中』且「系統批號」＜＞空白}或{「調升核印進度」＝『1.核印中』且「調升系統批號」＜＞空白}
+四、UTY2013004：TADebitBatchNo
+取得境內扣款送件批號 Url：{root}/TAapi/Utility/TADebitInfo/TADebitBatchNo
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+扣款平台類別\nDebitPlatType	String	V	1．選項(TA-000167)
+幣別類型\nCryKind	String	V	1．選項(TA-000148)
+送件批號\nBatchNo	String	O
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+查詢清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+送件批號\nBatchNo	String	1．「系統批號」
+實際扣款日期\nActDedDate	Datetime
+
+邏輯說明
+資料來源檔案
+投信扣款資料檔(DTA_DEB_Deduction)
+資料處理說明
+至【投信扣款資料檔(DTA_DEB_Deduction)】取得資料
+查詢條件
+「公司代碼」＝《公司代碼》
+「扣款平台類別」＝《扣款平台類別》
+「幣別類型」＝《幣別類型》
+「扣款進度處理碼」＝『1.扣款中』
+「系統批號」＜＞空白

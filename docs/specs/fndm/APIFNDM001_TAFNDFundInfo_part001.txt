@@ -1,0 +1,348 @@
+User Interface Specification
+目錄
+應用程式介面說明 3
+APIFNDM001：TAFNDFundInfo 3
+壹、功能說明 3
+貳、變更說明 3
+叁、傳入傳出參數(Function) 4
+一、傳入參數 5
+二、傳出參數 23
+三、邏輯說明 45
+肆、傳入傳出參數(檢核) 47
+一、KFNDM00101：TACKCSDPrtFundSetlDate 47
+二、KFNDM00102：TACKFundCalEdit(XX) 48
+三、KFNDM00103：TACKFundCodeExist 48
+伍、傳入傳出參數(Get) 49
+一、GFNDM00101：TAGetDPrtFundIssueCry 49
+二、GFNDM00102：TAGetDFundCry(XX) 51
+三、GFNDM00103：TAGetDFundMatureYear(XX) 52
+四、GFNDM00104：TAGetDTxCry 54
+應用程式介面說明
+APIFNDM001：TAFNDFundInfo
+壹、功能說明
+建立境內基金基本資料
+Url：{root}/TAapi/Fund/TAFNDFundInfo
+貳、變更說明
+[TABLE]
+變更日期	變更人員	變更說明
+2023/06/02	Meg Pan	1．ReBuild
+2024/03/13	Meg Pan	Modify\n1．新增「境內基金經理費設定主、明細檔」\n2．配合UI調整及Table 內容調整\n3．GFNDM00103：FNDM002 更改UI 設計，此支作業廢除\n4．GFNDM00101、GFNDM00104：配合多國語系 Searcher、Option 呈現方式調整
+2024/03/14	Meg Pan	Modify\n1．GFNDM00101：配合FNDM003，增加傳入參數「排除幣別代碼FilterItem」
+2024/04/25	Meg Pan	Modify\n1．配合UI調整，新增「定期定額手續費率(%)」
+2024/06/03	Joyce Lin	Modify\n1．GFNDM00104：配合BFM001增加排除中心幣別處理
+2024/06/12	Meg Pan	Modify\n1．GFNDM00104：配合TXNM031，增加傳入參數「查詢類別」、傳出參數「金額小數」、「雜幣否」
+2024/06/13	Dechang Chen	Modify\n1．APIFNDM001：增加新增放行流程前檢核\n2．KFNDM00102：新增規格
+2024/06/20	Dechang Chen	Modify\n1．KFNDM00102：刪除規格，搬移至KFNDM00502
+2024/07/01	Dechang Chen	Modify，配合多公司別調整\n1．APIFNDM001：新增欄位「公司代碼」\n2．KFNDM00101、GFNDM00101、GFNDM00104：新增傳入參數「公司代碼」
+2024/07/11	Joyce Lin	Modify\n1．KFNDM00103：新增規格，檢核同公司下基金代碼是否已被設定過\n2．KFNDM00101、GFNDM00101、GFNDM00104：傳入參數「公司代碼」改為必填
+2024/08/07	Meg Pan	Modify\n1．集保買回款項生效日期：原CSDRedSetlDate 變更為CSDRdmSetlDate
+2024/08/16	Meg Pan	Modify\n1．原「外幣匯費類型(ExchRemitMidType)」變更為「匯費類型(RemitChargeCD)」
+2024/08/27	Meg Pan	Modify\n1．APIFNDM001：邏輯說明，補上抓取「中心國別」的邏輯\n2．GFNDM00104：配合【取得系統參數查詢資料(SysUtility.GetSystem)】的調整，修改取得「中心幣別」、「外幣結算幣別」的寫法
+2024/08/29	Joyce Lin	Modify\n1．APIFNDM001：傳出參數結構調整，刪除〔境內基金清單DTAFundInfoList〕、〔特殊型基金清單DTASpecialList〕、〔短線交易費率清單DTAFundShortInfList〕
+2024/09/19	Dechang Chen	Modify，配合UI調整\n1．APIFNDM001\n1.1．新增欄位「聯絡電話」\n1.2．移除欄位「電話區域碼」、「電話」、「電話分機」、「傳真電話區域碼一」、「傳真電話區域碼二」\n1.3．調整欄位「傳真電話一」、「傳真電話二」長度
+2024/10/18	Joyce Lin	Modify\n1．APIFNDM001：傳入傳出參數結構調整，新增「反稀釋費用收取否」及「核準日期」〔反稀釋設定清單DTAFundAntiDilList〕
+2024/11/27	Joyce Lin	Modify\n1．APIFNDM001：新增欄位「募集期基金」
+2024/11/27	Dechang Chen	Modify\n1．APIFNDM001：傳入參數「公司代碼」調整為必填
+2024/12/18	Meg Pan	Modify\n1．APIFNDM001：新增欄位「全委基金否」
+2025/02/10	Dechang Chen	Modify\n1．APIFNDM001：補上「到期日期-保本型」〔特殊型基金清單DTASpecialList〕、調整「匯款虛擬帳號代碼」長度〔子基金相關帳號清單〕
+2025/02/13	Dechang Chen	Modify\n1．調整傳入出參數「最低轉申購金額」、「單筆最低轉申購金額－其他交易幣」命名
+2025/02/19	Ann Wu	Modify\n1．調整幣別欄位長度為6\n2．新增時固定值移至UI 規格書說明\n3．配合前端頁籤呈現增加公司代碼回傳資訊
+2025/02/25	Ann Wu	Modify\n1．傳出資料顯示規則調整至UI文件說明
+2025/03/31	Dechang Chen	Modify\n1．GFNDM00101：調整傳入參數「收取手續費類型」命名，原「FeeChargType」改為「FeeChargeType」
+2025/04/10	Dechang Chen	Modify\n1．KFNDM00101：配合【基金基本資料維護作業(FNDM001)】新增「集保款項生效日期」相關檢核\n1.1．新增傳入參數「基金代碼」\n1.2．新增判斷回傳結果訊息代碼
+2025/05/19	Dechang Chen	Modify\n1．GFNDM00104：調整傳入參數「幣別代碼」，改為支援用『，』串接
+2025/06/17	Dechang Chen	Modify，配合UI調整\n1．APIFNDM00101：傳入/出參數新增「限專業投資人交易」
+2025/07/16	Joyce Lin	Modify\n1．APIFNDM00101：資料來源檔案增加說明僅取得境內基金且非ETF基金的資料
+2025/08/06	Ann Wu	Modify\n1．APIFNDM001：子基金清單增加「TISA基金否」欄位
+2025/12/11	Meg Pan	Modify\n1．APIFNDM001\n1.1．傳出參數補à子基金清單增加「TISA基金否」欄位\n1.2．子基金清單增加「TISA基金最低持有期間(月)」、「級別說明事項」欄位\n2．GFNDM00104：增加傳入參數「基金代碼」
+2025/12/22	Joyce Lin	Modify\n1．APIFNDM001：傳入參數及傳出參數增加〔基金發行幣別清單DTACryGroupList〕「低於配息金額處理方式」
+2026/01/26	Meg Pan	Modify，配合前端底層規則\n1．APIFNDM00101：傳出參數增加「可刪除否」；邏輯說明增加相應處理的說明
+
+叁、傳入傳出參數(Function)
+一、傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+母基金代碼\nPrtFundCode	String	O
+基金統編\nUniCode	String	O
+基金內部簡稱\nFundInShName	String
+基金主要名稱\nFundMName	String
+基金主要簡稱\nFundShMName	String
+基金次要名稱\nFundSName	String
+cFundShSName	String
+基金風險屬性FundRiskLevel	String		1．選項(OPT：TA-000003)
+發行基準貨幣代碼IssueBaseCry	String
+成立日期\nFundSetupDate	Datetime
+GIIN CODE\nGIINNo	String
+基金狀態\nFundStatus	String		1．選項(OPT：TA-000007)
+基金警語\nFundWarningMsg	String
+單位數小數位數UnitDotLen	Int
+基金申購方式\nFundSubsWay	String		1．選項(OPT：TA-000011)
+基金買回方式\nFundRdmWay	String		1．選項(OPT：TA-000012)
+買回預估NAV 基準日\nRdmFNavDay	Int
+買回預估NAV折扣方式\nRdmFNavWay	String		1．選項(OPT：TA-000013)
+買回預估NAV折扣率\nRdmFNavDRate	Decimal
+買回預估NAV折扣值\nRdmFNavDVal	Decimal
+短線交易費收取否\nIsShortFee	String		1．選項(OPT：TA-000017)
+反稀釋費用收取否\nIsAntiDilFee	String		1．選項(OPT：TA-000017)
+ETF基金否\nIsETF	Bool
+ETF代碼\nETFCode	String
+全委基金否\nIsDIM	Bool
+境內外基金識別碼\nShoreID	String		1．選項(OPT：TA-000001)
+基金公司代碼\nOFDFHCode	String
+境內基金資訊清單\nDTAFundInfoList	List
+保管銀行聯絡人清單\nDTACustContactList	List
+特殊型基金清單\nDTASpecialList	List
+基金發行幣別清單DTACryGroupList	List
+子基金清單DTAFundDetailList	List
+子基金相關帳號清單DTAFundAccountList	List
+子基金相關群組清單DTAFundRelGroupList	List
+子基金確認單揭露費用清單DTAFundDisFeeList	List
+子基金可交易幣別清單DTAFundTxCryList	List
+短線交易費率清單DTAFundShortInfList	List
+短線交易費率明細清單\nDTAShortDtlList	List
+反稀釋設定清單DTAFundAntiDilList	List
+經理費率清單\nDTAFundMGTFeeList	List
+經理費率明細清單\nDTAMGTFeeDtlList	List
+
+境內基金資訊清單DTAFundInfoList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String
+母基金代碼\nPrtFundCode	String
+公會基金類型代碼\nSITCAFundType	String		1．選項(TCCode：001)
+基金型態\nDFundType	String		1．選項(OPT：TA-000004)
+基金投資地區\nDInvArea	String		1．選項(OPT：TA-000005)
+募集型態\nOfferType	String		1．選項(OPT：TA-000006)
+基準貨幣發行上限金額\nBCFundQuoUpAmt	Decimal
+基準貨幣發行下限金額\nBCFundQuoMinAmt	Decimal
+額度控管比率(%)\nFundQuoLmtRate	Decimal
+基金交易警示金額\nTradeWarningAmt	Decimal
+外幣發行額度控管方式\nExchUnitLmt	String		1．選項(OPT：TA-000034)
+法幣總額淨發行單位數上限\nFMNetQuoUpUnit	Decimal
+外幣總額淨發行單位數上限\nExchNetQuoUpUnit	Decimal
+首次募集日期\nFundIPODate	Datetime
+開放買回日期\nBegRdmDate	Datetime
+基金發行方式\nFundIssueType	String		1．選項(OPT：TA-000002)
+受益憑證發行日期\nFundIssueDate	Datetime
+轉換無實體上線日期\nCSDOnlineDate	Datetime
+集保平台款項生效日期\nCSDPrtFundSetlDate	Datetime
+核準日期\nApprovelDate	Datetime
+清算／合併日期\nClearDate	Datetime
+最後申購日期\nLastSubsDate	Datetime
+最後買回日期\nLastRdmDate	Datetime
+基金營業日定義\nBIZDayDef	String		1．選項(OPT：TA-000043)
+申購行事曆識別碼\nSubsDateType	String		1．選項(OPT：TA-000035)
+買回行事曆識別碼\nRdmDateType	String		1．選項(OPT：TA-000036)
+付款行事曆識別碼\nRdmPayDateType	String		1．選項(OPT：TA-000037)
+申購NAV基準日\nSubsNavDay	Int
+買回NAV基準日\nRdmNavDay	Int
+買回付款基準日\nRdmPayDay	Int
+保管銀行代碼\nCustBankHeadID	String
+基金專戶主要名稱\nFundAccMName	String
+基金專戶次要名稱\nFundAccSName	String
+提票日(非保銀他行)\nCheckDiffDay	Int
+兌現日(非保銀他行)\nCashDiffDay	Int
+FA申購放帳日\nFASubsInDay	Int
+FA買回放帳日\nFARdmOutDay	Int
+FA申購交割日\nFASubsSetlDay	Int
+FA買回交割日\nFARdmSetlDay	Int
+前收型手續費率群組\nSubsFeeGroup	String		1．選項(TCCode：021)
+遞延型手續費率群組\nCDSCFeeGroup	String		1．選項(TCCode：021)
+收益分配日期基金群組\nDivFundGroup	String		1．選項(TCCode：030)
+集保平台申購截止時間\nCSDSubsDeadline	String
+集保平台買回截止時間\nCSDRdmDeadline	String
+短線交易開始日期\nBeginShortDate	Datetime
+短線交易買回計算方式\nShortCalcMemo	String
+其他短線交易規定\nShortTxMemo	String
+短線交易備註\nShortMemo	String
+匯費類型\nRemitChargeCD	String		1．選項(OPT：TA-000023)
+募集期基金否\nIsIPO	Bool
+
+保管銀行聯絡人清單DTACustContactList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String
+母基金代碼\nPrtFundCode	String
+資料序號\nDataSeq	Int
+主要聯絡窗口否\nIsMainContact	Bool
+聯絡人\nContactMan	String
+聯絡電話\nContactTel	String
+傳真電話一\nFax1	String
+傳真電話二\nFax2	String
+工作項目\nWorkItem	String
+
+特殊型基金清單DTASpecialList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String
+母基金代碼\nPrtFundCode	String
+非投資等級基金否\nIsHighRisk	Bool
+保本型基金否\nIsPGF	Bool
+存續期間-保本型\nPGFStay	String		1．選項(OPT：TA-000009)
+到期年限-保本型\nPGFMatureYear	Int
+停止申購交易基準日-保本型\nPGFStopSubsDay	Int
+到期日期-保本型\nPGFExpiryDate	Datetime
+收取買回費否-保本型\nIsPGFRdmFee	Bool
+到期型基金否\nIsTMF	Bool
+到期方式-到期型\nTMFKind	String
+停止申購交易基準日-到期型\nTMFStopSubsDay	Int
+目標日期-到期型\nTMFTargetDate	Datetime
+到期／存續年限-到期型\nTMFStay	Int
+到期日期-到期型\nTMFExpiryDate	Datetime
+鎖利報酬計價幣別-到期型\nTMFRetunrBC	String
+鎖利報酬啟動依據\nTMFReturnStarr	String		1．選項(OPT：TA-000224)
+收取買回費否-到期型\nIsTMFRdmFee	Bool
+純外幣計價基金否\nIsPFF	Bool
+私募人數上限\nPvtFundLimit	Int
+收取績效費否\nIsPerformanceFee	Bool
+傘型架構否\nIsUmbrella	Bool
+傘型名稱\nUmbrellaName	String
+基金其他說明事項FundMemo	String
+
+基金發行幣別清單DTACryGroupList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註	備註
+公司代碼\nSysCoID	String
+母基金代碼\nPrtFundCode	String
+發行幣別代碼\nIssueCry	String
+單位面額\nFundFaceAmt	Decimal
+NAV小數位數\nNavDotLen	Int
+可交易其他交易幣\nIsOthTxCry	Bool
+其他交易幣別\nOthTxCry	String
+基準貨幣發行總面額\nFundQuoAmtBC	Decimal
+額度控管換算比率(%)\nUnitConvRate	Decimal
+淨發行單位數上限(額控)\nFundQuoUnit	Decimal
+募集手續費優惠方式\nIPOSubsFeeDisType	String		1．選項(OPT：TA-000047)
+募集固定費率(%)\nIPOFixRate	Decimal
+募集牌告折數(%)\nIPODiscRateOff	Decimal
+基金主專戶分行\nFundMBankBrh	String
+基金主專戶帳號\nFundMAccount	String
+公司代墊外幣匯費自行支付方式\nCRemitFeeID	String		1．選項(OPT：TA-000029)
+公司代墊外幣匯費自行－固定法幣金額\nCRemitFeeFM	Decimal
+公司代墊外幣匯費他行支付方式\nCRemitFeeOtherID	String		1．選項(OPT：TA-000030)
+公司代墊外幣匯費他行－固定法幣金額\nCRemitFeeOtherFM	Decimal
+基金開放RSP否\nIsRSP	Bool		1．選項(OPT：TA-000040)
+RSP開始扣款日期\nBeginRspDate	Datetime
+RSP最低扣款金額\nRSPMinAmt	Decimal
+RSP扣款累進金額\nRSPAmtApc	Decimal
+RSP最高扣款金額\nRSPMaxAmt	Decimal
+RSP最低扣款金額－其他交易幣\nRSPMinAmtTxC	Decimal
+RSP最低扣款累進金額－其他交易幣\nRSPAmtApcTxC	Decimal
+RSP最高扣款金額－其他交易幣\nRSPMaxAmtTxC	Decimal
+RSP連續扣款失敗終止次數\nRSPConFailCnt	Int
+定期定額手續費率(%)\nRSPFeeRate	Decimal
+RSP異動不可調升金額否\nIsRSPChgAmt	Bool
+RSP依級別調整設定否\nIsRSPShareSet	Bool
+基金開放配息否\nIsDividend	Bool		1．選項(OPT：TA-000040)
+收益分配方式\nDivType	String		1．選項(OPT：TA-000031)
+最小配現金額\nDivMinAmt	Decimal
+低於配現金額處理方式\nDivShortfallHandling	String		1．選項(OPT：TA-000200)
+配息頻率\nDivCycle	String		1．選項(OPT：TA-000032)
+配息付款平台\nDivPayPlatform	String		1．選項(OPT：TA-000033)
+國稅局預設申報所得格式\nTaxFormat	String
+大額申購金額\nLakhSubsAmt	Decimal
+大額買回金額\nLakhRdmAmt	Decimal
+
+子基金清單DTAFundDetailList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String
+母基金代碼\nPrtFundCode	String
+基金代碼\nFundCode	String
+計價幣別\nFundCry	String
+基金內部簡稱\nFundInShName	String
+基金主要簡稱\nFundShMName	String
+基金次要簡稱\nFundShSName	String
+公司基金級別代碼\nFHFundShare	String		1．選項(TCCode：031)
+級別首次銷售日期\nShareFirSaleDate	Datetime
+受益憑證代碼\nSMARTFundCode	String
+集保平台下單基金代碼\nCSDFundCode	String
+公會申報基金代碼\nSITCAFundCode	String
+FA公會基金代碼\nFAFundCode	String
+財金平台費用代碼\nFISFeeCode	String
+ISIN代碼\nISINCode	String
+TISA基金否\nIsTISA	Bool
+TISA基金最低持有期間(月)\nTISAHoldM	Int			For TISA基金	For TISA基金
+法人級別否\nIsIShare	Bool
+限專業投資人交易否IsPITrd	Bool
+計息種類\nDivCalcType	String		1．選項(OPT：TA-000024)
+申購手續費收取方式\nSubsFeeType	String		1．選項(OPT：TA-000025)
+單筆最低申購金額\nSubsMinAmt	Decimal
+單筆申購累進金額\nSubsAmtApc	Decimal
+最低轉申購金額\nSwMinAmt	Decimal
+收取分銷費否\nIsDistributionFee	String		1．選項(OPT：TA-000026)
+到期年限\nMatureYear	Int
+到期後轉入基金代碼\nMatureFund	String
+集保申購款項生效日期\nCSDSubsSetlDate	Datetime
+最低剩餘單位數\nRdmMinUnitSur	Decimal
+最低買回單位數\nRdmMinUnit	Decimal
+最低買回金額\nRdmMinAmt	Decimal
+集保買回款項生效日期\nCSDRdmSetlDate	Datetime
+基金級別不開放RSP否\nIsShareRSP	Bool
+RSP最低扣款金額\nRSPMinAmt	Decimal
+RSP扣款累進金額\nRSPAmtApc	Decimal
+RSP最高扣款金額\nRSPMaxAmt	Decimal
+單筆最低申購金額－其他交易幣\nSubsMinAmtTxC	Decimal
+單筆申購累進金額－其他交易幣\nSubsAmtApcTxC	Decimal
+單筆最低轉申購金額－其他交易幣\nSwMinAmtTxC	Decimal
+RSP最低扣款金額－其他交易幣\nRSPMinAmtTxC	Decimal
+RSP扣款累進金額－其他交易幣\nRSPAmtApcTxC	Decimal
+RSP最高扣款金額－其他交易幣\nRSPMaxAmtTxC	Decimal
+加發基金否\nIsAdditional	Bool
+舊資料否\nIsOld	Bool
+級別說明事項\nShareMemo	String			For TISA基金	For TISA基金
+
+子基金相關帳號清單DTAFundAccountList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String
+母基金代碼\nPrtFundCode	String
+基金代碼\nFundCode	String
+資料序號\nDataSeq	Int
+基金專戶分行\nCusBankBrh	String
+基金專戶帳號\nFundAccount	String
+匯款虛擬帳號代碼\nSRemitVCode	String
+帳號用途集合\nAccountUseSet	String		1．選項(OPT：TA-000028)\n2．資料用『，』串接
+備註\nRemark	String
+
+子基金相關群組清單DTAFundRelGroupList
+[TABLE]
+欄位名稱	資料型態	長度	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	20
+母基金代碼\nPrtFundCode	String	10
+基金代碼\nFundCode	String	10
+群組分類代碼\nFundGroupNo	String	6		1．選項(OPT：CustomUse=F1)
+分類代碼\nGroupTypeNo	String	5		1．當「群組分類代碼」值為『通路服務費』時，選項(TCCode：022)\n2．當「群組分類代碼」值為『基金停利』時，選項(TCCode：033)
+
+子基金確認單揭露費用資訊DTAFundDisFeeList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	欄位說明	備註
+公司代碼\nSysCoID	String
+母基金代碼\nPrtFundCode	String
+基金代碼\nFundCode	String
+生效日期\nEffDate	Datetime
+公告經理費率\nAnnManagerRate	String
+公告保管費率\nAnnCustodyRate	String
+公告分銷費率\nAnnDistributionRate	String
+公告其他費用\nAnnOtherFee	String
+
+子基金可交易幣別清單DTAFundTxCryList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註	備註
+公司代碼\nSysCoID	String		Ss	Ss
+母基金代碼\nPrtFundCode	String
+基金代碼\nFundCode	String
+幣別代碼\nCryID	String
+幣別資料來源\nCryDataSrc	String
+
+短線交易費率清單DTAFundShortInfList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註	備註
+公司代碼\nSysCoID	String
+母基金代碼\nPrtFundCode	String
+買回區間\nRdmRangeType	String		1．選項(OPT：TA-000018)	1．選項(OPT：TA-000018)
+短線計算行事曆類別\nShortDateType	String		1．選項(OPT：TA-000019)	1．選項(OPT：TA-000019)
+買回基準日\nRdmBaseID	String		1．選項(OPT：TA-000020)	1．選項(OPT：TA-000020)
+申購基準日\nSubsBaseID	String		1．選項(OPT：TA-000020)	1．選項(OPT：TA-000020)
+短線計算規則\nShortCalcID	String		

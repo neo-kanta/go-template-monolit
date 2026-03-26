@@ -1,0 +1,39 @@
+User Interface Specification
+目錄
+壹、功能說明 2
+貳、變更說明 2
+叁、傳入傳出參數(Utility) 2
+一、UTY2003001：TAGetAsstLimit 2
+壹、功能說明
+取得使用者部門機構權限相關API
+貳、變更說明
+[TABLE]
+變更日期	變更人員	變更說明
+2021/12/28	Esther Lin	1．Build
+
+
+叁、傳入傳出參數(Utility)
+一、UTY2003001：TAGetAsstLimit
+取得使用者部門機構權限 Url：{root}/TAapi/Utility/Biz/TAGetAsstLimit
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+使用者代碼\nUserID	String	V
+機構類別\nOrgType	String	V	1．選項(OPT：TA-000053)
+機構代碼\nOrgCode	String	O
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+機構權限清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+機構代碼\nOrgCode	String
+機構簡稱\nOrgNM	String
+
+邏輯說明
+資料來源檔案
+使用者部門機構權限檢視檔(UserDeptAsstLimitV)
+機構檢視檔(OrgV)

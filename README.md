@@ -1,119 +1,78 @@
-# Go Transfer Agent Platform 🏦
+# Go Clean Architecture Template
 
-A Go monorepo for a **Transfer Agent** platform built with Clean Architecture, Gin API Gateway, gRPC services, and PostgreSQL.
+A starter repository for building robust Go microservices following Clean Architecture principles. It provides a modular, extensible monorepo foundation with an API gateway, gRPC backend services, and a structured set of shared common libraries.
 
-## Current Status
+## 🏗️ Architecture Overview
 
-| Component | Status | Description |
-|---|---|---|
-| **API Gateway** | ✅ Working | Gin + Swagger UI + JWT auth |
-| **FND Service** | ✅ Health only | gRPC health check endpoint |
-| **Common Platform** | ✅ Scaffolded | Shared config, logger |
+The workspace is organized into discrete components:
 
-## Quick Start
+- **`api-gateway/`**: An HTTP gateway built on [Gin](https://gin-gonic.com/). It serves as the primary entry point for external clients, proxies REST requests to the underlying gRPC services, and provides a Swagger UI for API documentation.
+- **`services/`**: The directory dedicated to backend gRPC microservices.
+  - **`_template/`**: A canonical and strictly typed empty service scaffold. Use this blueprint to create new domain services to ensure architecture consistency in the repository.
+  - **`sample/`**: A runnable baseline template service that demonstrates a complete implementation of the architectural pattern.
+- **`common/`**: Shared resources strictly accessible across all components and services.
+  - **`proto/`**: Protobuf definitions mapping the contract between gateways and microservices.
+  - **`gen/`**: Auto-generated gRPC Go bindings based on the `.proto` files.
+  - **`platform/`**: Standalone shared libraries containing utilities like logging, configuration loaders, connection poolers, and middleware.
+- **`deploy/`**: Deployment configurations including local staging with Docker Compose (`deploy/compose/docker-compose.yml`).
+- **`scripts/`**: Automation scripts to accelerate local development scenarios (e.g. `gen_proto.ps1`, `gen_swagger.ps1`).
+
+## 🚀 Getting Started
 
 ### Prerequisites
 
-- **Go 1.25+**
-- **Docker + Docker Compose** (for containerized runs)
-- **swag CLI** — `go install github.com/swaggo/swag/cmd/swag@latest`
+- Go 1.25+
+- [Buf](https://buf.build/docs/installation) CLI (for clean protobuf generation)
+- Docker & Docker Compose (optional, for running with containers)
 
-### Run API Gateway (local)
+### Running Locally
 
-```powershell
-# Generate Swagger docs
-swag init -g ./api-gateway/cmd/gateway/main.go -o ./api-gateway/docs
+1. **Generate Protobuf and Swagger Code:**
+   Ensure your generated gRPC files and Swagger API documentations are up to date:
+   ```powershell
+   .\scripts\gen_proto.ps1
+   .\scripts\gen_swagger.ps1
+   ```
 
-# Start gateway
-go run ./api-gateway/cmd/gateway/main.go
-```
+2. **Run Services Manually:**
+   Launch the API Gateway and arbitrary downstream services natively:
+   ```bash
+   # Terminal 1: Run the HTTP API Gateway
+   go run api-gateway/cmd/gateway/main.go
 
-Open **http://localhost:8080/swagger/index.html**
+   # Terminal 2: Run the Template/Sample service
+   go run services/sample/cmd/sample/main.go
+   ```
 
-### Run FND Service (local)
+3. **Run using Docker Compose:**
+   Alternatively, run the entire ecosystem implicitly via docker setup:
+   ```bash
+   cd deploy/compose
+   docker-compose up --build -d
+   ```
 
-```powershell
-go run ./services/FND/cmd/fnd/main.go
-```
+## 🛠 How to Create a New Service
 
-Listens on `0.0.0.0:50051` (gRPC).
+Creating a new robust microservice in this monorepo demands only a few explicit steps:
 
-### Test FND Service (gRPC)
+1. **Scaffold the Service:** Look at `services/_template`, safely copy the directory, and rename it to your service context (e.g., `services/my_service`).
+2. **Define the API Contract:** Develop a brand new `.proto` file in `common/proto/my_service/v1/`.
+3. **Generate gRPC Bindings:** Run `buf generate` or execute the script `.\scripts\gen_proto.ps1` to re-generate the underlying Go definitions into `common/gen/`.
+4. **Implement the Clean Layers:** Fill out your business logic within the boundaries inside `services/my_service/internal`:
+   - **Domain:** Pure business rules and enterprise entities.
+   - **Usecase:** Application-specific workflows connecting to repositories.
+   - **Adapter/Delivery:** External bindings representing the database, cache, or external SDKs.
+5. **Route in the Gateway:** Inject your new GRPC connections inside `api-gateway` logic to securely proxy HTTP requests.
 
-**Option 1: Use the helper script** (No extra tools needed)
+## 📚 Tech Stack
 
-```powershell
-go run ./scripts/test_grpc_health.go
-```
+- **Target Language:** Go (1.25+)
+- **Web Framework:** [Gin](https://gin-gonic.com/)
+- **RPC Framework:** [gRPC](https://grpc.io/)
+- **Protocol Buffers Management:** [Buf](https://buf.build/)
+- **ORM Configuration:** [GORM](https://gorm.io/)
+- **API Documentation:** [Swagger (Swaggo)](https://github.com/swaggo/swag) (alongside [grpc-gateway](https://grpc-ecosystem.github.io/grpc-gateway/))
 
-**Option 2: Use grpcurl**
+## 📄 License
 
-```powershell
-# Install
-go install github.com/fullstorydev/grpcurl/cmd/grpcurl@latest
-
-# Test
-grpcurl -plaintext localhost:50051 list
-grpcurl -plaintext localhost:50051 grpc.health.v1.Health/Check
-```
-
-### Run via Docker Compose
-
-```powershell
-docker compose -f deploy/compose/docker-compose.yml up --build
-```
-
-## Project Layout
-
-```
-go-transfer-agent/
-├── api-gateway/          # Gin HTTP gateway (REST + Swagger + JWT)
-├── services/
-│   ├── FND/              # Fund service (gRPC) — MVP target
-│   └── _template/        # Copy-paste scaffold for new services
-├── common/
-│   ├── proto/            # Protobuf contracts
-│   ├── gen/              # Generated Go code (protoc)
-│   └── platform/         # Shared wiring (config, logger, db, grpc)
-├── deploy/
-│   ├── docker/           # Dockerfiles
-│   └── compose/          # Docker Compose
-├── docs/                 # Architecture docs
-└── scripts/              # Dev scripts (swagger gen, proto gen, tests)
-```
-
-## Architecture
-
-**Clean Architecture + Hexagonal (Ports & Adapters)**
-
-- **Edge:** API Gateway — auth, validation, Swagger, request routing
-- **Core:** gRPC services — business logic, domain rules
-- **Infra:** GORM/Postgres persistence, messaging (future)
-
-See [docs/architecture.md](docs/architecture.md) for the full system diagram.
-
-## Test Users (POC)
-
-| Username | Password | Role |
-|---|---|---|
-| `admin` | `admin123` | admin |
-| `user` | `user123` | user |
-
-## Environment Variables
-
-### API Gateway
-
-| Variable | Default | Description |
-|---|---|---|
-| `PORT` | `8080` | HTTP listen port |
-| `JWT_SECRET` | `super-secret-poc-key-change-me` | HMAC HS256 secret |
-| `JWT_EXPIRY_MINUTES` | `60` | Token TTL |
-| `GIN_MODE` | `debug` | `release` for production |
-
-### FND Service
-
-| Variable | Default | Description |
-|---|---|---|
-| `GRPC_ADDR` | `0.0.0.0:50051` | gRPC listen address |
-| `DB_DSN` | _(empty)_ | PostgreSQL connection string |
-| `LOG_LEVEL` | `info` | `debug` / `info` / `warn` / `error` |
+Review the `LICENSE` file for broad distribution details.

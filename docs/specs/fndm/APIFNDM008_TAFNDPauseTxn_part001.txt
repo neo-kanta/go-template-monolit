@@ -1,0 +1,119 @@
+User Interface Specification
+目錄
+應用程式介面說明 2
+APIFNDM008：TAFNDPauseTxn 2
+壹、功能說明 2
+貳、變更說明 2
+叁、傳入傳出參數(Function) 2
+一、傳入參數 2
+二、傳出參數 4
+三、邏輯說明 5
+肆、傳入傳出參數(檢核) 6
+一、KFNDM00801：TACKPTxnBegDate 6
+伍、傳入傳出參數(Get) 7
+應用程式介面說明
+APIFNDM008：TAFNDPauseTxn
+壹、功能說明
+建立基金暫停交易相關資料。
+Url：{root}/BaseFund/TAFNDPauseTxn
+貳、變更說明
+[TABLE]
+變更日期	變更人員	變更說明
+2024/03/18	Meg Pan	1．ReBuild
+2024/07/01	Dechang Chen	Modify，配合多公司別調整\n1．APIFNDM008：新增欄位「公司代碼」\n2．KFNDM00801：新增傳入參數「公司代碼」
+2024/11/27	Dechang Chen	Modify\n1．APIFNDM008：傳入參數「公司代碼」調整為必填
+2025/01/07	Meg Pan	Modify\n1．APIFNDM008：「幣別名稱」改由【幣別查詢.幣別名稱(SysUtility.GetCry.CryIDNM)】取得
+2025/02/19	Ann Wu	Modify\n1．調整幣別欄位長度為6\n2．配合前端頁籤呈現增加公司代碼回傳資訊
+2025/03/24	Dechang Chen	Modify\n1．APIFNDM008：傳入參數「幣別明細清單」統一名稱為『PauseTxnCryList』
+
+叁、傳入傳出參數(Function)
+一、傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+母基金代碼\nPrtFundCode	String	O
+暫停起始日期\nPTxnBegDate	DateTime
+暫停終止日期\nPTxnEndDate	DateTime
+備註\nRemark	String
+幣別明細清單\nPauseTxnCryList	List
+交易別明細清單\nPauseTxnTypeList	List
+
+幣別明細清單PauseTxnCryList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String
+母基金代碼\nPrtFundCode	String
+暫停起始日期\nPTxnBegDate	DateTime
+幣別代碼\nCryID	String
+
+交易別明細清單PauseTxnTypeList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String
+母基金代碼\nPrtFundCode	String
+暫停起始日期\nPTxnBegDate	DateTime
+暫停交易類別\nPauseTxnType	String		1．選項(OPT：TA-000098)
+
+二、傳出參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+基金暫停交易清單\nResultList \ Master	List	V	V
+幣別明細清單\nPauseTxnCryList	List
+交易別明細清單\nPauseTxnTypeList	List
+
+ResultList \ Master
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+公司代碼\nSysCoID	String	V	V
+公司名稱\nSysCoIDNM	String		V	1．公司代碼名稱查詢.公司名稱(SysUtility.GetSysCoNM.SysCoIDNM)
+母基金代碼\nPrtFundCode	String	V	V
+母基金簡稱\nPrtFundCodeNM	String	V	V	1．境內母基金簡稱查詢.母基金簡稱(SysUtility.GetDPrtFundNM.PrtFundCodeNM)
+暫停起始日期\nPTxnBegDate	DateTime	V	V
+暫停終止日期\nPTxnEndDate	DateTime	V	V
+備註\nRemark	String		V
+
+幣別明細清單PauseTxnCryList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+公司代碼\nSysCoID	String		V
+母基金代碼\nPrtFundCode	String		V
+暫停起始日期\nPTxnBegDate	DateTime		V
+幣別代碼\nCryID	String		V
+幣別名稱\nCryIDNM	String		V	1．幣別查詢.幣別名稱(SysUtility.GetCry.CryIDNM)
+
+交易別明細清單PauseTxnTypeList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+公司代碼\nSysCoID	String		V
+母基金代碼\nPrtFundCode	String		V
+暫停起始日期\nPTxnBegDate	DateTime		V
+暫停交易類別\nPauseTxnType	String		V	1．選項(OPT：TA-000098)
+
+三、邏輯說明
+資料來源檔案
+更新檔案
+基金暫停交易設定Edit檔(DTA_FND_PauseTxn_Edit)
+基金暫停交易幣別Edit檔(DTA_FND_PauseTxnCry_Edit)
+基金暫停交易設定Edit明細檔(DTA_FND_PauseTxnDtl_Edit)
+肆、傳入傳出參數(檢核)
+一、KFNDM00801：TACKPTxnBegDate
+依暫停交易類別檢核暫停起始日期的合法性 Url：{root}/BaseFund/TAFNDFundInfo/ChkData/TACKPTxnBegDate
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+母基金代碼\nPrtFundCode	String	V
+暫停起始日期\nPTxnBegDate	DateTime	V
+暫停交易集合\nPauseTxnSet	String[]	O	1．選項(OPT：TA-000098)
+
+邏輯說明
+資料來源檔案
+取得境內母基金查詢資料(SysUtility.GetDPrtFund)
+以《公司代碼》及《母基金代碼》至【取得境內母基金查詢資料(SysUtility.GetDPrtFund)】取得成立日期(@FundSetupDate)、開放買回日期(@BegRdmDate)
+申購交易類(@TxnSubs)：若《暫停交易集合》有『1.單筆申購交易』或『3.轉入申購交易』或『5.定期定額扣款』或『ALL』的資料，為『True』，反之為『False 』
+買回交易類(@TxnRdm)：若《暫停交易集合》有『2.買回(含轉換出)交易』或『ALL』的資料，為『True』，反之為『False』
+若申購交易類(@TxnSubs)或買回交易類(@TxnRdm)任一為『Y』時，以下述規則檢核資料
+若申購交易類(@TxnRdm)為『True 』且《暫停起始日期》＜成立日期(@FundSetupDate)，則回傳結果代碼{FNDM008001}
+若買回交易類(@TxnRdm)為『True 』且《暫停起始日期》＜開放買回日期(@BegRdmDate)，則回傳結果代碼{FNDM008002}
+伍、傳入傳出參數(Get)
+無。

@@ -1,0 +1,15 @@
+meta {
+  name: FNDM003Service_GetDataByDataID
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}/TAapi/Fund/TAFNDSwitch/GetData/{DataID}
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}

@@ -1,0 +1,122 @@
+User Interface Specification
+目錄
+應用程式介面說明 2
+APIFNDM003：TAFNDSwitch 2
+壹、功能說明 2
+貳、變更說明 2
+叁、傳入傳出參數(Function) 2
+一、傳入參數 3
+二、傳出參數 4
+三、邏輯說明 7
+肆、傳入傳出參數(檢核) 7
+伍、傳入傳出參數(Get) 7
+應用程式介面說明
+APIFNDM003：TAFNDSwitch
+壹、功能說明
+建立發行基金相互轉申購的規則。
+Url：{root}/TAapi/Fund/TAFNDSwitch
+貳、變更說明
+[TABLE]
+變更日期	變更人員	變更說明
+2023/06/02	Meg Pan	1．ReBuild
+2024/04/25	Meg Pan	Modify，配合UI調整\n1．新增《轉申購手續費率設定》區塊\n2．轉申購手續費率不包含「電子交易」之費率
+2024/07/01	Dechang Chen	Modify，配合多公司別調整\n1．APIFNDM003：新增欄位「公司代碼」
+2024/08/12	Meg Pan	Modify\n1．轉申購 由 SW 改成 Sw
+2024/08/28	Meg Pan	Modify\n1．APIFNDM003：修正傳出參數《不同幣別轉換清單》「轉入計價幣別」、「轉入計價幣別名稱」、「轉出計價幣別集合」、「轉入計價幣別名稱集合」
+2024/11/27	Dechang Chen	Modify\n1．APIFNDM003：傳入參數「公司代碼」調整為必填
+2025/02/19	Ann Wu	Modify\n1．調整幣別欄位長度為6\n2．新增時固定值移至UI 規格書說明\n3．配合前端頁籤呈現增加公司代碼回傳資訊
+
+叁、傳入傳出參數(Function)
+一、傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+母基金代碼\nPrtFundCode	String	O
+開放轉入否\nIsSwitchIn	String		1．選項(OPT：TA-000040)
+轉出基金清單\nSwitchFundList	List
+前收型轉申購手續費率清單\nFundSwitchFeeList	List
+不同幣別轉換清單\nSwitchCryList	List
+
+轉出基金清單SwitchFundList
+[TABLE]
+欄位名稱	資料型態	長度	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	20
+母基金代碼\nPrtFundCode	String	10
+轉出母基金代碼\nSwOPrtFundCode	String	10
+轉申購日期計算基準日\nSwDateType	String	6		1．選項(OPT：TA-000049)
+
+前收型轉申購手續費率清單FundSwitchFeeList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String
+母基金代碼\nPrtFundCode	String
+基金代碼\nFundCode	String
+轉申購適用基金類型\nSwFundType	String		1．選項(OPT：TA-000046)
+轉申購折扣方式\nSwDiscType	String		1．選項(OPT：TA-000047)
+轉申購費率(%)\nSwitchRate	Decimal
+
+不同幣別轉換清單SwitchCryList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String
+母基金代碼\nPrtFundCode	String
+轉入計價幣別\nSwIFundCry	String
+轉出計價幣別集合SwOFundCrySet	String		1．資料以「，」串接
+
+二、傳出參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+基金轉申購清單\nResultList \ Master	List	V	V
+轉出基金清單\nSwitchFundList	List		V
+前收型轉申購手續費率清單\nFundSwitchFeeList	List		V
+不同幣別轉換清單\nSwitchCryList	List		V
+
+ResultList \ Master
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+公司代碼\nSysCoID	String	V	V
+公司名稱\nSysCoIDNM	String		V	1．公司代碼名稱查詢.公司名稱(SysUtility.GetSysCoNM.SysCoIDNM)
+母基金代碼\nPrtFundCode	String	V	V
+母基金簡稱\nPrtFundCodeNM	String	V	V	1．境內母基金簡稱查詢.母基金簡稱(SysUtility.GetDPrtFundNM.PrtFundCodeNM)
+開放轉入否\nIsSwitchIn	String	V	V
+
+轉出基金清單SwitchFundList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+公司代碼\nSysCoID	String		V
+母基金代碼\nPrtFundCode	String		V
+轉出母基金代碼\nSwOPrtFundCode	String		V
+轉出母基金代碼\nSwOPrtFundCodeNM	String		V	1．境內母基金簡稱查詢.母基金簡稱(SysUtility.GetDPrtFundNM.PrtFundCodeNM)
+轉申購日期計算基準日\nSwDateType	String		V	1．選項(OPT：TA-000049)
+
+前收型轉申購手續費率清單FundSwitchFeeList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+公司代碼\nSysCoID	String		V
+母基金代碼\nPrtFundCode	String		V
+基金代碼\nFundCode	String		V
+轉申購適用基金類型\nSwFundType	String		V	1．選項(OPT：TA-000046)
+轉申購折扣方式\nSwDiscType	String		V	1．選項(OPT：TA-000047)
+轉申購費率(%)\nSwitchRate	Decimal		V
+
+不同幣別轉換清單SwitchCryList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+公司代碼\nSysCoID	String		V
+母基金代碼\nPrtFundCode	String		V
+轉入計價幣別\nSwIFundCry	String		V
+轉入計價幣別名稱\nSwIFundCryNM	String		V	1．幣別查詢.幣別名稱(SysUtility.GetCry.CryIDNM)
+轉出計價幣別集合\nSwOFundCrySet	String		V
+轉出計價幣別名稱集合\nSwOFundCrySetNM	String[]		V	1．幣別查詢.幣別名稱(SysUtility.GetCry.CryIDNM)
+
+三、邏輯說明
+資料來源檔案
+更新檔案
+基金轉申購Edit檔(DTA_FND_Switch_Edit)
+基金轉申購轉出基金Edit檔(DTA_FND_SwitchFund_Edit)
+前收型基金轉申購費率設定Edit檔(DTA_FND_FundFeeSwitch_Edit)
+基金轉申購幣別Edit檔(DTA_FND_SwitchCry_Edit)
+肆、傳入傳出參數(檢核)
+無。
+伍、傳入傳出參數(Get)
+無。

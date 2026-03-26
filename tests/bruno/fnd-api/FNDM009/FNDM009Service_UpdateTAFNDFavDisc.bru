@@ -1,0 +1,19 @@
+meta {
+  name: FNDM009Service_UpdateTAFNDFavDisc
+  type: http
+  seq: 1
+}
+
+put {
+  url: {{base_url}}/TAapi/Fund/TAFNDFavDisc
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}
+
+body:json {
+  {}
+}

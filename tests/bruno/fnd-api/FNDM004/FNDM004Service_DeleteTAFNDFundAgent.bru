@@ -1,0 +1,15 @@
+meta {
+  name: FNDM004Service_DeleteTAFNDFundAgent
+  type: http
+  seq: 1
+}
+
+delete {
+  url: {{base_url}}/TAapi/BaseFund/TAFNDFundAgent?DataID=&DataFlag=
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}

@@ -1,0 +1,15 @@
+meta {
+  name: FNDM006Service_TAFNDRPFeeChgType
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}/TAapi/Fund/TAFNDRPFeeChgType?SysCoID=&PmtTxnType=&PrtFundCode=
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}

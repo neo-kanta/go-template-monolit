@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package sample.v1;
+
+option go_package = "go-transfer-agent/common/gen/sample/v1;samplev1";
+
+service SampleService {
+  rpc Echo (EchoRequest) returns (EchoResponse);
+  rpc HealthCheck (HealthCheckRequest) returns (HealthCheckResponse);
+}
+
+message EchoRequest {
+  string message = 1;
+}
+
+message EchoResponse {
+  string message = 1;
+}
+
+message HealthCheckRequest {}
+
+message HealthCheckResponse {
+  string status = 1;
+}

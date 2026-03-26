@@ -1,0 +1,411 @@
+User Interface Specification
+目錄
+應用程式介面說明 2
+壹、功能說明 2
+貳、變更說明 2
+叁、傳入傳出參數(Utility) 2
+一、UTY2006001：TAGetCanRedemUnit 3
+二、UTY2006002：TAGetWriteoffData 5
+三十、UTY2006030：TAGetVioShortUnits 9
+三十一、UTY2006031：TAGetShortFee 11
+三十二、UTY2006032：TAGetPostRemitFee 13
+三十三、UTY2006033：TAGetSubsAgentFee 15
+二、UTY2006002：TAGetBFSpecialOfferSubs(前版本) 17
+三、UTY2006003：TAGetBFSpecialOfferRsp(前版本) 19
+應用程式介面說明
+壹、功能說明
+取得交易相關API
+貳、變更說明
+[TABLE]
+變更日期	變更人員	變更說明
+2024/07/09~07/10	Joyce Lin	Modify\n1．新增UTY2006030取得申購書違反短線單位數判斷\n2．新增UTY2006031取得計算短線費API
+2024/07/22~08/05	Meg Pan	Modify\n1．UTY2006001：Rebulid\n1．UTY2006002：Add
+2024/09/30	Joyce LIn	Modify\n1．UTY2006001：調整交易編號欄位名稱\n2．UTY2006002：調整交易編號欄位名稱、邏輯說明寫法
+2024/10/22	Joyce Lin	Modify\n1．UTY2006002：移除傳出參數「申購單位數」
+2025/02/19	Ann Wu	Modify\n1．調整幣別欄位長度為6
+2025/03/18	Joyce Lin	Modify\n1．新增UTY2006033計算申購銷售機構拆帳手續費
+2025/03/21	Joyce Lin	Modify\n1．新增UTY2006032改為呼叫CoreUtility
+2025/04/02	Joyce Lin	Modify\n1．UTY2006002：重新增加傳出參數「申購單位數」
+2025/04/16	Meg Pan	Modify\n1．UTY2006001、UTY2006002：傳入參數「交易類別」的選項，改至OPT設定
+2025/04/24	Dechang Chen	Modify\n1．UTY2006002：調整傳出參數「受益憑證期別」命名，原『CertIssuCode』改為『CertIssueCode』
+2025/06/19	Meg Pan	Modify\n1．UTY2006033：刪除傳入參數「交易幣小數位數」
+2025/11/10	Meg Pan	Modify\n1．UTY2006001：配合受益權交易類程式調整\n1.1．傳入參數《交易日期》調整欄位說明\n1.2．傳入參數《手續費收取方式》改為《交易類別》為『01~80』時，則必須傳入\n2．UTY2006002：配合受益權交易類程式調整\n2.1．傳入參數《交易日期》調整欄位說明\n2.2．傳入參數《手續費收取方式》改為《交易類別》為『01~80』時，則必須傳入\n2.3．傳入參數增加《法人級別》\n2.4．增加＂法人級別提前買回違反交易單判斷＂處理
+2025/12/26	Meg Pan	Modify，配合前端組件，選項String『Y、N』變更為Bool『True、False』\n1．UTY2006002：「法人級別」、「短線交易註記」、「持有期滿否」、「買回憑證否」、「換發憑證否」；相關欄位判斷規則\n2．UTY2006030：「短線交易註記」\n3．UTY2006032：「免收郵匯費否」、「同母基金互轉否」
+
+叁、傳入傳出參數(Utility)
+一、UTY2006001：TAGetCanRedemUnit
+取得TA可買回單位數 Url：{root}/TAapi/Utility/TATxInfo/TAGetCanRedemUnit
+Pan：本作業暫無考慮交易日結帳的處理
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+交易類別\nTxType	String	V	1．選項(OPT：TA-900056)
+基金代碼\nFundCode	String	V
+戶號\nBFNo	Int	V
+交易日期\nTxDate	DateTime	V	1．若《交易類別》為『01』~『80』，則傳入值為「買回日期」\n2．若《交易類別》為『81.轉讓』，則傳入值為「轉讓日期」\n3．若《交易類別》為『82.質設』，則傳入值為「質設日期」\n4．若《交易類別》為『84.換發』，則傳入值為「換發日期」\n5．若《交易類別》為『85.掛失』，則傳入值為「掛失日期」\n6．若《交易類別》為『88.凍結』，則傳入值為「凍結日期」\n7．若《交易類別》為『91.庫存查詢』，則傳入值為「查詢日期」
+買回淨值日期\nRdmNavDate	DateTime	O	1．若《交易類別》為『01~80』時，則必須傳入
+手續費收取方式\nSubsFeeType	String	O	1．選項(OPT：TA-000025)\n2．若《交易類別》為『01~80』時，則必須傳入
+客戶帳號\nAgentSubAcct	String	O	1．若《手續費收取方式》為『C.遞延』時，此參數值才有作用
+交易編號\nAgentTxNo	String	O	1．若《手續費收取方式》為『C.遞延』時，此參數值才有作用
+一般可買回否\nIsGenCanRdm	Bool	O
+交易單號\nTxnNo	String	O
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+可買回清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+結餘單位數\nBalUnit	Decimal
+買回中單位數\nOnRdmUnit	Decimal
+當日申購單位數\nSubsTdayUnit	Decimal
+員工閉鎖單位數\nEmpLockUnit	Decimal
+凍結單位數\nFreezeUnit	Decimal
+質設單位數\nPledgeUnit	Decimal
+其他單位數\nOtherLockUnit	Decimal
+可買回單位數\nCanRdmUnit	Decimal
+可買回憑證單位數\nCanCertUnit	Decimal
+可買回無實體單位數\nCanNonPhysUnit	Decimal
+
+邏輯說明
+資料來源檔案
+取得TA可買回單位數(TABizUtility.GetCanRedemUnit)
+資料處理說明
+依傳入參數至【取得TA可買回單位數(TABizUtility.GetCanRedemUnit)】取得資料
+二、UTY2006002：TAGetWriteoffData
+取得TA可沖銷的申購書及憑證資料 Url：{root}/TAapi/Utility/TATxInfo/TAGetWriteoffData
+Pan：本作業暫無考慮交易日結帳的處理
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+交易類別\nTxType	String	V	1．選項(OPT：TA-900056)
+資料查詢類別\nQueryDataKind	String	V	1．選項\n1：申購書、2：受益憑證、9：全部
+基金代碼\nFundCode	String	V
+戶號\nBFNo	Int	V
+交易日期\nTxDate	DateTime	V	1．若《交易類別》為『01』~『80』，則傳入值為「買回日期」\n2．若《交易類別》為『81.轉讓』，則傳入值為「轉讓日期」\n3．若《交易類別》為『82.質設』，則傳入值為「質設日期」\n4．若《交易類別》為『88.凍結』，則傳入值為「凍結日期」
+買回淨值日期\nRdmNavDate	DateTime	O	1．若《交易類別》為『01~80』時，則必須傳入
+手續費收取方式\nSubsFeeType	String	O	1．選項(OPT：TA-000025)\n2．若《交易類別》為『01~80』時，則必須傳入
+客戶帳號\nAgentSubAcct	String	O	1．若《手續費收取方式》為『C.遞延』時，此參數值才有作用
+交易編號\nAgentTxNo	String	O	1．若《手續費收取方式》為『C.遞延』時，此參數值才有作用
+一般可買回否\nIsGenCanRdm	Bool	O
+法人級別\nIsIShare	Bool	O	1．若《交易類別》為『01~80』時，則必須傳入
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+可沖銷清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+申購書清單\nSubsList	List
+憑證清單\nCertList	List
+
+申購書清單SubsList
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+申購書號\nSubsNo	String
+申購日期\nSubsDate	DateTime
+淨值日期\nNavDate	DateTime
+申購資料類別\nSubsDataKind	String	1．選項(OPT：TA-000115)
+短線交易註記\nShortTradeMark	Bool
+買回單位數\nRdmUnit	Decimal
+客戶帳號\nAgentSubAcct	String
+交易編號\nAgentTxNo	String
+申購單位數\nSubsUnit	Decimal
+持有期間\nHoldingPeriod	Decimal	1．若「手續費收取方式」為『C.遞延』時，才有傳出值
+持有期滿否\nIsHoldingExpire	Bool	1．若「手續費收取方式」為『C.遞延』時，才有傳出值
+原始申購書號\nOrgSubsNo	String	1．若「手續費收取方式」為『C.遞延』時，才有傳出值
+原始申購日期\nOrgSubsDate	DateTime	1．若「手續費收取方式」為『C.遞延』時，才有傳出值
+庫存部位\nBalType	String	1．選項(OPT：TA-000114)
+公會申報庫存類別\nSITCABalType	String	1．選項(OPT：TA-000114)
+可買回單位數\nCanRdmUnit	Decimal
+
+憑證清單CertList
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+受益憑證期別\nCertIssueCode	String
+受益憑證號碼\nCertNo	String
+受益憑證檢查碼\nCertChkNo	Int
+憑證號碼\nFullCertNo	String
+憑證單位數\nCertUnit	Decimal
+買回憑證單位數\nRdmCertUnit	Decimal
+買回憑證否\nIsRdmCert	Bool
+換發憑證否\nIsReIssuCert	Bool
+
+邏輯說明
+資料來源檔案
+取得TA可沖銷申購書資料(TABizUtility.GetWriteoffSubs)
+取得TA可沖銷憑證資料(TABizUtility.GetWriteoffCert)
+違反短線單位數判斷(s_VioShortUnits)
+遞延型提前買回違反交易單判斷(s_VioCDSCTxn)
+法人級別提前買回違反交易單判斷(s_VioIShareTxn)
+資料處理說明
+若《資料查詢類別》為『1.申購書』或「9.全部」時
+沖銷申購書清單(@WriteoffList)：依傳入參數至【取得TA可沖銷申購書資料(TABizUtility.GetWriteoffSubs)】取得資料
+取得欄位
+申購書號(@SubsNo)
+申購日期(@SubsDate)
+淨值日期(@NavDate)
+申購資料類別(@SubsDataKind)
+短線交易註記(@IsShortMark)：為『False』
+買回單位數(@RdmUnit)：為『0』
+客戶帳號(@AgentSubAcct)
+交易編號(@AgentTxNo)
+申購單位數(@SubsUnit)
+持有期間(@HoldingPeriod)：為『0』
+持有期滿否(@IsHoldingExpire)：為『False』
+原始申購書號(@OrgSubsNo)
+原始申購日期(@OrgSubsDate)
+庫存部位(@BalType)
+公會申報庫存類別(@SITCABalType)
+可買回單位數(@CanRdmUnit)
+買回日期(@RdmDate)：為《交易日期》
+買回淨值日期(@RdmNavDate)：為《買回淨值日期》
+若《交易類別》為『01』~『80』時
+以《公司代碼》、《基金代碼》及沖銷申購書清單(@WriteoffList)呼叫【違反短線單位數判斷(s_VioShortUnits)】更新沖銷申購書清單(@WriteoffList)下列欄位
+短線交易註記(@IsShortMark)：為「違反短線單位數判斷.短線交易註記」
+若《手續費收取方式》為『C.遞延』時，以《公司代碼》、《基金代碼》及沖銷申購書清單(@WriteoffList)呼叫【遞延型提前買回違反交易單判斷(s_VioCDSCTxn)】更新沖銷申購書清單(@WriteoffList)下列欄位
+持有期間(@HoldingPeriod)：為「遞延型提前買回違反交易單判斷.持有日/年數」
+持有期滿否(@IsHoldingExpire)：為「遞延型提前買回違反交易單判斷.到期否」
+若《法人級別》為『True』時，以《公司代碼》、《基金代碼》及沖銷申購書清單(@WriteoffList)呼叫【法人級別提前買回違反交易單判斷(s_VioIShareTxn)】更新沖銷申購書清單(@WriteoffList)下列欄位
+持有期間(@HoldingPeriod)：為「法人級別提前買回違反交易單判斷.持有天數」
+持有期滿否(@IsHoldingExpire)：為「法人級別提前買回違反交易單判斷.到期否」
+若《資料查詢類別》為『2.受益憑證』或「9.全部」時
+沖銷憑證清單(@WriteoffCertList)：以《公司代碼》、《基金代碼》及《戶號》至【取得TA可沖銷憑證資料(TABizUtility.GetWriteoffCert)】取得以下欄位
+受益憑證期別(@CertIssueCode)
+受益憑證號碼(@CertNo)
+受益憑證檢查碼(@CertChkNo)
+憑證號碼(@FullCertNo)
+憑證單位數(@CertUnit)
+買回憑證單位數(@RdmCertUnit)：為『0』
+買回憑證否(@IsRdmCert)：為『False』
+換發憑證否(@IsReplaceCert)：為『False』
+三十、UTY2006030：TAGetVioShortUnits
+取得申購書違反短線單位數判斷 Url：{root}/TAapi/Utility/TATxInfo/TAGetVioShortUnits
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+基金代碼\nFundCode	String	V
+短線單位數判斷清單\nVioShortUnitList	List	V
+
+VioShortUnitList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+申購書號\nSubsNo	String	V
+申購資料類別\nSubsDataKind	String	V	1．選項(OPT：TA-000115)
+申購日期\nSubsDate	DateTime	V
+申購淨值日期\nSubsNavDate	DateTime
+買回日期\nRdmDate	DateTime
+買回淨值日期\nRdmNavDate	DateTime
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+短線費判斷結果清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+申購書號\nSubsNo	String
+短線交易註記\nIsShortMark	Bool
+短線交易費率%\nShortFeeRate	Decimal
+
+邏輯說明
+資料來源檔案
+違反短線單位數判斷(s_VioShortUnits)
+資料處理說明
+依傳入參數至【違反短線單位數判斷(s_VioShortUnits)】取得資料
+三十一、UTY2006031：TAGetShortFee
+取得短線交易費 Url：{root}/TAapi/Utility/TATxInfo/TAGetShortFee
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+基金代碼\nFundCode	String	V
+母基金代碼\nPrtFundCode	String	V
+金額小數\nDecLen	Int	V	1．計價幣別的小數位數
+基金淨值\nFundNav	Decimal	V
+計算短線費清單\nCalcShortFeeList	List	V
+
+CalcShortFeeList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+費用交易書號\nACCTxNo	String	O	1．此指買回書號\n2．預設值為空值
+計算費用總單位數\nActTotFeeUnit	Decimal	V
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+短線費計算清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+費用交易書號\nACCTxNo	String
+費率%\nFeeRate	Decimal
+應收費用總金額\nTotFeeAmt	Decimal
+實收費用總金額\nActTotFeeAmt	Decimal
+
+邏輯說明
+資料來源檔案
+計算短線交易費(s_CalcRdmShortFee)
+資料處理說明
+依傳入參數至【計算短線交易費(s_CalcRdmShortFee)】取得資料
+三十二、UTY2006032：TAGetPostRemitFee
+取得郵匯費 Url：{root}/TAapi/Utility/TATxInfo/TAGetPostRemitFee
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+母基金代碼\nPrtFundCode	String	V
+計價幣別\nFundCry	String	V
+付款幣別\nPayCry	String	V
+計算郵匯款清單\nCalcList	List	V
+
+CalcList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+付款方式\nRdmPayWay	String	V	1．選項(OPT：TA-000160)
+免收郵匯費否\nIsWaiverPRFee	Bool	V
+匯款金額\nRemitAmt	Decimal	V
+匯入銀行\nRemitBank	String	O	1．「付款方式」為『T.匯款』時，才有傳入值
+轉入母基金代碼\nSwPrtFundCode	String	O	1．「付款方式」為『S.轉申購』時，才有傳入值
+同母基金互轉否\nIsIntraFundTsfr	Bool	O	1．「付款方式」為『S.轉申購』時，才有傳入值
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+郵匯費清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+付款方式\nRdmPayWay	String	1．選項(OPT：TA-000160)
+匯款金額\nRemitAmt	Decimal
+匯入銀行\nRemitBank	String	1．「付款方式」為『T.匯款』時，才有傳出值
+轉入母基金代碼\nSwPrtFundCode	String	1．「付款方式」為『S.轉申購』時，才有傳出值
+郵匯費支付者\nPRFeeType	String	1．選項(OPT：TA-000014)
+匯費幣別\nRemitFeeCry	String	1．「付款方式」為『T.匯款』或『S.轉申購』時，才有傳出值
+受益人支付費用\nBFPRFee	Decimal
+公司支付費用\nCoPRFee	Decimal
+保銀支付費用\nBankPRFee	Decimal
+
+邏輯說明
+資料來源檔案
+取得TA郵匯費(TABizUtility.GetTAPRFee)
+資料處理說明
+依傳入參數至【取得TA郵匯費(TABizUtility.GetTAPRFee)】取得資料
+三十三、UTY2006033：TAGetSubsAgentFee
+計算申購銷售機構拆帳手續費 Url：{root}/TAapi/Utility/TATxInfo/TACalcSubsAgentFee
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+母基金代碼\nPrtFundCode	String	V
+基金代碼\nFundCode	String	V
+交易幣別\nTxCry	String	V
+申購金額\nSubsAmt	Decimal	V
+申購手續費\nSubsFee	Decimal	V
+手續費拆帳基礎\nSubsFeePctType	String	V	1．選項(OPT：TA-000052)
+手續費占比-銷售機構\nSubsFeePctAG	Decimal	V
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+計算清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+銷售機構手續費\nAgentFee	Decimal
+
+邏輯說明
+資料來源檔案
+計算TA銷售機構申購手續費拆帳(TABizUtility.CalcSubsFeeForAgent)
+資料處理說明
+依傳入參數至【計算TA銷售機構申購手續費拆帳(TABizUtility.CalcSubsFeeForAgent)】取得資料
+二、UTY2006002：TAGetBFSpecialOfferSubs(前版本)
+取得受益人單筆適用優惠資料 Url：{root}/TAapi/Utility/TATxInfo/TAGetBFSpecialOfferSubs
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+適用優惠代碼\nSpecialOffer	String	O
+包含促銷活動\nInclCmpn	String	V	1．選項(OPT：TA-000000)
+身分證字號\nIDNo	String	V
+基準日\nBasicDate	DateTime	O	1．「包含促銷活動」為『Y：是』時必須傳入
+促銷範圍\nCmpnScope	String	O	1． 選項(OPT：TA-000135)\n2．「包含促銷活動」為『Y：是』時必須傳入
+母基金代碼\nPrtFundCode	String	O	1．「包含促銷活動」為『Y：是』時必須傳入
+基金代碼\nFundCode	String	O	1．「包含促銷活動」為『Y：是』時必須傳入
+計價幣別\nFundCurrency	String	O	1．「包含促銷活動」為『Y：是』時必須傳入
+收付幣別\nTxCurrency	String	O	1．「包含促銷活動」為『Y：是』時必須傳入
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+適用優惠清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+適用優惠代碼\nSpecialOffer	String
+適用優惠名稱\nSpecialOfferNM	String
+適用優惠來源\nSource	String
+
+邏輯說明
+資料來源檔案
+受益人基本資料檔(TA_BF_BFInfo)
+銷售身分代檔(TA_CMM_StatusCode)
+行銷身分名單檔(TA_CMM_StatusList)
+促銷活動主檔(TA_TXN_Cmpn)
+促銷活動身分別明細檔(TA_TXN_CmpnStatus)
+促銷活動適用交易基金明細檔(TA_TXN_CmpnFund)
+資料處理說明
+「適用優惠代碼」取得符合下述規則資料
+取得優惠身分別
+優惠身分別(@DiscStatusCode)：依《身分證字號》至【受益人基本資料檔(TA_BF_BFInfo)】取得「優惠身分別」
+優惠身分名稱(@DiscStatusDescrp)：至【銷售身分代檔(TA_CMM_StatusCode)】取得「身分代碼」為『優惠身分別(@DiscStatusCode)』的「身分名稱」
+適用優惠來源(@Source)：『Disc.優惠身分別』
+取得促銷活動，《包含促銷活動》為『Y.是』才進行以下處理
+促銷活動代碼(@CmpnCode)：至【促銷活動主檔(TA_TXN_Cmpn)】取得《基準日》介於「促銷活動時間起」和「促銷活動時間迄」之間且（若《促銷範圍》為『W.書面』，則「促銷活動範圍書面否」為『Y.是』；若《促銷範圍》為『EC.EC』，則「促銷活動範圍EC否」為『Y.是』）且「促銷活動項目單筆申購否」為『Y.是』的「促銷活動代碼」
+促銷活動名稱(@CmpnName)：至【促銷活動主檔(TA_TXN_Cmpn)】取得《基準日》介於「促銷活動時間起」和「促銷活動時間迄」之間且（若《促銷範圍》為『W.書面』，則「促銷活動範圍書面否」為『Y.是』；若《促銷範圍》為『EC.EC』，則「促銷活動範圍EC否」為『Y.是』）且「促銷活動項目單筆申購否」為『Y.是』的「促銷活動名稱」
+促銷對象(@CmpnObject)：至【促銷活動主檔(TA_TXN_Cmpn)】取得《基準日》介於「促銷活動時間起」和「促銷活動時間迄」之間且（若《促銷範圍》為『W.書面』，則「促銷活動範圍書面否」為『Y.是』；若《促銷範圍》為『EC.EC』，則「促銷活動範圍EC否」為『Y.是』）且「促銷活動項目單筆申購否」為『Y.是』的「促銷對象」
+若促銷對象(@CmpnObject)為『S.身分別』，則依促銷活動代碼(@CmpnCode)至【促銷活動身分別明細檔(TA_TXN_CmpnStatus)】取得「身份代碼」，再依「身份代碼」及《身分證字號》至【行銷身分名單檔(TA_CMM_StatusList)】檢核《身分證字號》是否在該行銷身分名單中，取得適用的「促銷活動代碼」
+依促銷活動代碼(@CmpnCode)、《母基金代碼》、《基金代碼》、《計價幣別》及《收付幣別》至【促銷活動適用交易基金明細檔(TA_TXN_CmpnFund)】取得適用的「促銷活動代碼」
+取得促銷活動代碼(@CmpnCode)排除（不符合【4.2.1.2.4.】的「促銷活動代碼」或不符合【4.2.1.2.5.】的「促銷活動代碼」）
+適用優惠來源(@Source)：『Cmpn.促銷活動』
+固定選項
+「適用優惠代碼」：『99』
+「適用優惠名稱」：『主管特簽』
+「適用優惠來源」：『Oth.其他』
+三、UTY2006003：TAGetBFSpecialOfferRsp(前版本)
+取得受益人定額適用優惠資料 Url：{root}/TAapi/Utility/TATxInfo/TAGetBFSpecialOfferRsp
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+適用優惠代碼\nSpecialOffer	String	O
+忠實戶否\nIsLoyalty	String	V	1．選項(OPT：TA-000000)
+身分證字號\nIDNo	String	V
+基準日\nBasicDate	DateTime	V
+促銷範圍\nCmpnScope	String	V	1． 選項(OPT：TA-000135)
+母基金代碼\nPrtFundCode	String	V
+基金代碼\nFundCode	String	V
+計價幣別\nFundCurrency	String	V
+收付幣別\nTxCurrency	String	V
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+適用優惠清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+適用優惠代碼\nSpecialOffer	String
+適用優惠名稱\nSpecialOfferNM	String
+適用優惠來源\nSource	String

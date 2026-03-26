@@ -1,0 +1,57 @@
+User Interface Specification
+目錄
+應用程式介面說明 2
+壹、功能說明 2
+貳、變更說明 2
+叁、傳入傳出參數(Utility) 2
+一、UTY2017001：TAGetRspLoyalQual 2
+二、UTY2017002：TAGetRspCanBegDebitDate 3
+應用程式介面說明
+壹、功能說明
+取得境內基金淨值相關API。
+貳、變更說明
+[TABLE]
+變更日期	變更人員	變更說明
+2025/12/22~2025/12/23	Meg Pan	Build\n1．UTY2017001：Add\n2．UTY2017002：Add
+
+
+叁、傳入傳出參數(Utility)
+一、UTY2017001：TAGetRspLoyalQual
+取得TA受益人忠實戶資格 Url：{root}/TAapi/Utility/TARspInfo/TAGetRspLoyalQual
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+戶號\nBFNo	Int	V
+基金代碼\nFundCode	String	V
+查詢日期\nQueryDate	Datetine	V
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+忠實戶註記\nRSPLoyalMark	Bit
+累積成功次數\nTotSuccCnt	Int
+
+邏輯說明
+資料來源檔案
+取得受益人忠實戶資格(TABizUtility.GetRspLoyalQualification)
+資料處理說明
+以傳入參數至【取得受益人忠實戶資格(TABizUtility.GetRspLoyalQualification)】取得資料
+二、UTY2017002：TAGetRspCanBegDebitDate
+取得TA定額可開始扣款日期 Url：{root}/TAapi/Utility/TARspInfo/TAGetRspCanBegDebitDate
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+查詢日期\nQueryDate	Datetine	V
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+可開始扣款日期\nCanBegDebitDate	DateTime
+
+邏輯說明
+資料來源檔案
+取得定額可開始扣款日期(TABizUtility.GetRspCanBegDate)
+資料處理說明
+以傳入參數至【取得定額可開始扣款日期(TABizUtility.GetRspCanBegDate)】取得資料

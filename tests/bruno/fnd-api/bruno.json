@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "FND API Modules (Transfer Agent)",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

@@ -93,13 +93,48 @@ const docTemplate = `{
             }
         },
         "/api/v1/fnd/transactions": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Returns a list of fund transactions from FND gRPC service.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "transactions"
+                ],
+                "summary": "List fund transactions",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.TransactionListResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.ErrorResponse"
+                        }
+                    }
+                }
+            },
             "post": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
-                "description": "Submits a new fund transfer transaction. This is a POC stub.",
+                "description": "Submits a new fund transfer transaction via FND gRPC service.",
                 "consumes": [
                     "application/json"
                 ],
@@ -109,7 +144,7 @@ const docTemplate = `{
                 "tags": [
                     "transactions"
                 ],
-                "summary": "Create fund transaction (stub)",
+                "summary": "Create fund transaction",
                 "parameters": [
                     {
                         "description": "Transaction details",
@@ -136,6 +171,12 @@ const docTemplate = `{
                     },
                     "401": {
                         "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
                         "schema": {
                             "$ref": "#/definitions/handlers.ErrorResponse"
                         }
@@ -269,6 +310,21 @@ const docTemplate = `{
                 }
             }
         },
+        "handlers.TransactionListResponse": {
+            "type": "object",
+            "properties": {
+                "total": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "transactions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/handlers.TransactionResponse"
+                    }
+                }
+            }
+        },
         "handlers.TransactionResponse": {
             "type": "object",
             "properties": {
@@ -324,7 +380,7 @@ var SwaggerInfo = &swag.Spec{
 	BasePath:         "/",
 	Schemes:          []string{},
 	Title:            "Transfer Agent API Gateway",
-	Description:      "POC API Gateway with JWT authentication for the Transfer Agent platform.",
+	Description:      "POC API Gateway with JWT authentication. Calls FND service via gRPC.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

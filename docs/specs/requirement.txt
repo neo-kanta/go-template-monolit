@@ -1,0 +1,33 @@
+Overview
+Design a Go Microservice container for Transfer Agent Fund(FND) Module. According to the FND API specification. While designing, developing and localizing the Fund module for Thai customer.
+
+Requirements features
+Service compiles and runs in Docker (docker compose up works).
+Database(PostgreSQL) Use GORM for migrations and ORM logic
+api-gateway/: Gateway Layer (Gin Framework). Handles Auth & Validation.
+services/FND/*: Core Fund Module (gRPC). Manages Transactions & Balances (PostgreSQL).
+common/: Share Resources. Proto definitions
+deploy/: Deployment. Dockerfiles manifests.
+Unit Tests with testify/assert for unit testing.
+Integration Tests with testify/suite for logic testing.
+Standard production-grade documentation.
+FND API Specification here: API Specification
+
+In-Scope
+Localizing including Thai Baht (THB) precision handling, Thai Date Formatting, Thai Documentation and Regulation, Naming and etc.
+4-eyes principle(Maker-Checker logic)
+Transaction Submission: A "Maker" e.g. Junior Officer submits a Fund Subscription/Redemption. Status: PENDING_APPROVAL
+Transaction Approval: A "Checker" e.g.  Senior Officer must approve the transaction.
+Constraint: The CheckerID cannot be the same as the MakerID
+Deploy the Microservice container on Google Cloud. 
+Out of Scope
+Frontend UI Development: No web interface or mobile app is required. Validation should be done strictly via Postman/Bruno collection or curl.
+Do not implement a full Identity Provider (like Keycloak or Auth0). A simple, hard-coded JWT middleware in the api-gateway is sufficient for the "4-Eyes" principle
+Multi-Currency Logic: THB is the only supported currency.
+
+What to submit
+URL Endpoints to your deployed Microservice.
+Upload your code in your own branch in this Git repository: https://SystemwebRD@dev.azure.com/SystemwebRD/ThaiHR/_git/SWTH_GoAPI
+API reference documentation in Microsoft Team API Reference
+
+Deadline Submission: 27th February 2026 16:30 (Bangkok Time)

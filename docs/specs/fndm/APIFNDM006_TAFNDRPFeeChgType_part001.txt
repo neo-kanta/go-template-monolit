@@ -1,0 +1,81 @@
+User Interface Specification
+目錄
+應用程式介面說明 2
+APIFNDM006：TAFNDRPFeeChgType 2
+壹、功能說明 2
+貳、變更說明 2
+叁、傳入傳出參數(Function) 2
+一、傳入參數 2
+二、傳出參數 3
+三、邏輯說明 5
+肆、傳入傳出參數(檢核) 5
+伍、傳入傳出參數(Get) 5
+應用程式介面說明
+APIFNDM006：TAFNDRPFeeChgType
+壹、功能說明
+建立基金交易於支付款項時（如：買回／轉申購／配息／清算等），匯費的支付者及收取方式資料。
+Url：{root}/TAapi/Fund/TAFNDRPFeeChgType
+貳、變更說明
+[TABLE]
+變更日期	變更人員	變更說明
+2023/06/28	Meg Pan	1．Build
+2024/07/01	Dechang Chen	Modify，配合多公司別調整\n1．APIFNDM0006：新增欄位「公司代碼」
+2024/11/27	Dechang Chen	Modify\n1．APIFNDM002：傳入參數「公司代碼」調整為必填
+2025/02/20	Ann Wu	Modify\n1．新增時固定值移至UI 規格書說明\n2．配合前端頁籤呈現增加公司代碼回傳資訊
+
+叁、傳入傳出參數(Function)
+一、傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+付款交易別\nPmtTxnType	String	O	1．選項(OPT：TA-000008)
+母基金代碼\nPrtFundCode	String	O
+收取方式明細清單\nChgTypeList	List
+
+收取方式明細清單ChgTypeList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String
+付款交易別\nPmtTxnType	String		1．選項(OPT：TA-000008)
+母基金代碼\nPrtFundCode	String
+幣別類型\nCryKind	String		1．選項(OPT：TA-000148)
+匯費支付者\nRemitFeeObj	String		1．選項(OPT：TA-000014)
+匯費收取方式\nRemitFeeChgType	String		1．當「幣別類型」值為『CCY』時，選項(OPT：TA-000015)\n2．當「幣別類型」值為『FCY』時，選項(OPT：TA-000016)
+郵費支付者\nPostFeeObj	String		1．選項(OPT：TA-000014)
+
+二、傳出參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+付款交易別清單\nResultList \ Master	List	V	V
+收取方式明細清單\nChgTypeList	List		V
+
+ResultList \ Master
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+公司代碼\nSysCoID	String	V	V
+公司名稱\nSysCoIDNM	String		V	1．公司代碼名稱查詢.公司名稱(SysUtility.GetSysCoNM.SysCoIDNM)
+付款交易別\nPmtTxnType	String		V
+付款交易別\nPmtTxnTypeNM	String	V		1．下拉選項查詢.代碼說明(SysUtility.GetOption.ItemName{TA-000008})
+母基金代碼\nPrtFundCode	String	V	V
+母基金簡稱\nPrtFundCodeNM	String	V	V	1．境內母基金簡稱查詢.母基金簡稱(SysUtility.GetDPrtFundNM.PrtFundCodeNM)
+
+收取方式明細清單ChgTypeList
+[TABLE]
+欄位名稱	資料型態	Method\nQ	Method\nQ{DataID}	欄位說明	備註
+公司代碼\nSysCoID	String		V
+付款交易別\nPmtTxnType	String		V	1．選項(OPT：TA-000008)
+母基金代碼\nPrtFundCode	String		V
+幣別類型\nCryKind	String		V	1．選項(OPT：TA-000148)
+匯費支付者\nRemitFeeObj	String		V	1．選項(OPT：TA-000014)
+匯費收取方式\nRemitFeeChgType	String		V	1．當「幣別類型」值為『CCY』時，選項(OPT：TA-000015)\n2．當「幣別類型」值為『FCY』時，選項(OPT：TA-000016)
+郵費支付者\nPostFeeObj	String		V	1．選項(OPT：TA-000014)
+
+三、邏輯說明
+資料來源檔案
+更新檔案
+基金郵匯費收取方式設定Edit檔(DTA_FND_RPFeeChgType_Edit)
+基金郵匯費收取方式設定Edit明細檔(DTA_FND_RPFeeChgTypeDtl_Edit)
+肆、傳入傳出參數(檢核)
+無。
+伍、傳入傳出參數(Get)
+無。

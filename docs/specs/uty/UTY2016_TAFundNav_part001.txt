@@ -1,0 +1,77 @@
+User Interface Specification
+目錄
+應用程式介面說明 2
+壹、功能說明 2
+貳、變更說明 2
+叁、傳入傳出參數(Utility) 2
+一、UTY2016001：TAGetTAFundNav 2
+二、UTY2016002：TAGetTAFundEstNav 3
+應用程式介面說明
+壹、功能說明
+取得境內基金淨值相關API。
+貳、變更說明
+[TABLE]
+變更日期	變更人員	變更說明
+2024/07/08	Meg Pan	1．Build
+2024/07/16	Meg Pan	Modify\n1．UTY2016001、UTY2016002：補上查無資料時的回傳訊息
+2025/03/18	Meg Pan	Modify\n1．UTY2016001、UTY2016002：程式主體移至CoreUtility
+2025/10/15	Meg Pan	Modify\n1．UTY2016001：調整邏輯說明，增加傳入參數的說明
+
+叁、傳入傳出參數(Utility)
+一、UTY2016001：TAGetTAFundNav
+取得TA基金的正式淨值 Url：{root}/TAapi/Utility/Biz/GetFundNAV/TAGetTAFundNav
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+基金代碼\nFundCode	String	O
+淨值日期\nNavDate	DateTime	V
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+查詢清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+基金代碼\nFundCode	String
+淨值日期\nNavDate	DateTime
+基金淨值\nFormalNav	decimail
+基金資產規模\nFundSize	decimail
+發行在外單位數\nOSUnit	decimail
+
+邏輯說明
+資料來源檔案
+取得TA基金的正式淨值(TABizUtility.GetTAFundNav)
+資料處理說明
+以傳入參數至【取得TA基金的正式淨值(TABizUtility.GetTAFundNav)】取得資料
+《排除未放行資料》＝『True』
+若無資料，則回傳結果代碼{TXN0057}
+二、UTY2016002：TAGetTAFundEstNav
+取得TA基金的預估淨值 Url：{root}/TAapi/Utility/Biz/GetFundNAV/TAGetTAFundEstNav
+傳入參數
+[TABLE]
+欄位名稱	資料型態	Method\nQ	欄位說明	備註
+公司代碼\nSysCoID	String	V
+基金代碼\nFundCode	String	V
+買回日期\nRdmDate	DateTime	V
+
+傳出參數
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+查詢清單\nMaster	List
+
+Master
+[TABLE]
+欄位名稱	資料型態	欄位說明	備註
+基金代碼\nFundCode	String
+預估買回淨值日期\nEstRdmNavDate	DateTime
+預估買回淨值\nEstRdmNav	decimail
+
+邏輯說明
+資料來源檔案
+取得TA基金的預估淨值(TABizUtility.GetTAFundEstNav)
+資料處理說明
+以傳入參數至【取得TA基金的預估淨值(TABizUtility.GetTAFundEstNav)】取得資料
+若無資料，則回傳結果代碼{TXN0057}

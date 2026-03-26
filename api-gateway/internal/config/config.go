@@ -5,12 +5,13 @@ import (
 	"strconv"
 )
 
-// Config holds all configuration for the API gateway.
+// Config holds API Gateway configuration.
 type Config struct {
 	Port             string
 	JWTSecret        string
 	JWTExpiryMinutes int
-	GinMode          string
+	GinMode           string
+	SampleServiceAddr string // gRPC address of the Sample service
 }
 
 // Load reads configuration from environment variables with sensible defaults.
@@ -19,7 +20,8 @@ func Load() *Config {
 		Port:             getEnv("PORT", "8080"),
 		JWTSecret:        getEnv("JWT_SECRET", "super-secret-poc-key-change-me"),
 		JWTExpiryMinutes: getEnvInt("JWT_EXPIRY_MINUTES", 60),
-		GinMode:          getEnv("GIN_MODE", "debug"),
+		GinMode:           getEnv("GIN_MODE", "debug"),
+		SampleServiceAddr: getEnv("SAMPLE_SERVICE_ADDR", "localhost:50051"),
 	}
 }
 

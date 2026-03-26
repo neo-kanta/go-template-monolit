@@ -1,0 +1,15 @@
+meta {
+  name: FNDM009Service_TAFNDFavDisc
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}/TAapi/Fund/TAFNDFavDisc?SysCoID=&CusIDCode=&DiscItemSet=&DiscFundType=
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}
