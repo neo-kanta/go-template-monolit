@@ -18,4 +18,4 @@ plugins:
       - logtostderr=true
       - json_names_for_fields=true
       - allow_merge=true
-      - merge_file_name=fnd/v1/fnd
+      - merge_file_name=sample/v1/sample

@@ -1,62 +1,39 @@
-# Architecture — Go Transfer Agent Platform (POC → MVP) 🏦
+# Target Architecture
 
-This document describes the **current POC** architecture and how it evolves into the **MVP** based on requirements:
+This repository adopts **Clean Architecture** combined with a **Monorepo** multi-service layout. The goal is to maximize isolation between domain logic, presentation layers, and infrastructure.
 
-- Gin API Gateway (REST + Swagger)
-- gRPC core services (FND first)
-- PostgreSQL (single DB, multi-schema)
-- GORM migrations/ORM
-- Maker–Checker (4-eyes principle)
-- Thai localization (THB precision, Thai date formatting)
-- Docker Compose local + Google Cloud deploy
+## Repository Layout
+- `api-gateway/`: Acts as the central REST API frontend for all underlying services. Maps HTTP requests to gRPC calls. Includes routing, authentication (JWT), and Swagger generation.
+- `services/`: Contains independent Microservices.
+  - `_template/`: The canonical empty service scaffold. Duplicate it when creating a new domain service.
+  - `sample/`: A working baseline service implementing `HealthCheck` and `Echo` endpoints. Use it for reference.
+- `common/`: Shared code meant to be used by all microservices.
+  - `proto/`: Protobuf definitions representing the contracts between API Gateway and individual services.
+  - `gen/`: Auto-generated Go code from protobuf using `buf generate`.
+  - `platform/`: Shared technical capabilities: config loaders, loggers, generic middlewares.
 
----
+## Domain Service Internal Architecture (Clean Architecture)
+Inside any given service (e.g., `services/sample`), the layout strictly enforces separation of concerns:
 
-## 1) Architecture Style
+1. **`cmd/<service>/main.go` (Infrastructure Layer)**:
+   - Wires up dependencies.
+   - Bootstraps the gRPC server and Database.
+   - Reads environment configurations.
 
-**Clean Architecture + Hexagonal (Ports & Adapters)**
+2. **`internal/adapter/` (Interface Adapters)**:
+   - **`grpc/`**: Handlers that receive gRPC requests, call usecases, and return gRPC responses.
+   - **`persistence/`**: Database repositories. Implements domain interfaces using SQL/ORMs.
 
-- **Edge / Adapter:** `api-gateway` (Gin + Swagger, validation, auth)
-- **Core / Use-cases:** `services/*` (gRPC servers, business rules)
-- **Infrastructure adapters:** persistence (GORM/Postgres), messaging (future), external APIs (future)
-- **Contracts:** Protobuf in `common/proto/*`
+3. **`internal/usecase/` (Application Layer)**:
+   - Contains business flow operations.
+   - Orchestrates entities and repository instructions.
+   - Has no knowledge of gRPC, REST, or SQL.
 
-Key goal: juniors can create a new service by copying `_template` and implementing:
+4. **`internal/domain/` (Enterprise Business Rules)**:
+   - Holds core entities, value objects, domain logic, and interface definitions (e.g., repository interfaces).
+   - This layer must not depend on ANY other internal package.
 
-- domain
-- usecases
-- adapters (grpc + persistence)
-
----
-
-## 2) System Overview (Target MVP)
-
-```txt
-Clients (Swagger/Bruno/Postman/curl)
-        |
-        | REST/HTTP
-        v
-+-----------------------+
-| api-gateway (Gin)     |
-| - Auth (JWT)          |
-| - Validation          |
-| - Swagger UI          |
-| - Request mapping     |
-+-----------------------+
-        |
-        | gRPC
-        v
-+-----------------------+       +-----------------------+
-| services/FND (gRPC)   |       | services/Customer      |
-| - Txn + balances      |       | - Customer master      |
-| - Maker/Checker       |       | - KYC flags (future)   |
-+-----------------------+       +-----------------------+
-        |
-        | GORM
-        v
-+-----------------------------------------------+
-| PostgreSQL (single DB, multiple schemas)       |
-| - engine.*  (customer, users, audit)           |
-| - fnd.*     (fund, transactions, approvals)    |
-+-----------------------------------------------+
-```
+## Constraints
+- **Direction of Dependency**: `Adapter` -> `Usecase` -> `Domain`.
+- Do not import `adapter` code directly into `usecase` or `domain`. Only interface implementation should connect them.
+- If an ORM model differs significantly from a Domain entity, use Data Transfer Objects (DTOs) to map them within the `persistence` layer.

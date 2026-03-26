@@ -13,10 +13,10 @@ services:
       timeout: 3s
       retries: 10
 
-  fnd:
+  sample:
     build:
       context: ../../
-      dockerfile: deploy/docker/Dockerfile.fnd
+      dockerfile: deploy/docker/Dockerfile.sample
     environment:
       - GRPC_ADDR=0.0.0.0:50051
       - DB_DSN=host=postgres user=taplatform password=taplatform dbname=taplatform port=5432 sslmode=disable TimeZone=Asia/Bangkok
@@ -37,8 +37,8 @@ services:
       - PORT=8080
       - JWT_SECRET=docker-compose-poc-secret
       - JWT_EXPIRY_MINUTES=60
-      - FND_SERVICE_ADDR=fnd:50051
+      - SAMPLE_SERVICE_ADDR=sample:50051
     depends_on:
-      - fnd
+      - sample
     ports:
       - "8080:8080"

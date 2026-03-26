@@ -12,7 +12,7 @@ import (
 )
 
 // NewRouter creates and configures the Gin engine with all routes.
-func NewRouter(cfg *config.Config, fndClient *grpcclient.FNDClient) *gin.Engine {
+func NewRouter(cfg *config.Config, sampleClient *grpcclient.SampleClient) *gin.Engine {
 	gin.SetMode(cfg.GinMode)
 
 	r := gin.Default()

@@ -24,15 +24,15 @@ import (
 func main() {
 	cfg := config.Load()
 
-	// Connect to FND gRPC service
-	fndClient := grpcclient.NewFNDClient(cfg.FNDServiceAddr)
-	defer fndClient.Close()
+	// Connect to Sample gRPC service
+	sampleClient := grpcclient.NewSampleClient(cfg.SampleServiceAddr)
+	defer sampleClient.Close()
 
-	router := apphttp.NewRouter(cfg, fndClient)
+	router := apphttp.NewRouter(cfg, sampleClient)
 
 	log.Printf("🚀 API Gateway starting on :%s", cfg.Port)
 	log.Printf("📖 Swagger UI: http://localhost:%s/swagger/index.html", cfg.Port)
-	log.Printf("🔗 FND gRPC: %s", cfg.FNDServiceAddr)
+	log.Printf("🔗 Sample gRPC: %s", cfg.SampleServiceAddr)
 
 	if err := router.Run(":" + cfg.Port); err != nil {
 		log.Fatalf("failed to start server: %v", err)

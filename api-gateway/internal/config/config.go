@@ -10,8 +10,8 @@ type Config struct {
 	Port             string
 	JWTSecret        string
 	JWTExpiryMinutes int
-	GinMode          string
-	FNDServiceAddr   string // gRPC address of the FND service
+	GinMode           string
+	SampleServiceAddr string // gRPC address of the Sample service
 }
 
 // Load reads configuration from environment variables with sensible defaults.
@@ -20,8 +20,8 @@ func Load() *Config {
 		Port:             getEnv("PORT", "8080"),
 		JWTSecret:        getEnv("JWT_SECRET", "super-secret-poc-key-change-me"),
 		JWTExpiryMinutes: getEnvInt("JWT_EXPIRY_MINUTES", 60),
-		GinMode:          getEnv("GIN_MODE", "debug"),
-		FNDServiceAddr:   getEnv("FND_SERVICE_ADDR", "localhost:50051"),
+		GinMode:           getEnv("GIN_MODE", "debug"),
+		SampleServiceAddr: getEnv("SAMPLE_SERVICE_ADDR", "localhost:50051"),
 	}
 }
 
